@@ -1,0 +1,58 @@
+name: ci
+
+# AI 原生 SDLC 的合并门禁：pnpm gate 全绿才允许合并。
+# 评测回归（mock）离线确定性，不消耗 API 额度。
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Gate（validate + 单元测试 + 评测回归 + 构建）
+        run: pnpm gate
+
+      - name: Upload 评测回归报告
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-regression-reports
+          path: reports/regression/
+          if-no-files-found: ignore
+
+  # 样本仓库自带可运行测试：编译并执行通过 = 样本项目的过程证据自证
+  # （被评测的仓库自己先过 CI，评测结论才有底气）
+  sample-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: eie-clock 调时状态机桌面测试（g++）
+        run: |
+          cd samples/eie-clock
+          g++ -std=c++17 -Wall -Wextra -I src tests/test_state.cpp src/state.cpp -o test_state
+          ./test_state
+
+      - name: modeling-comp 拟合与清洗测试（pytest）
+        run: |
+          python -m pip install --quiet pytest pandas numpy
+          python -m pytest samples/modeling-comp/tests -q

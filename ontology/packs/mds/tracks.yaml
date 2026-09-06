@@ -1,0 +1,39 @@
+# 数学建模与数据科学 · 分级要求（班型 → 节点最低等级）——LLM 组装草稿，待课程教师审阅
+- 班型: "拔尖班"  # 面向数模竞赛与科研入门的高阶培养路径，要求建模核心节点达到迁移与权衡水平，方法节点达到独立应用水平。
+  - {skill: "modeling.abstract", minLevel: 3}
+  - {skill: "modeling.optimization", minLevel: 3}
+  - {skill: "modeling.simulation", minLevel: 3}
+  - {skill: "modeling.validation", minLevel: 3}
+  - {skill: "data.inference", minLevel: 3}
+  - {skill: "foundation.linalg", minLevel: 2}
+  - {skill: "foundation.calculus", minLevel: 2}
+  - {skill: "foundation.probstat", minLevel: 2}
+  - {skill: "foundation.numerical", minLevel: 2}
+  - {skill: "data.clean", minLevel: 2}
+  - {skill: "data.exploration", minLevel: 2}
+  - {skill: "data.viz", minLevel: 2}
+  - {skill: "practice.vcs", minLevel: 2}
+  - {skill: "practice.testing", minLevel: 2}
+  - {skill: "practice.debug", minLevel: 2}
+  - {skill: "practice.doc", minLevel: 2}
+  - {skill: "practice.search", minLevel: 2}
+  - {skill: "practice.abstract", minLevel: 2}
+- 班型: "普通班"  # 面向数据分析课程设计与基础建模能力培养，要求建模核心节点达到独立应用水平，方法节点达到认知与模仿水平。
+  - {skill: "modeling.abstract", minLevel: 2}
+  - {skill: "modeling.optimization", minLevel: 2}
+  - {skill: "modeling.simulation", minLevel: 2}
+  - {skill: "modeling.validation", minLevel: 2}
+  - {skill: "data.inference", minLevel: 2}
+  - {skill: "foundation.linalg", minLevel: 1}
+  - {skill: "foundation.calculus", minLevel: 1}
+  - {skill: "foundation.probstat", minLevel: 1}
+  - {skill: "foundation.numerical", minLevel: 1}
+  - {skill: "data.clean", minLevel: 1}
+  - {skill: "data.exploration", minLevel: 1}
+  - {skill: "data.viz", minLevel: 1}
+  - {skill: "practice.vcs", minLevel: 1}
+  - {skill: "practice.testing", minLevel: 1}
+  - {skill: "practice.debug", minLevel: 1}
+  - {skill: "practice.doc", minLevel: 1}
+  - {skill: "practice.search", minLevel: 1}
+  - {skill: "practice.abstract", minLevel: 1}

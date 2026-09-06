@@ -1,0 +1,2846 @@
+{
+  "reportVersion": 1,
+  "id": "453ab4c8-8284-413a-b5c4-ee582e0ed0cb",
+  "createdAt": "2026-09-01T15:41:45.729Z",
+  "evidence": {
+    "kind": "local-dir",
+    "path": "E:\\A-GLM\\登楼\\02\\skilltree\\samples\\task-todo",
+    "name": "task-todo",
+    "fileCount": 8,
+    "totalLines": 444,
+    "digestHash": "58d314aa176e4eb6"
+  },
+  "pack": {
+    "id": "cs",
+    "version": "0.1.0",
+    "contentHash": "ef17ae2cea8659c6"
+  },
+  "model": {
+    "provider": "mock",
+    "details": "确定性规则评测（关键词密度 + 来源核验 + 仲裁规则），非模型输出"
+  },
+  "survey": {
+    "summary": "证据包含 8 个文本文件、约 444 行；语言分布 js×6、md×1、json×1。",
+    "languages": {
+      "md": 1,
+      "json": 1,
+      "js": 6
+    },
+    "entryPoints": [
+      "src/index.js"
+    ],
+    "buildCommands": [
+      "npm test"
+    ],
+    "testCommands": [
+      "npm test"
+    ],
+    "observations": [
+      "包含 README（29 行）",
+      "测试文件 2 个",
+      "最大文件 src/index.js（98 行）"
+    ]
+  },
+  "assessments": [
+    {
+      "skillId": "algo.complexity",
+      "level": 1,
+      "confidence": 0.6,
+      "criteria": [
+        {
+          "text": "能对常见代码片段给出时间复杂度并解释计数方式",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "命中关键词：o(n)"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：o(n)"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "理解 O(1)/O(log n)/O(n)/O(n²) 的实际含义差异",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "命中关键词：o(n)"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：o(n)"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "在项目决策中使用复杂度分析（如说明为何用哈希代替遍历）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能识别嵌套循环、递归主定理等复合结构的复杂度",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "进行摊还分析与空间换时间的系统权衡，并在代码/文档中留有痕迹",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "用实测（基准、剖析）验证理论分析，处理常数因子与缓存等现实因素",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 2 处、分布于 2 个文件（其中源码文件 1 个）。"
+    },
+    {
+      "skillId": "algo.sort",
+      "level": 2,
+      "confidence": 0.84,
+      "criteria": [
+        {
+          "text": "正确实现至少一种 O(n²) 排序，并能解释过程",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "命中关键词：排序"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：sort、排序"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "正确使用语言内置排序并理解比较语义（稳定性、比较器）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "命中关键词：排序"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：sort、排序"
+            }
+          ],
+          "comment": "证据密度达到 L2 档"
+        },
+        {
+          "text": "独立实现 O(n log n) 排序（快排/归并/堆排），边界与重复元素正确",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "命中关键词：排序"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：sort、排序"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "测试覆盖基本与 adversarial 输入（已排序、全相同、逆序）",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能论证不同排序在稳定性、原地性、最坏情况间的取舍并按数据特征选择",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "理解非比较排序（计数/基数）的适用边界",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 10 处、分布于 4 个文件（其中源码文件 3 个）。"
+    },
+    {
+      "skillId": "algo.search",
+      "level": 0,
+      "confidence": 0.5,
+      "criteria": [
+        {
+          "text": "在有序数据上正确使用/实现二分查找",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/validate.js",
+              "note": "命中关键词：lower"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "理解循环不变式与终止条件",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "正确处理左右边界变体（首个/最后一个、插入点），无差一错误",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "将二分思想迁移到答案空间（如最小满足条件的值）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能论证二分适用前提（单调性）并在非显然场景识别可二分结构",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "结合剪枝/启发式控制搜索规模并分析复杂度",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 1 处、分布于 1 个文件（其中源码文件 1 个）。"
+    },
+    {
+      "skillId": "algo.recursion",
+      "level": 0,
+      "confidence": 0.4,
+      "criteria": [
+        {
+          "text": "正确写出基础递归（阶乘、斐波那契、树遍历）并解释基线条件",
+          "verdict": "partial",
+          "citations": [],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "理解调用栈与递归深度的关系",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "用回溯系统性枚举（排列/组合/子集/棋盘类），状态正确恢复",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "有剪枝意识并在代码中体现",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "分析搜索空间规模并论证剪枝有效性",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能在递归与显式栈迭代间转换并说明取舍",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 0 处、分布于 0 个文件（其中源码文件 0 个）。"
+    },
+    {
+      "skillId": "algo.greedy",
+      "level": 0,
+      "confidence": 0.4,
+      "criteria": [
+        {
+          "text": "能复述经典贪心/分治问题（区间调度、归并排序）的思路",
+          "verdict": "partial",
+          "citations": [],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "在明确适合的场景中正确应用",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "独立识别可分解子结构并设计分治策略（含合并步骤的正确性）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "对贪心选择给出交换论证或反例检验",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能证明贪心策略的最优性或构造反例说明失效场景",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "在贪心/DP/分治之间做出有依据的技术选型",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 0 处、分布于 0 个文件（其中源码文件 0 个）。"
+    },
+    {
+      "skillId": "algo.dp",
+      "level": 0,
+      "confidence": 0.4,
+      "criteria": [
+        {
+          "text": "能把朴素递归改造为记忆化搜索并解释重叠子问题",
+          "verdict": "partial",
+          "citations": [],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "理解状态与转移的定义方式",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "独立定义状态与转移解决经典模型（线性 DP、背包、LIS/LCS）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "正确处理初始化、边界与遍历顺序",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "进行维度/空间优化并保持正确性论证",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "面对新问题能自主设计状态（含多维、状态压缩）并分析复杂度",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 0 处、分布于 0 个文件（其中源码文件 0 个）。"
+    },
+    {
+      "skillId": "algo.graphalg",
+      "level": 0,
+      "confidence": 0.4,
+      "criteria": [
+        {
+          "text": "正确实现 BFS 最短路（无权）与拓扑排序",
+          "verdict": "partial",
+          "citations": [],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "理解各算法的适用前提",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "在带权图上正确应用 Dijkstra（或 Bellman-Ford 处理负权）并说明差异",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "将工程问题正确建图为图算法问题（依赖调度、路由）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "掌握 MST/强连通等进阶算法并能论证正确性",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "依据图的规模与性质（稀疏/稠密、静态/动态）选择算法与数据结构",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 0 处、分布于 0 个文件（其中源码文件 0 个）。"
+    },
+    {
+      "skillId": "db.model",
+      "level": 0,
+      "confidence": 0.4,
+      "criteria": [
+        {
+          "text": "能将业务对象表示为带主键的表并建立基本关系",
+          "verdict": "partial",
+          "citations": [],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "字段类型与约束（非空、唯一）使用合理",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "关系设计正确（一对多/多对多），消除明显冗余（符合基本范式）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "模式演进有考虑（迁移脚本或版本记录）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能论证规范化与反范式的取舍（读放大 vs 写放大）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "建模体现对业务约束的完整捕获（部分唯一、复合键、软删除策略）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 0 处、分布于 0 个文件（其中源码文件 0 个）。"
+    },
+    {
+      "skillId": "db.sql",
+      "level": 2,
+      "confidence": 0.82,
+      "criteria": [
+        {
+          "text": "正确编写单表与简单连接查询，过滤与排序符合需求",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "test/store.test.js",
+              "note": "命中关键词：join"
+            },
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：join"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "理解 NULL 语义与聚合函数行为",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "test/store.test.js",
+              "note": "命中关键词：join"
+            },
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：join"
+            }
+          ],
+          "comment": "证据密度达到 L2 档"
+        },
+        {
+          "text": "熟练使用多表连接、分组聚合、子查询/CTE 解决实际报表类需求",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "test/store.test.js",
+              "note": "命中关键词：join"
+            },
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：join"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "参数化查询，无拼接注入风险",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能读写复杂查询（窗口函数、递归 CTE）并优化可读性",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能分析查询语义陷阱（重复行、连接放大、聚合时机）",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 8 处、分布于 4 个文件（其中源码文件 4 个）。"
+    },
+    {
+      "skillId": "db.tx",
+      "level": 0,
+      "confidence": 0.4,
+      "criteria": [
+        {
+          "text": "理解事务的原子性并能正确开启/提交/回滚",
+          "verdict": "partial",
+          "citations": [],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "能解释脏读、不可重复读的直观含义",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "在应用中正确圈定事务边界（多步写入的成败一致）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "理解隔离级别与常见并发异常的对应关系",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能分析并解决死锁/长事务问题（加锁顺序、超时、重试）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "对一致性需求做出有依据的隔离级别/乐观锁选型",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 0 处、分布于 0 个文件（其中源码文件 0 个）。"
+    },
+    {
+      "skillId": "db.perf",
+      "level": 3,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "理解索引加速查找的原理与代价（写入放大、存储）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：index"
+            },
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：index"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "能为主键/外键/常用过滤字段建立索引",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：index"
+            },
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：index"
+            }
+          ],
+          "comment": "证据密度达到 L2 档"
+        },
+        {
+          "text": "使用执行计划（EXPLAIN）定位全表扫描并针对性建索引",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：index"
+            },
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：index"
+            }
+          ],
+          "comment": "证据密度达到 L3 档"
+        },
+        {
+          "text": "能识别索引失效写法（函数包裹、类型不匹配、前导通配）",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "系统性优化案例：测量→分析→改写/索引→复测，并保留证据",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "理解存储引擎层面的代价（页、缓冲、WAL）并能解释选型",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 30 处、分布于 6 个文件（其中源码文件 4 个）。"
+    },
+    {
+      "skillId": "db.nosql",
+      "level": 0,
+      "confidence": 0.4,
+      "criteria": [
+        {
+          "text": "能说出文档/键值/关系库的核心差异与典型场景",
+          "verdict": "partial",
+          "citations": [],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "正确使用一种非关系存储完成读写",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "在项目中合理引入（如缓存层、会话存储）并处理失效/一致性",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "理解其弱事务/弱模式带来的边界并防御",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能论证存储选型（数据形态、访问模式、一致性需求）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "处理过真实问题：缓存击穿/穿透、淘汰策略、序列化兼容",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 0 处、分布于 0 个文件（其中源码文件 0 个）。"
+    },
+    {
+      "skillId": "ds.array",
+      "level": 2,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "正确使用数组/列表完成增删改查与遍历",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：list"
+            },
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：list、slice"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "能解释索引访问与插入删除的代价差异",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：list"
+            },
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：list、slice"
+            }
+          ],
+          "comment": "证据密度达到 L2 档"
+        },
+        {
+          "text": "在项目中依据操作模式选择数组或链表并能说明理由",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：list"
+            },
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：list、slice"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "手写实现过链表（或等价结构）且边界正确（头尾、空表）",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能分析连续 vs 链式存储在缓存、内存分配上的实际影响",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "实现过带容量策略的动态结构（扩容、缩容）并论证参数",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 21 处、分布于 6 个文件（其中源码文件 5 个）。"
+    },
+    {
+      "skillId": "ds.string",
+      "level": 2,
+      "confidence": 0.93,
+      "criteria": [
+        {
+          "text": "正确进行字符串构造、切分、拼接与格式化",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "命中关键词：string、utf"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：string"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "处理空串、特殊字符等基本情况不出错",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "命中关键词：string、utf"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：string"
+            }
+          ],
+          "comment": "证据密度达到 L2 档"
+        },
+        {
+          "text": "有编码意识（UTF-8、转义），跨来源的文本被规范化处理",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "命中关键词：string、utf"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：string"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "使用正则或解析器解决匹配/提取问题且模式可读",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "为文本处理选择合适算法/结构并能分析复杂度（如 KMP、Trie）",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "处理大规模文本的流式/分块策略并论证",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 10 处、分布于 5 个文件（其中源码文件 5 个）。"
+    },
+    {
+      "skillId": "ds.stackqueue",
+      "level": 0,
+      "confidence": 0.5,
+      "criteria": [
+        {
+          "text": "能解释栈与队列的语义差异并举出典型场景",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "命中关键词：栈"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "正确使用内置栈/队列结构解决问题",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "在真实场景中应用（撤销、括号匹配、任务排队、广度优先）且实现正确",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "手写实现过栈或队列，操作复杂度达标",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "组合运用（双端队列、单调栈、循环队列）并论证选择",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能分析受限结构如何约束问题空间从而简化证明/实现",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 1 处、分布于 1 个文件（其中源码文件 0 个）。"
+    },
+    {
+      "skillId": "ds.hash",
+      "level": 3,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "正确使用内置哈希/映射/集合完成存取与判重",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：map、set、index"
+            },
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：map、index"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "能识别\"遍历查找\"应替换为哈希查找的场景",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：map、set、index"
+            },
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：map、index"
+            }
+          ],
+          "comment": "证据密度达到 L2 档"
+        },
+        {
+          "text": "在项目中把需要 O(n) 查找的逻辑改为哈希结构并保持行为正确",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：map、set、index"
+            },
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：map、index"
+            }
+          ],
+          "comment": "证据密度达到 L3 档"
+        },
+        {
+          "text": "处理缺失键、键冲突、遍历顺序等边界",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能解释哈希函数、装载因子与扩容策略，并在项目中体现权衡（自定义键、容量预估）",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "依据访问模式论证哈希表与有序结构/树的取舍",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 42 处、分布于 7 个文件（其中源码文件 5 个）。"
+    },
+    {
+      "skillId": "ds.tree",
+      "level": 0,
+      "confidence": 0.4,
+      "criteria": [
+        {
+          "text": "能构建/遍历树（前中后序、层序）并解释各序语义",
+          "verdict": "partial",
+          "citations": [],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "理解二叉搜索树的有序性质",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "独立实现 BST 的插入/查找（删除至少了解），递归与迭代任一写法边界正确",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "在项目中用树形结构表达层次数据并正确序列化/还原",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能解释失衡问题与自平衡方案（AVL/红黑/B 树）的核心思想及适用场景",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "实现过带平衡/剪枝优化的树结构或论证其必要性",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 0 处、分布于 0 个文件（其中源码文件 0 个）。"
+    },
+    {
+      "skillId": "ds.heap",
+      "level": 3,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "能解释堆的完全二叉树性质与上浮/下沉操作",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：priority"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：priority"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "正确使用内置优先队列解决\"取最值\"类问题",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：priority"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：priority"
+            }
+          ],
+          "comment": "证据密度达到 L2 档"
+        },
+        {
+          "text": "在项目中应用堆解决 Top-K、调度、合并有序流等问题且复杂度正确",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：priority"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：priority"
+            }
+          ],
+          "comment": "证据密度达到 L3 档"
+        },
+        {
+          "text": "手写实现过堆且边界（空、单元素、重复值）正确",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能论证堆与有序数组/BST 在不同操作组合下的取舍",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "实现过堆的变体（索引堆、双堆、延迟删除）处理真实约束",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 50 处、分布于 5 个文件（其中源码文件 4 个）。"
+    },
+    {
+      "skillId": "ds.graph",
+      "level": 2,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "能用邻接表/矩阵表示图并解释空间差异",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "命中关键词：node"
+            },
+            {
+              "file": "test/store.test.js",
+              "note": "命中关键词：node"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "正确实现 BFS/DFS 遍历并避免重复访问",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "命中关键词：node"
+            },
+            {
+              "file": "test/store.test.js",
+              "note": "命中关键词：node"
+            }
+          ],
+          "comment": "证据密度达到 L2 档"
+        },
+        {
+          "text": "将真实问题建模为图（依赖、关系、路径）且建模合理",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "命中关键词：node"
+            },
+            {
+              "file": "test/store.test.js",
+              "note": "命中关键词：node"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "能判断连通性、环、层级等基本性质",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "处理加权/有向/带约束的图结构并说明表示选择的代价",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能论证图算法选型与数据规模的匹配（稀疏 vs 稠密）",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 19 处、分布于 6 个文件（其中源码文件 4 个）。"
+    },
+    {
+      "skillId": "net.http",
+      "level": 0,
+      "confidence": 0.4,
+      "criteria": [
+        {
+          "text": "正确发起/处理 HTTP 请求，理解方法与状态码语义",
+          "verdict": "partial",
+          "citations": [],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "能解释一次请求-响应的完整路径（客户端、DNS、服务器）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "在项目中正确处理头、查询参数、状态码与超时/重试",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能用工具（curl/抓包）诊断实际请求问题",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "理解缓存、连接复用、HTTPS/TLS 握手的机制并能据此优化或排障",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能论证 RESTful 约定或替代风格（RPC、GraphQL）的取舍",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 0 处、分布于 0 个文件（其中源码文件 0 个）。"
+    },
+    {
+      "skillId": "net.api",
+      "level": 1,
+      "confidence": 0.53,
+      "criteria": [
+        {
+          "text": "实现过对外 HTTP 接口，路由与动词使用合理",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：rest"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "响应格式一致（统一包裹/错误结构）",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：rest"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "资源建模清晰（名词化、层级、分页/过滤约定），输入有校验",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "错误响应可行动（明确的错误码、信息、状态码正确）",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "有接口契约（文档/OpenAPI）与版本化/兼容性意识",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能论证鉴权、幂等、限流等横切设计的选择",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 5 处、分布于 1 个文件（其中源码文件 1 个）。"
+    },
+    {
+      "skillId": "net.tcp",
+      "level": 0,
+      "confidence": 0.4,
+      "criteria": [
+        {
+          "text": "能解释 TCP 与 UDP 的核心差异及适用场景",
+          "verdict": "partial",
+          "citations": [],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "使用过 socket/网络库完成基本的收发",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "处理过流式传输的现实问题（分包/粘包、编码、心跳、断线重连）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "连接生命周期管理正确（超时、关闭、资源释放）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "设计过应用层协议（帧格式、握手、错误恢复）并论证",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能基于拥塞控制/背压原理诊断或优化传输行为",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 0 处、分布于 0 个文件（其中源码文件 0 个）。"
+    },
+    {
+      "skillId": "net.sec",
+      "level": 0,
+      "confidence": 0.5,
+      "criteria": [
+        {
+          "text": "理解注入/XSS/CSRF 的原理与基本防御（参数化、转义、token）",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：注入"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "不在代码中硬编码密钥/口令",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "在项目中落实防御（参数化查询、输出编码、CORS/头配置）并校验输入来源",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "密码等敏感数据处理正确（加盐哈希、不落日志）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "系统性威胁建模：识别信任边界并给出缓解（最小权限、审计）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "对会话/令牌的生成、存储、失效有完整且正确的设计",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 1 处、分布于 1 个文件（其中源码文件 1 个）。"
+    },
+    {
+      "skillId": "prog.syntax",
+      "level": 2,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "项目中存在能独立运行的源码，正确使用变量、运算与基本数据类型",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：function"
+            },
+            {
+              "file": "src/validate.js",
+              "note": "命中关键词：function、class"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "能读懂并小幅修改既有代码（存在对依赖库/模板代码的有意义改动）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：function"
+            },
+            {
+              "file": "src/validate.js",
+              "note": "命中关键词：function、class"
+            }
+          ],
+          "comment": "证据密度达到 L2 档"
+        },
+        {
+          "text": "综合运用分支、循环、集合等构造完成完整功能单元，而非仅拼接示例代码",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：function"
+            },
+            {
+              "file": "src/validate.js",
+              "note": "命中关键词：function、class"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "代码风格一致，能通过格式化/静态检查（含配置或结果痕迹）",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "针对语言特性做出取舍并能说明理由（如值语义 vs 引用、可变性控制）",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "使用语言中高级特性解决实际问题（如迭代器/生成器、解构、泛型约束）",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 21 处、分布于 7 个文件（其中源码文件 6 个）。"
+    },
+    {
+      "skillId": "prog.control",
+      "level": 2,
+      "confidence": 0.94,
+      "criteria": [
+        {
+          "text": "正确使用条件与循环表达业务规则",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：if、switch"
+            },
+            {
+              "file": "src/validate.js",
+              "note": "命中关键词：if"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "能识别并描述程序中的关键状态（如条目是否完成）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：if、switch"
+            },
+            {
+              "file": "src/validate.js",
+              "note": "命中关键词：if"
+            }
+          ],
+          "comment": "证据密度达到 L2 档"
+        },
+        {
+          "text": "状态转换集中、可追踪（如集中管理数据而非散落的标志位）",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：if、switch"
+            },
+            {
+              "file": "src/validate.js",
+              "note": "命中关键词：if"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "循环与条件覆盖边界情况（空输入、越界、终止条件）",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "用状态机/表驱动等方式治理复杂分支，代码可读性显著优于堆叠 if",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能解释状态设计的演进理由及替代方案",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 22 处、分布于 4 个文件（其中源码文件 4 个）。"
+    },
+    {
+      "skillId": "prog.functions",
+      "level": 3,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "能把重复逻辑提取为函数并正确传参/返回",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：function、export、import"
+            },
+            {
+              "file": "src/store.js",
+              "note": "命中关键词：function、export、import"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "项目拆分为多个源文件/模块，职责可辨认",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：function、export、import"
+            },
+            {
+              "file": "src/store.js",
+              "note": "命中关键词：function、export、import"
+            }
+          ],
+          "comment": "证据密度达到 L2 档"
+        },
+        {
+          "text": "模块间通过明确接口交互，无跨越边界的隐式耦合（如隐藏全局状态）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：function、export、import"
+            },
+            {
+              "file": "src/store.js",
+              "note": "命中关键词：function、export、import"
+            }
+          ],
+          "comment": "证据密度达到 L3 档"
+        },
+        {
+          "text": "函数职责单一，参数与返回值语义清晰，命名一致",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "抽象层次分明：核心逻辑与 I/O、展示分离，替换底层不影响上层",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能说明模块划分的权衡（合并 vs 拆分、依赖方向）",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 50 处、分布于 7 个文件（其中源码文件 6 个）。"
+    },
+    {
+      "skillId": "prog.types",
+      "level": 2,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "为核心概念选择了合适的基础数据结构并保持一致使用",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/validate.js",
+              "note": "命中关键词：type、validation"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：结构、validation"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "数据形态有约定可循（命名、结构统一）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/validate.js",
+              "note": "命中关键词：type、validation"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：结构、validation"
+            }
+          ],
+          "comment": "证据密度达到 L2 档"
+        },
+        {
+          "text": "存在显式的类型/结构定义或输入校验，非法数据被拒绝而非默默传播",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/validate.js",
+              "note": "命中关键词：type、validation"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：结构、validation"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "数据表示与领域语义对应（而非一切皆字符串/字典）",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "利用类型系统消除一类错误（可辨识联合、泛型约束、不可变数据等）",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能论证数据表示选择的代价（规范化 vs 便利、内存 vs 拷贝）",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 22 处、分布于 7 个文件（其中源码文件 5 个）。"
+    },
+    {
+      "skillId": "prog.io",
+      "level": 3,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "能正确读写文件并选择合理的编码/格式（如 JSON）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "test/store.test.js",
+              "note": "命中关键词：file、read、write"
+            },
+            {
+              "file": "src/store.js",
+              "note": "命中关键词：file、read、write"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "文件不存在、损坏等基础异常被处理",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "test/store.test.js",
+              "note": "命中关键词：file、read、write"
+            },
+            {
+              "file": "src/store.js",
+              "note": "命中关键词：file、read、write"
+            }
+          ],
+          "comment": "证据密度达到 L2 档"
+        },
+        {
+          "text": "持久化逻辑集中封装，数据格式有版本意识或迁移考虑",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "test/store.test.js",
+              "note": "命中关键词：file、read、write"
+            },
+            {
+              "file": "src/store.js",
+              "note": "命中关键词：file、read、write"
+            }
+          ],
+          "comment": "证据密度达到 L3 档"
+        },
+        {
+          "text": "写入具备基本一致性意识（如先写临时文件再替换）",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能论证持久化方案取舍（格式、位置、并发安全、体积）",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "处理真实故障模式：并发写、部分写入、磁盘异常",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 95 处、分布于 6 个文件（其中源码文件 4 个）。"
+    },
+    {
+      "skillId": "prog.cli",
+      "level": 2,
+      "confidence": 0.91,
+      "criteria": [
+        {
+          "text": "能解析命令行参数并分发到对应功能",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：argv、args、命令行"
+            },
+            {
+              "file": "README.md",
+              "note": "命中关键词：命令行"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "有基本的使用提示（-h/--help 或 README 示例）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：argv、args、命令行"
+            },
+            {
+              "file": "README.md",
+              "note": "命中关键词：命令行"
+            }
+          ],
+          "comment": "证据密度达到 L2 档"
+        },
+        {
+          "text": "错误用法有可读的报错与正确退出码，而非堆栈崩溃",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：argv、args、命令行"
+            },
+            {
+              "file": "README.md",
+              "note": "命中关键词：命令行"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "支持常见习惯（子命令或标志、默认值、管道/重定向友好输出）",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "交互设计有整体考量：输出可组合（机器可读模式）、进度反馈、破坏性操作确认",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能说明 CLI 与其他界面形态（Web/API）的取舍",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 30 处、分布于 3 个文件（其中源码文件 1 个）。"
+    },
+    {
+      "skillId": "prog.error",
+      "level": 3,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "对用户输入做基本校验，拒绝非法值而非崩溃或静默出错",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "命中关键词：error、try、catch"
+            },
+            {
+              "file": "src/validate.js",
+              "note": "命中关键词：error、throw"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "捕获可预期异常并给出可读提示",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "命中关键词：error、try、catch"
+            },
+            {
+              "file": "src/validate.js",
+              "note": "命中关键词：error、throw"
+            }
+          ],
+          "comment": "证据密度达到 L2 档"
+        },
+        {
+          "text": "错误有分类（用户错误 vs 程序缺陷），信息足以定位问题（上下文、原因链）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "命中关键词：error、try、catch"
+            },
+            {
+              "file": "src/validate.js",
+              "note": "命中关键词：error、throw"
+            }
+          ],
+          "comment": "证据密度达到 L3 档"
+        },
+        {
+          "text": "边界路径（空、超大、非法字符、重复操作）行为明确",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "系统性错误策略：自定义错误类型、恢复/回滚路径、日志与报错分离",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "失败测试或防御性设计表明对失败模式的预判",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 69 处、分布于 7 个文件（其中源码文件 6 个）。"
+    },
+    {
+      "skillId": "prog.fp",
+      "level": 2,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "使用 map/filter/reduce（或等价物）替代手写循环完成数据变换",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：map、filter"
+            },
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：map"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "理解回调/高阶函数的传参语义",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：map、filter"
+            },
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：map"
+            }
+          ],
+          "comment": "证据密度达到 L2 档"
+        },
+        {
+          "text": "数据变换管道清晰可组合，中间状态不可变或最小化",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "命中关键词：map、filter"
+            },
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：map"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "副作用集中于边界，核心逻辑可测试",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "自建高阶抽象（组合器、惰性序列、函数工厂）并说明适用边界",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能论证可变性/性能与函数式纯度的权衡",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 12 处、分布于 6 个文件（其中源码文件 5 个）。"
+    },
+    {
+      "skillId": "prog.tooling",
+      "level": 1,
+      "confidence": 0.6,
+      "criteria": [
+        {
+          "text": "项目有清单文件（依赖声明），安装即可运行",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "package.json",
+              "note": "命中关键词：script"
+            },
+            {
+              "file": "README.md",
+              "note": "命中关键词：依赖"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "常用操作脚本化（运行、测试），不依赖口口相传的命令",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "package.json",
+              "note": "命中关键词：script"
+            },
+            {
+              "file": "README.md",
+              "note": "命中关键词：依赖"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "配置有意识：lint/格式化/编译选项符合项目需要并能说明理由",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "依赖最小化，锁定版本，无无用依赖",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "工程链端到端可复现（环境、版本、构建产物），有证据（lockfile、CI 配置、说明）",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能论证工具链选型与简化空间",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 3 处、分布于 2 个文件（其中源码文件 0 个）。"
+    },
+    {
+      "skillId": "prog.concurrency",
+      "level": 1,
+      "confidence": 0.51,
+      "criteria": [
+        {
+          "text": "正确使用语言异步原语完成 I/O 等待，理解回调- promise - async 的关系",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "命中关键词：并发、锁"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "并发操作的结果被正确收集（如等待全部完成）",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "命中关键词：并发、锁"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "能识别并避免竞态（共享状态、乱序完成），错误在异步路径上被传播与处理",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "并发度有控制（限流、队列、批处理）",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "理解底层模型（事件循环/线程调度）并能解释死锁、饥饿、活锁等失败模式",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "项目中体现并发设计决策（同步边界、取消、超时）",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 2 处、分布于 1 个文件（其中源码文件 0 个）。"
+    },
+    {
+      "skillId": "sw.vcs",
+      "level": 1,
+      "confidence": 0.55,
+      "criteria": [
+        {
+          "text": "提交粒度合理、信息可读（描述\"为什么\"而非仅\"改了什么\"）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：log"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "能完成基本循环：修改、暂存、提交、推送",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：log"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "分支使用有策略（功能分支、合并/变基选择）并能解决普通冲突",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "历史可追溯（无大量 \"fix\"/\"update\" 噪声提交）",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能安全地进行历史改写（变基、回滚、摘取）并解释风险",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "协作场景下有明确的工作流约定并能传授他人",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 8 处、分布于 1 个文件（其中源码文件 1 个）。"
+    },
+    {
+      "skillId": "sw.docs",
+      "level": 1,
+      "confidence": 0.6,
+      "criteria": [
+        {
+          "text": "README 交代项目是什么、如何运行、如何使用",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "test/store.test.js",
+              "note": "命中关键词：comment、说明"
+            },
+            {
+              "file": "README.md",
+              "note": "命中关键词：说明"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "关键非显然逻辑有注释解释意图",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "test/store.test.js",
+              "note": "命中关键词：comment、说明"
+            },
+            {
+              "file": "README.md",
+              "note": "命中关键词：说明"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "文档结构服务读者（安装→使用→示例→FAQ），与代码行为一致",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "有决策记录或说明（为何选 A 不选 B）",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "文档是维护的一部分：随变更更新、有变更日志/接口文档",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能面向不同受众分层表达（用户文档 vs 开发者文档）",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 3 处、分布于 2 个文件（其中源码文件 1 个）。"
+    },
+    {
+      "skillId": "sw.testing",
+      "level": 3,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "存在可自动运行的测试，覆盖核心函数的典型输入",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：test"
+            },
+            {
+              "file": "test/store.test.js",
+              "note": "命中关键词：test"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "测试可重复、无外部依赖或依赖可控",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：test"
+            },
+            {
+              "file": "test/store.test.js",
+              "note": "命中关键词：test"
+            }
+          ],
+          "comment": "证据密度达到 L2 档"
+        },
+        {
+          "text": "测试覆盖边界与失败路径（空输入、非法值、异常分支），断言有意义",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：test"
+            },
+            {
+              "file": "test/store.test.js",
+              "note": "命中关键词：test"
+            }
+          ],
+          "comment": "证据密度达到 L3 档"
+        },
+        {
+          "text": "代码为可测性做了设计（依赖注入、纯函数分离）",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "测试策略分层（单元/集成），测试即规格（命名表达行为）",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "用测试驱动发现设计问题或修复过回归（有证据）",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 28 处、分布于 5 个文件（其中源码文件 3 个）。"
+    },
+    {
+      "skillId": "sw.debug",
+      "level": 2,
+      "confidence": 0.65,
+      "criteria": [
+        {
+          "text": "会用日志输出与最小复现来定位简单问题",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：log"
+            },
+            {
+              "file": "src/store.js",
+              "note": "命中关键词：修复"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "修复问题时能解释根因而非仅消除症状",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：log"
+            },
+            {
+              "file": "src/store.js",
+              "note": "命中关键词：修复"
+            }
+          ],
+          "comment": "证据密度达到 L2 档"
+        },
+        {
+          "text": "使用调试器/结构化日志系统性地缩小问题范围",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：log"
+            },
+            {
+              "file": "src/store.js",
+              "note": "命中关键词：修复"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "修复伴随回归测试或验证步骤",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "有假设-验证的问题解决记录（issue/提交描述体现推理链）",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能定位跨模块/异步/时序类疑难问题",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 9 处、分布于 2 个文件（其中源码文件 2 个）。"
+    },
+    {
+      "skillId": "sw.collab",
+      "level": 3,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "提交可评审的变更（小步、描述清楚、可独立理解）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：pr"
+            },
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：pr"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "能响应评审意见并迭代",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：pr"
+            },
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：pr"
+            }
+          ],
+          "comment": "证据密度达到 L2 档"
+        },
+        {
+          "text": "参与过双向评审：给他人有建设性的意见，接受意见并改进",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：pr"
+            },
+            {
+              "file": "test/commands.test.js",
+              "note": "命中关键词：pr"
+            }
+          ],
+          "comment": "证据密度达到 L3 档"
+        },
+        {
+          "text": "遵守并推动项目约定（风格、提交规范、PR 模板）",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能主导协作流程设计（分支策略、评审标准、发布节奏）并沉淀文档",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "处理过跨人变更冲突与责任边界的协调",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 63 处、分布于 6 个文件（其中源码文件 5 个）。"
+    },
+    {
+      "skillId": "sw.refactor",
+      "level": 0,
+      "confidence": 0.5,
+      "criteria": [
+        {
+          "text": "能识别明显坏味道（重复、超长函数、误导命名）并小步消除",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "命中关键词：命名"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "重命名/提取函数后行为不变",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "重构有测试保护，提交序列清晰（先测试后重构或小步交错）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "结构改善让后续需求变更更容易（有对比说明）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能设计渐进式重构路径（绞杀者、适配层）处理大面积遗留代码",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "在重构收益与业务风险间做出明确权衡并记录",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 1 处、分布于 1 个文件（其中源码文件 0 个）。"
+    },
+    {
+      "skillId": "sw.design",
+      "level": 2,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "理解单一职责并能按层组织代码（逻辑/存储/展示）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "命中关键词：di"
+            },
+            {
+              "file": "test/store.test.js",
+              "note": "命中关键词：di"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "能识别项目中的核心抽象并命名",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "命中关键词：di"
+            },
+            {
+              "file": "test/store.test.js",
+              "note": "命中关键词：di"
+            }
+          ],
+          "comment": "证据密度达到 L2 档"
+        },
+        {
+          "text": "依赖方向合理，具体实现可替换（接口/注入），核心逻辑独立可测",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "命中关键词：di"
+            },
+            {
+              "file": "test/store.test.js",
+              "note": "命中关键词：di"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "恰当运用常见模式解决真实问题而非堆砌",
+          "verdict": "met",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能对设计做演进式决策并记录权衡（简单性 vs 扩展点）",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "从需求变化中反推设计缺陷并调整边界",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 12 处、分布于 6 个文件（其中源码文件 5 个）。"
+    },
+    {
+      "skillId": "sw.ci",
+      "level": 1,
+      "confidence": 0.79,
+      "criteria": [
+        {
+          "text": "理解 CI 的价值：合并前自动运行检查",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：ci"
+            },
+            {
+              "file": "src/store.js",
+              "note": "命中关键词：ci"
+            }
+          ],
+          "comment": "证据密度达到 L1 档"
+        },
+        {
+          "text": "配置或使用过现成的 CI 流程",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "命中关键词：ci"
+            },
+            {
+              "file": "src/store.js",
+              "note": "命中关键词：ci"
+            }
+          ],
+          "comment": "证据部分覆盖"
+        },
+        {
+          "text": "搭建过基本流水线（lint+测试+构建），失败信息可定位",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "构建产物版本化，环境差异被管理",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "设计过含质量门禁与发布策略的完整管线（环境晋升、回滚）",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        },
+        {
+          "text": "能优化流水线（缓存、并行、失败快速反馈）并论证",
+          "verdict": "partial",
+          "citations": [],
+          "comment": ""
+        }
+      ],
+      "rationale": "关键词命中 4 处、分布于 4 个文件（其中源码文件 4 个）。"
+    }
+  ],
+  "redteam": {
+    "checks": [
+      {
+        "name": "readme_quality",
+        "title": "项目说明完整性",
+        "verdict": "pass",
+        "detail": "README 29 行"
+      },
+      {
+        "name": "tests_present",
+        "title": "自动化测试存在性",
+        "verdict": "pass",
+        "detail": "发现 2 个测试文件：test/commands.test.js、test/store.test.js"
+      },
+      {
+        "name": "provenance",
+        "title": "来源标注与原创性",
+        "verdict": "pass",
+        "detail": "未发现外部来源标记"
+      },
+      {
+        "name": "oversized_file",
+        "title": "巨型文件（疑似整体粘贴/生成）",
+        "verdict": "pass",
+        "detail": "无异常大文件"
+      },
+      {
+        "name": "stub_evidence",
+        "title": "证据充分性",
+        "verdict": "pass",
+        "detail": "源码约 403 行，证据充分"
+      }
+    ],
+    "overallRisk": "low"
+  },
+  "arbitration": {
+    "adjustments": [],
+    "notes": "红队未发现风险，维持取证结论。"
+  },
+  "effective": [
+    {
+      "skillId": "algo.complexity",
+      "assessedLevel": 1,
+      "effectiveLevel": 1,
+      "blockedBy": []
+    },
+    {
+      "skillId": "algo.sort",
+      "assessedLevel": 2,
+      "effectiveLevel": 2,
+      "blockedBy": []
+    },
+    {
+      "skillId": "algo.search",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "algo.recursion",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "algo.greedy",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "algo.dp",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "algo.graphalg",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "db.model",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "db.sql",
+      "assessedLevel": 2,
+      "effectiveLevel": 0,
+      "blockedBy": [
+        "db.model@L1"
+      ]
+    },
+    {
+      "skillId": "db.tx",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "db.perf",
+      "assessedLevel": 3,
+      "effectiveLevel": 0,
+      "blockedBy": [
+        "db.sql@L1"
+      ]
+    },
+    {
+      "skillId": "db.nosql",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "ds.array",
+      "assessedLevel": 2,
+      "effectiveLevel": 2,
+      "blockedBy": []
+    },
+    {
+      "skillId": "ds.string",
+      "assessedLevel": 2,
+      "effectiveLevel": 2,
+      "blockedBy": []
+    },
+    {
+      "skillId": "ds.stackqueue",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "ds.hash",
+      "assessedLevel": 3,
+      "effectiveLevel": 3,
+      "blockedBy": []
+    },
+    {
+      "skillId": "ds.tree",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "ds.heap",
+      "assessedLevel": 3,
+      "effectiveLevel": 0,
+      "blockedBy": [
+        "ds.tree@L1"
+      ]
+    },
+    {
+      "skillId": "ds.graph",
+      "assessedLevel": 2,
+      "effectiveLevel": 0,
+      "blockedBy": [
+        "ds.tree@L1"
+      ]
+    },
+    {
+      "skillId": "net.http",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "net.api",
+      "assessedLevel": 1,
+      "effectiveLevel": 0,
+      "blockedBy": [
+        "net.http@L1"
+      ]
+    },
+    {
+      "skillId": "net.tcp",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "net.sec",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "prog.syntax",
+      "assessedLevel": 2,
+      "effectiveLevel": 2,
+      "blockedBy": []
+    },
+    {
+      "skillId": "prog.control",
+      "assessedLevel": 2,
+      "effectiveLevel": 2,
+      "blockedBy": []
+    },
+    {
+      "skillId": "prog.functions",
+      "assessedLevel": 3,
+      "effectiveLevel": 3,
+      "blockedBy": []
+    },
+    {
+      "skillId": "prog.types",
+      "assessedLevel": 2,
+      "effectiveLevel": 2,
+      "blockedBy": []
+    },
+    {
+      "skillId": "prog.io",
+      "assessedLevel": 3,
+      "effectiveLevel": 3,
+      "blockedBy": []
+    },
+    {
+      "skillId": "prog.cli",
+      "assessedLevel": 2,
+      "effectiveLevel": 2,
+      "blockedBy": []
+    },
+    {
+      "skillId": "prog.error",
+      "assessedLevel": 3,
+      "effectiveLevel": 3,
+      "blockedBy": []
+    },
+    {
+      "skillId": "prog.fp",
+      "assessedLevel": 2,
+      "effectiveLevel": 2,
+      "blockedBy": []
+    },
+    {
+      "skillId": "prog.tooling",
+      "assessedLevel": 1,
+      "effectiveLevel": 1,
+      "blockedBy": []
+    },
+    {
+      "skillId": "prog.concurrency",
+      "assessedLevel": 1,
+      "effectiveLevel": 1,
+      "blockedBy": []
+    },
+    {
+      "skillId": "sw.vcs",
+      "assessedLevel": 1,
+      "effectiveLevel": 1,
+      "blockedBy": []
+    },
+    {
+      "skillId": "sw.docs",
+      "assessedLevel": 1,
+      "effectiveLevel": 1,
+      "blockedBy": []
+    },
+    {
+      "skillId": "sw.testing",
+      "assessedLevel": 3,
+      "effectiveLevel": 3,
+      "blockedBy": []
+    },
+    {
+      "skillId": "sw.debug",
+      "assessedLevel": 2,
+      "effectiveLevel": 2,
+      "blockedBy": []
+    },
+    {
+      "skillId": "sw.collab",
+      "assessedLevel": 3,
+      "effectiveLevel": 3,
+      "blockedBy": []
+    },
+    {
+      "skillId": "sw.refactor",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "sw.design",
+      "assessedLevel": 2,
+      "effectiveLevel": 2,
+      "blockedBy": []
+    },
+    {
+      "skillId": "sw.ci",
+      "assessedLevel": 1,
+      "effectiveLevel": 1,
+      "blockedBy": []
+    }
+  ],
+  "stats": {
+    "totalSkills": 41,
+    "litSkills": 22,
+    "byBranch": {
+      "algo": {
+        "total": 7,
+        "lit": 2,
+        "levelSum": 3
+      },
+      "db": {
+        "total": 5,
+        "lit": 0,
+        "levelSum": 0
+      },
+      "ds": {
+        "total": 7,
+        "lit": 3,
+        "levelSum": 7
+      },
+      "net": {
+        "total": 4,
+        "lit": 0,
+        "levelSum": 0
+      },
+      "prog": {
+        "total": 10,
+        "lit": 10,
+        "levelSum": 21
+      },
+      "sw": {
+        "total": 8,
+        "lit": 7,
+        "levelSum": 13
+      }
+    },
+    "durationMs": 81
+  }
+}

@@ -1,0 +1,184 @@
+# 分支：软件工程（sw）
+branch:
+  id: sw
+  name: 软件工程
+  color: "#a78bfa"
+  description: 让代码活得比作业久——测试、协作与持续演进。
+  skills:
+    - id: sw.vcs
+      name: 版本控制
+      tier: 1
+      summary: Git 的思维方式：提交、分支与历史叙事。
+      keywords: [git, commit, branch, merge, 版本, 提交, rebase, log]
+      prereqs: []
+      levels:
+        - level: 1
+          criteria:
+            - 提交粒度合理、信息可读（描述"为什么"而非仅"改了什么"）
+            - 能完成基本循环：修改、暂存、提交、推送
+        - level: 2
+          criteria:
+            - 分支使用有策略（功能分支、合并/变基选择）并能解决普通冲突
+            - 历史可追溯（无大量 "fix"/"update" 噪声提交）
+        - level: 3
+          criteria:
+            - 能安全地进行历史改写（变基、回滚、摘取）并解释风险
+            - 协作场景下有明确的工作流约定并能传授他人
+
+    - id: sw.docs
+      name: 文档与技术表达
+      tier: 1
+      summary: 让别人（和未来的自己）看懂：README、注释与设计记录。
+      keywords: [readme, doc, comment, 注释, 文档, 说明, adr, changelog]
+      prereqs: []
+      levels:
+        - level: 1
+          criteria:
+            - README 交代项目是什么、如何运行、如何使用
+            - 关键非显然逻辑有注释解释意图
+        - level: 2
+          criteria:
+            - 文档结构服务读者（安装→使用→示例→FAQ），与代码行为一致
+            - 有决策记录或说明（为何选 A 不选 B）
+        - level: 3
+          criteria:
+            - 文档是维护的一部分：随变更更新、有变更日志/接口文档
+            - 能面向不同受众分层表达（用户文档 vs 开发者文档）
+
+    - id: sw.testing
+      name: 自动化测试
+      tier: 2
+      summary: 用代码捍卫正确性：单元测试、边界覆盖与可测性设计。
+      keywords: [test, jest, vitest, pytest, spec, 测试, coverage, 单元, mock]
+      prereqs:
+        - skill: prog.functions
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 存在可自动运行的测试，覆盖核心函数的典型输入
+            - 测试可重复、无外部依赖或依赖可控
+        - level: 2
+          criteria:
+            - 测试覆盖边界与失败路径（空输入、非法值、异常分支），断言有意义
+            - 代码为可测性做了设计（依赖注入、纯函数分离）
+        - level: 3
+          criteria:
+            - 测试策略分层（单元/集成），测试即规格（命名表达行为）
+            - 用测试驱动发现设计问题或修复过回归（有证据）
+
+    - id: sw.debug
+      name: 调试与问题定位
+      tier: 2
+      summary: 系统地逼近真相：复现、定位、验证。
+      keywords: [debug, breakpoint, log, 日志, 断点, 定位, fix, bug, 修复]
+      prereqs:
+        - skill: prog.functions
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 会用日志输出与最小复现来定位简单问题
+            - 修复问题时能解释根因而非仅消除症状
+        - level: 2
+          criteria:
+            - 使用调试器/结构化日志系统性地缩小问题范围
+            - 修复伴随回归测试或验证步骤
+        - level: 3
+          criteria:
+            - 有假设-验证的问题解决记录（issue/提交描述体现推理链）
+            - 能定位跨模块/异步/时序类疑难问题
+
+    - id: sw.collab
+      name: 协作流程
+      tier: 2
+      summary: 与他人合写代码：PR、评审与约定。
+      keywords: [pull request, review, pr, 协作, 评审, issue,贡献, contribution]
+      prereqs:
+        - skill: sw.vcs
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 提交可评审的变更（小步、描述清楚、可独立理解）
+            - 能响应评审意见并迭代
+        - level: 2
+          criteria:
+            - 参与过双向评审：给他人有建设性的意见，接受意见并改进
+            - 遵守并推动项目约定（风格、提交规范、PR 模板）
+        - level: 3
+          criteria:
+            - 能主导协作流程设计（分支策略、评审标准、发布节奏）并沉淀文档
+            - 处理过跨人变更冲突与责任边界的协调
+
+    - id: sw.refactor
+      name: 重构与代码整洁
+      tier: 3
+      summary: 在不改变行为的前提下改善结构：识别坏味道、小步演进。
+      keywords: [refactor, 重构, clean code, 坏味道, 抽象, 命名, 简化]
+      prereqs:
+        - skill: prog.functions
+          minLevel: 2
+        - skill: sw.testing
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 能识别明显坏味道（重复、超长函数、误导命名）并小步消除
+            - 重命名/提取函数后行为不变
+        - level: 2
+          criteria:
+            - 重构有测试保护，提交序列清晰（先测试后重构或小步交错）
+            - 结构改善让后续需求变更更容易（有对比说明）
+        - level: 3
+          criteria:
+            - 能设计渐进式重构路径（绞杀者、适配层）处理大面积遗留代码
+            - 在重构收益与业务风险间做出明确权衡并记录
+
+    - id: sw.design
+      name: 设计与抽象
+      tier: 3
+      summary: 面向变化设计：职责划分、依赖方向与模式运用。
+      keywords: [design pattern, architecture, 架构, 设计, 抽象, 接口, 依赖注入, di, mvc, 分层]
+      prereqs:
+        - skill: prog.types
+          minLevel: 1
+        - skill: sw.testing
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 理解单一职责并能按层组织代码（逻辑/存储/展示）
+            - 能识别项目中的核心抽象并命名
+        - level: 2
+          criteria:
+            - 依赖方向合理，具体实现可替换（接口/注入），核心逻辑独立可测
+            - 恰当运用常见模式解决真实问题而非堆砌
+        - level: 3
+          criteria:
+            - 能对设计做演进式决策并记录权衡（简单性 vs 扩展点）
+            - 从需求变化中反推设计缺陷并调整边界
+
+    - id: sw.ci
+      name: 持续集成与交付
+      tier: 3
+      summary: 让机器守护主干：自动检查、构建与发布管线。
+      keywords: [ci, cd, pipeline, github action, workflow, 持续集成, 构建, 部署, release]
+      prereqs:
+        - skill: sw.vcs
+          minLevel: 1
+        - skill: sw.testing
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 理解 CI 的价值：合并前自动运行检查
+            - 配置或使用过现成的 CI 流程
+        - level: 2
+          criteria:
+            - 搭建过基本流水线（lint+测试+构建），失败信息可定位
+            - 构建产物版本化，环境差异被管理
+        - level: 3
+          criteria:
+            - 设计过含质量门禁与发布策略的完整管线（环境晋升、回滚）
+            - 能优化流水线（缓存、并行、失败快速反馈）并论证

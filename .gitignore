@@ -1,0 +1,13 @@
+node_modules/
+dist/
+# 本地安全扫描器的会话状态，不属于项目内容
+.mimosa/
+# 回归门禁每次运行的重生成产物不追踪；reports/ 下的真实评测报告（含 deepseek 报告）作为可复现证据入库
+reports/regression/
+server.log
+*.log
+.DS_Store
+preview.log
+# 参赛提交产物不入库（zip 含队长手机号命名，且体积随视频增长）
+submission/提交包/
+submission/*.zip

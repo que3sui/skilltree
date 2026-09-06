@@ -1,0 +1,41 @@
+# 电子信息与嵌入式 · 分级要求（班型 → 节点最低等级）——LLM 组装草稿，待课程教师审阅
+- 班型: "竞赛班"  # 面向电子设计竞赛与硬件 Hackathon 的高强度训练，要求系统级技能达到迁移与权衡水平，方法技能达到独立应用水平。
+  - {skill: "circuit.analysis", minLevel: 3}
+  - {skill: "circuit.analog", minLevel: 3}
+  - {skill: "circuit.signals", minLevel: 3}
+  - {skill: "digital.logic", minLevel: 3}
+  - {skill: "digital.interface", minLevel: 3}
+  - {skill: "embedded.mcu", minLevel: 3}
+  - {skill: "embedded.rtos", minLevel: 3}
+  - {skill: "embedded.driver", minLevel: 3}
+  - {skill: "engineering.pcb", minLevel: 3}
+  - {skill: "engineering.integration", minLevel: 3}
+  - {skill: "lib.vcs", minLevel: 2}
+  - {skill: "lib.testing", minLevel: 2}
+  - {skill: "lib.doc", minLevel: 2}
+  - {skill: "lib.debug", minLevel: 2}
+  - {skill: "lib.search", minLevel: 2}
+  - {skill: "lib.abstract", minLevel: 2}
+  - {skill: "lib.performance", minLevel: 2}
+  - {skill: "lib.experiment", minLevel: 2}
+  - {skill: "lib.literature", minLevel: 2}
+- 班型: "课程班"  # 面向嵌入式课程设计与基础实验，要求系统级技能达到独立应用水平，方法技能达到认知与模仿水平。
+  - {skill: "circuit.analysis", minLevel: 2}
+  - {skill: "circuit.analog", minLevel: 2}
+  - {skill: "circuit.signals", minLevel: 2}
+  - {skill: "digital.logic", minLevel: 2}
+  - {skill: "digital.interface", minLevel: 2}
+  - {skill: "embedded.mcu", minLevel: 2}
+  - {skill: "embedded.rtos", minLevel: 2}
+  - {skill: "embedded.driver", minLevel: 2}
+  - {skill: "engineering.pcb", minLevel: 2}
+  - {skill: "engineering.integration", minLevel: 2}
+  - {skill: "lib.vcs", minLevel: 1}
+  - {skill: "lib.testing", minLevel: 1}
+  - {skill: "lib.doc", minLevel: 1}
+  - {skill: "lib.debug", minLevel: 1}
+  - {skill: "lib.search", minLevel: 1}
+  - {skill: "lib.abstract", minLevel: 1}
+  - {skill: "lib.performance", minLevel: 1}
+  - {skill: "lib.experiment", minLevel: 1}
+  - {skill: "lib.literature", minLevel: 1}

@@ -1,0 +1,114 @@
+# 分支：数据库（db）
+branch:
+  id: db
+  name: 数据库
+  color: "#ef4444"
+  description: 数据是系统的记忆——建模、查询、一致与性能。
+  skills:
+    - id: db.model
+      name: 数据建模与关系模型
+      tier: 1
+      summary: 把现实抽象为表：实体、关系与约束。
+      keywords: [schema, table, entity, relation, 建模, 表, 外键, primary, 字段]
+      prereqs: []
+      levels:
+        - level: 1
+          criteria:
+            - 能将业务对象表示为带主键的表并建立基本关系
+            - 字段类型与约束（非空、唯一）使用合理
+        - level: 2
+          criteria:
+            - 关系设计正确（一对多/多对多），消除明显冗余（符合基本范式）
+            - 模式演进有考虑（迁移脚本或版本记录）
+        - level: 3
+          criteria:
+            - 能论证规范化与反范式的取舍（读放大 vs 写放大）
+            - 建模体现对业务约束的完整捕获（部分唯一、复合键、软删除策略）
+
+    - id: db.sql
+      name: SQL 查询
+      tier: 2
+      summary: 声明式地要数据：连接、聚合与子查询。
+      keywords: [sql, select, join, group, query, 查询, where, 聚合, sqlite, mysql, postgres]
+      prereqs:
+        - skill: db.model
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 正确编写单表与简单连接查询，过滤与排序符合需求
+            - 理解 NULL 语义与聚合函数行为
+        - level: 2
+          criteria:
+            - 熟练使用多表连接、分组聚合、子查询/CTE 解决实际报表类需求
+            - 参数化查询，无拼接注入风险
+        - level: 3
+          criteria:
+            - 能读写复杂查询（窗口函数、递归 CTE）并优化可读性
+            - 能分析查询语义陷阱（重复行、连接放大、聚合时机）
+
+    - id: db.tx
+      name: 事务与一致性
+      tier: 3
+      summary: 并发世界的契约：ACID、隔离级别与冲突。
+      keywords: [transaction, acid, commit, rollback, 事务, 隔离, isolation, 一致性, 死锁]
+      prereqs:
+        - skill: db.sql
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 理解事务的原子性并能正确开启/提交/回滚
+            - 能解释脏读、不可重复读的直观含义
+        - level: 2
+          criteria:
+            - 在应用中正确圈定事务边界（多步写入的成败一致）
+            - 理解隔离级别与常见并发异常的对应关系
+        - level: 3
+          criteria:
+            - 能分析并解决死锁/长事务问题（加锁顺序、超时、重试）
+            - 对一致性需求做出有依据的隔离级别/乐观锁选型
+
+    - id: db.perf
+      name: 索引与查询优化
+      tier: 3
+      summary: 让查询快起来：索引原理、执行计划与实证优化。
+      keywords: [index, explain, 索引, 优化, 慢查询, btree, 执行计划, partition]
+      prereqs:
+        - skill: db.sql
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 理解索引加速查找的原理与代价（写入放大、存储）
+            - 能为主键/外键/常用过滤字段建立索引
+        - level: 2
+          criteria:
+            - 使用执行计划（EXPLAIN）定位全表扫描并针对性建索引
+            - 能识别索引失效写法（函数包裹、类型不匹配、前导通配）
+        - level: 3
+          criteria:
+            - 系统性优化案例：测量→分析→改写/索引→复测，并保留证据
+            - 理解存储引擎层面的代价（页、缓冲、WAL）并能解释选型
+
+    - id: db.nosql
+      name: 非关系型存储
+      tier: 2
+      summary: 超越表格：文档、键值与缓存的适用边界。
+      keywords: [redis, mongo, kv, cache, 缓存, 文档, nosql, memcached, kvstore]
+      prereqs:
+        - skill: db.model
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 能说出文档/键值/关系库的核心差异与典型场景
+            - 正确使用一种非关系存储完成读写
+        - level: 2
+          criteria:
+            - 在项目中合理引入（如缓存层、会话存储）并处理失效/一致性
+            - 理解其弱事务/弱模式带来的边界并防御
+        - level: 3
+          criteria:
+            - 能论证存储选型（数据形态、访问模式、一致性需求）
+            - 处理过真实问题：缓存击穿/穿透、淘汰策略、序列化兼容

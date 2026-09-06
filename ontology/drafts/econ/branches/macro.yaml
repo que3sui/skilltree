@@ -1,0 +1,108 @@
+branch:
+  id: "macro"
+  name: "宏观经济分析"
+  color: "#8F5E3B"
+  description: "国民收入核算、增长理论、短期波动与开放经济的模型求解与政策分析能力。"
+  skills:
+    - id: "macro.national-accounting"
+      name: "国民收入核算分析"
+      summary: "运用 GDP 三种核算方法与平减指数进行宏观经济度量与恒等式推导。"
+      keywords:
+        - "GDP"
+        - "平减指数"
+        - "国民收入恒等式"
+        - "实际与名义变量"
+      tier: 0
+      prereqs: []
+      levels:
+        - level: 1
+          criteria:
+            - "能区分 GDP 的三种核算方法（生产法、收入法、支出法）并解释其等价性。"
+            - "能计算名义 GDP、实际 GDP 与 GDP 平减指数。"
+        - level: 2
+          criteria:
+            - "能独立从给定数据完成国民收入核算恒等式的推导与验证。"
+            - "能解释 GDP 作为福利度量指标的局限性，并讨论替代指标。"
+        - level: 3
+          criteria:
+            - "能比较不同国家或时期的核算口径差异对经济分析结论的影响。"
+            - "能在非市场活动、环境成本等扩展核算框架下，评估传统 GDP 度量的适用性并提出修正方案。"
+    - id: "macro.growth-theory"
+      name: "经济增长模型分析"
+      summary: "运用索洛模型与增长核算分解分析长期经济增长的驱动因素与收敛性。"
+      keywords:
+        - "索洛模型"
+        - "稳态"
+        - "黄金律"
+        - "增长核算"
+        - "收敛"
+      tier: 1
+      prereqs:
+        - skill: "macro.national-accounting"
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - "能写出索洛模型的基本方程，并求解稳态资本存量与产出。"
+            - "能解释储蓄率、人口增长率变化对稳态的影响并作图说明。"
+        - level: 2
+          criteria:
+            - "能独立完成增长核算分解，将产出增长归因于资本、劳动与全要素生产率。"
+            - "能判断经济体是否处于黄金律水平，并计算最优储蓄率。"
+        - level: 3
+          criteria:
+            - "能比较索洛模型与内生增长模型（如 AK 模型、Romer 模型）对长期增长解释的差异。"
+            - "能评估条件收敛与绝对收敛假说在现实数据中的适用性，并设计检验方案。"
+    - id: "macro.short-run-fluctuation"
+      name: "短期波动与政策分析"
+      summary: "运用 IS-LM 与 AD-AS 模型分析短期经济波动与财政货币政策效果。"
+      keywords:
+        - "IS-LM"
+        - "AD-AS"
+        - "政策乘数"
+        - "财政政策"
+        - "货币政策"
+        - "挤出效应"
+      tier: 1
+      prereqs:
+        - skill: "macro.national-accounting"
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - "能推导 IS 曲线与 LM 曲线，并求解均衡产出与利率。"
+            - "能作图说明财政扩张与货币扩张对均衡的影响。"
+        - level: 2
+          criteria:
+            - "能独立计算政府支出乘数与税收乘数，并解释挤出效应的机制。"
+            - "能运用 AD-AS 模型分析供给冲击与需求冲击的短期与长期效应。"
+        - level: 3
+          criteria:
+            - "能比较不同模型设定（如流动性陷阱、古典情形）下政策效果的差异，并判断现实经济所处情形。"
+            - "能评估政策时滞、预期形成方式对政策有效性的影响，并提出改进分析框架。"
+    - id: "macro.open-economy"
+      name: "开放经济与通胀分析"
+      summary: "运用汇率决定理论、购买力平价与菲利普斯曲线分析开放经济与通胀动态。"
+      keywords:
+        - "汇率"
+        - "购买力平价"
+        - "菲利普斯曲线"
+        - "通胀预期"
+        - "蒙代尔-弗莱明"
+      tier: 2
+      prereqs:
+        - skill: "macro.short-run-fluctuation"
+          minLevel: 2
+      levels:
+        - level: 1
+          criteria:
+            - "能解释购买力平价的绝对与相对形式，并计算隐含汇率。"
+            - "能画出菲利普斯曲线并解释通胀与失业的短期替代关系。"
+        - level: 2
+          criteria:
+            - "能独立运用蒙代尔-弗莱明模型分析不同汇率制度下财政与货币政策的有效性。"
+            - "能区分预期通胀与供给冲击对菲利普斯曲线位置的影响。"
+        - level: 3
+          criteria:
+            - "能比较不同汇率制度（固定、浮动、管理浮动）对宏观经济稳定的影响，并评估政策选择。"
+            - "能在理性预期或适应性预期框架下，评估菲利普斯曲线的长期垂直性及其政策含义。"

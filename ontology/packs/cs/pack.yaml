@@ -1,0 +1,23 @@
+# 建木技能本体 · 计算机与软件工程（cs）
+#
+# 目录即仓库：本文件是包元信息，branches/*.yaml 每个文件是一个分支。
+# 社区通过 PR 修订技能与 rubric —— 评价标准公开、版本化、可追溯，是与任课教师/助教脱钩的根本。
+# 修改 rubric 请在 PR 描述中说明理由与影响面；reviewer 角色见 docs/DESIGN.zh.md 社区治理一节。
+
+schemaVersion: 1
+id: cs
+name: 计算机与软件工程
+version: 0.1.0
+description: >
+  面向本科计算机类课程的技能图谱种子。等级语义对所有分支统一；
+  rubric 编写原则：可观察（能从项目证据中判定）、行为化（描述做了什么而非知道什么）、可证伪（红队能质疑）。
+levelSemantics:
+  - level: 1
+    title: 认知与模仿
+    description: 能在指导下完成；能读懂、解释并小幅修改既有实现。
+  - level: 2
+    title: 独立应用
+    description: 能脱离指导，在真实小型项目中正确、完整地运用，含常见边界情况。
+  - level: 3
+    title: 迁移与权衡
+    description: 能跨场景迁移，理解方法边界与代价，做出取舍并清楚说明理由。

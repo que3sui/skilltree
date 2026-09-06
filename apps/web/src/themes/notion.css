@@ -1,0 +1,100 @@
+/* ---------------- 主题层：Notion 式温暖纸感浅色（?theme=notion） ----------------
+   只覆盖令牌与少量组件形态，布局不动。
+   暖纸底上一张张纯白卡片分层，边框压到发丝级；科大蓝 #004098 是唯一强调色，
+   稳而不跳；无渐变、无发光、阴影极轻，适合长时间阅读。 */
+
+html[data-theme="notion"] {
+  --bg: #f7f6f3; /* 暖纸底：顶栏/画布/面板共用“一张纸” */
+  --surface: #ffffff; /* 卡片与阅读面：纯白 */
+  --surface-2: #f1efec; /* 悬停/按压/进度轨道：比纸略深一档的暖灰 */
+  --line: #e7e4dc; /* 发丝线：暖灰，几乎不可见 */
+  --line-2: #d8d4c8; /* 需要一点存在感的边：蜂窝描边、卡片边、输入框 */
+  --text: #37352f; /* 暖黑正文，白底约 12.3:1 */
+  --text-2: #5f5d58; /* 次级暖灰，白底约 6.5:1 */
+  --text-3: #8a867c; /* 三阶注脚灰 */
+  --accent: #004098; /* 科大蓝：点亮计数/进度/主按钮/选中态的唯一重色 */
+  --accent-soft: rgba(0, 64, 152, 0.28);
+  --amber: #94620a; /* 暖棕黄警示，贴纸感不发荧光 */
+  --amber-soft: rgba(148, 98, 10, 0.4);
+  --green: #1a7f50;
+  --green-soft: rgba(26, 127, 80, 0.3);
+  --red: #c43a2f;
+  --red-soft: rgba(196, 58, 47, 0.34);
+  --pip: #ddd8ce; /* 未点亮等级点：暖灰 */
+  --edge-hover: #a9a294;
+  --legend-lit: #1a7f50;
+  --link: #0a52ba;
+  --link-bg: rgba(10, 82, 186, 0.07);
+  --mask: rgba(42, 37, 28, 0.32); /* 暖黑蒙层，不往灰蓝里偏 */
+  --focus-border: #7295cd;
+  --log-pct: #8f8b80;
+  --deck-card-bg: #ffffff;
+  --deck-shadow: 0 1px 2px rgba(55, 53, 47, 0.05), 0 12px 32px rgba(61, 54, 40, 0.09);
+  --hex-digit: rgba(255, 255, 255, 0.92);
+  --btn-hover-border: #c7c1b4;
+  --radius: 10px;
+}
+
+/* 主按钮：科大蓝实底白字 —— 纸面上唯一的重色块，稳住视觉锚点 */
+html[data-theme="notion"] .primary-btn {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+html[data-theme="notion"] .primary-btn:hover {
+  background: #0a52ba;
+  border-color: #0a52ba;
+}
+
+/* 分段选中态：蓝字 + 淡蓝纸底，不用实底，保持安静 */
+html[data-theme="notion"] .segment button.seg-on {
+  background: rgba(0, 64, 152, 0.08);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* 阅读面（侧栏/抽屉）用纯白，与画布暖纸底分层 */
+html[data-theme="notion"] .side-panel,
+html[data-theme="notion"] .drawer {
+  background: var(--surface);
+}
+
+/* 白页上的输入/日志：暖纸内凹 + 略深边，摸得到边界 */
+html[data-theme="notion"] .field input,
+html[data-theme="notion"] .field select,
+html[data-theme="notion"] .eval-log {
+  background: var(--bg);
+  border-color: var(--line-2);
+}
+
+/* 纸面上的下拉框：边框加深一档才可见 */
+html[data-theme="notion"] .report-select,
+html[data-theme="notion"] .pack-select {
+  border-color: var(--line-2);
+}
+
+/* 圆角整体略放大：控件 9px，路径/小卡 10px，层叠大卡 12px */
+html[data-theme="notion"] .segment,
+html[data-theme="notion"] .primary-btn,
+html[data-theme="notion"] .ghost-btn,
+html[data-theme="notion"] .report-select,
+html[data-theme="notion"] .pack-select,
+html[data-theme="notion"] .field input,
+html[data-theme="notion"] .field select,
+html[data-theme="notion"] .eval-log,
+html[data-theme="notion"] .eval-error {
+  border-radius: 9px;
+}
+
+html[data-theme="notion"] .sp-path,
+html[data-theme="notion"] .sp-pick {
+  border-radius: 10px;
+}
+
+html[data-theme="notion"] .deck-card {
+  border-radius: 12px;
+}
+
+/* 要点一：分层全靠“暖纸 #f7f6f3 → 纯白卡片”的底色差与留白完成，边框退成发丝线，阴影轻到只剩贴纸感。 */
+/* 要点二：科大蓝 #004098 是纸面上唯一重色，只出现在点亮计数/进度/主按钮/选中态；主按钮实底、选中态淡蓝纸，稳而不跳。 */

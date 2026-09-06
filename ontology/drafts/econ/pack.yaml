@@ -1,0 +1,12 @@
+# 经济学 · 本体草稿（deepseek-v4-pro @ api.llm.ustc.edu.cn（temperature=0, json mode, stream） 组装，待人工审阅后 PR 立法）
+# 组装输入：专业定位；课程大纲：syllabus-econ.md
+
+schemaVersion: 1
+id: "econ"
+name: "经济学"
+version: "0.1.0"
+description: "用经济理论与数据回答现实问题的能力体系：覆盖微观—宏观—计量三主线，从模型推导、数据获取与清洗、实证检验到政策分析写作的完整闭环。"
+levelSemantics:
+  - {level: 1, title: 认知与模仿, description: 读懂既有实现，在指导下修改与套用}
+  - {level: 2, title: 独立应用, description: 面对新问题独立写出正确实现，处理边界情况}
+  - {level: 3, title: 迁移与权衡, description: 跨场景迁移，论证方案取舍，评估风险}

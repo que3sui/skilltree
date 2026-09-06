@@ -1,0 +1,188 @@
+branch:
+  id: "engineering"
+  name: "工程实践与方法"
+  color: "#6A994E"
+  description: "贯穿硬件项目的工程方法：版本控制、测试验证、调试、文档化与技术检索。"
+  skills:
+    - id: "lib.vcs"
+      name: "版本控制"
+      summary: "用 Git 等版本系统管理工作成果，形成可追溯的演进历史。"
+      keywords:
+        - "git"
+        - "commit"
+        - "push"
+        - "提交"
+        - "分支"
+        - "版本控制"
+      tier: 0
+      prereqs: []
+      levels:
+        - level: 1
+          criteria:
+            - "能对项目做有意义的原子提交，提交说明写清做了什么与为什么。"
+            - "能查看历史与差异，定位某次改动是谁何时为何引入。"
+        - level: 2
+          criteria:
+            - "能用分支隔离实验性改动，合并回主线时解决冲突且不丢失工作。"
+            - "仓库历史呈渐进分布（多次有意义的提交），而非一次性倾倒。"
+        - level: 3
+          criteria:
+            - "能设计分支策略（特性分支/评审流），并论证其对协作与回滚成本的影响。"
+    - id: "lib.testing"
+      name: "测试与验证"
+      summary: "为结论建立可重复的检验手段——单元测试、对照实验或复算检验。"
+      keywords:
+        - "测试"
+        - "单元测试"
+        - "assert"
+        - "断言"
+        - "验证"
+        - "test_"
+        - "复现"
+      tier: 1
+      prereqs: []
+      levels:
+        - level: 1
+          criteria:
+            - "能运行项目自带的测试/检验脚本并解读结果。"
+            - "能为单个函数或计算步骤写出最小验证用例。"
+        - level: 2
+          criteria:
+            - "能为关键路径建立成组用例，覆盖边界与异常输入。"
+            - "测试可重复执行，不依赖特定机器状态或人工干预。"
+        - level: 3
+          criteria:
+            - "能设计检验策略并论证覆盖范围与遗漏风险，失败用例能定位到具体环节。"
+    - id: "lib.doc"
+      name: "成果文档化"
+      summary: "让他人不看源码也能使用与复现你的成果——README、报告或说明文档。"
+      keywords:
+        - "README"
+        - "文档"
+        - "报告"
+        - "说明"
+        - "注释"
+        - "markdown"
+      tier: 1
+      prereqs: []
+      levels:
+        - level: 1
+          criteria:
+            - "仓库含 README，写明项目是什么、如何运行、依赖什么。"
+            - "步骤说明按顺序可跟随，无跳步。"
+        - level: 2
+          criteria:
+            - "他人按文档可在干净环境复现主要结果。"
+            - "文档解释关键设计选择，而非罗列操作。"
+        - level: 3
+          criteria:
+            - "文档分层组织（快速上手/深入细节/常见问题），并随成果演进保持一致。"
+    - id: "lib.debug"
+      name: "系统化调试"
+      summary: "面对错误不猜：定位、隔离、最小复现、修复、回归验证。"
+      keywords:
+        - "调试"
+        - "排错"
+        - "复现"
+        - "日志"
+        - "串口"
+        - "print"
+      tier: 1
+      prereqs: []
+      levels:
+        - level: 1
+          criteria:
+            - "能读懂错误信息并定位到相关文件与行。"
+            - "能用打印/日志缩小问题范围。"
+        - level: 2
+          criteria:
+            - "能构造最小复现用例，把问题与无关因素隔离。"
+            - "修复后能说明根因，而非只消除症状。"
+        - level: 3
+          criteria:
+            - "能对复杂问题建立假设-验证循环并留下排查记录，修复附回归用例。"
+    - id: "lib.search"
+      name: "技术检索与甄别"
+      summary: "检索文档、论文与既有方案，甄别质量并正确引用。"
+      keywords:
+        - "检索"
+        - "文档"
+        - "论文"
+        - "引用"
+        - "datasheet"
+        - "手册"
+      tier: 0
+      prereqs: []
+      levels:
+        - level: 1
+          criteria:
+            - "能用准确关键词找到官方文档或权威资料解决具体问题。"
+        - level: 2
+          criteria:
+            - "能对比多个来源并选择可靠方案，注明来源与版本。"
+            - "借鉴的代码或方法有出处标注。"
+        - level: 3
+          criteria:
+            - "能系统检索领域方案（含论文），综合评估适用性并说明取舍。"
+    - id: "engineering.pcb"
+      name: "PCB 设计与硬件实现"
+      summary: "完成原理图绘制、PCB 布局布线、制板与硬件调试，处理信号完整性、电源完整性与可制造性问题。"
+      keywords:
+        - "原理图"
+        - "PCB"
+        - "布局"
+        - "布线"
+        - "信号完整性"
+        - "电源"
+        - "封装"
+        - "立创"
+      tier: 2
+      prereqs:
+        - skill: "circuit.analog"
+          minLevel: 2
+        - skill: "digital.interface"
+          minLevel: 2
+      levels:
+        - level: 1
+          criteria:
+            - "能按给定原理图使用 EDA 工具完成简单 PCB 布局布线并生成制造文件。"
+            - "能复述信号完整性与电源完整性的基本概念（串扰、去耦、地弹）。"
+        - level: 2
+          criteria:
+            - "能独立完成中等复杂度电路板的原理图设计与 PCB 布局布线，满足基本电气规则。"
+            - "能独立进行硬件调试，使用示波器、万用表等仪器定位并解决硬件故障。"
+        - level: 3
+          criteria:
+            - "能在层数、成本、信号质量与可制造性之间权衡，优化高速或混合信号 PCB 设计。"
+            - "能将 DFM/DFT 原则迁移到量产硬件设计中，处理 EMC 等工程认证问题。"
+    - id: "engineering.integration"
+      name: "软硬件系统集成"
+      summary: "将电路、固件、软件与机械结构集成为完整系统，进行联调、系统测试与性能验证。"
+      keywords:
+        - "集成"
+        - "联调"
+        - "系统测试"
+        - "接口"
+        - "可靠性"
+        - "验收"
+        - "整机"
+        - "组装"
+      tier: 3
+      prereqs:
+        - skill: "embedded.mcu"
+          minLevel: 2
+        - skill: "engineering.pcb"
+          minLevel: 2
+      levels:
+        - level: 1
+          criteria:
+            - "能按集成方案连接各子系统，完成基本功能联调并记录问题。"
+            - "能复述系统测试的基本流程（功能测试、性能测试、可靠性测试）。"
+        - level: 2
+          criteria:
+            - "能独立制定系统集成计划，协调软硬件接口并完成端到端功能验证。"
+            - "能独立执行系统级测试，分析测试数据并定位跨模块问题。"
+        - level: 3
+          criteria:
+            - "能在集成策略（自顶向下/自底向上/大爆炸）之间权衡，降低集成风险。"
+            - "能将系统集成方法迁移到多学科复杂产品中，处理可靠性、可维护性与量产一致性。"

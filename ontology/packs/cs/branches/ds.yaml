@@ -1,0 +1,158 @@
+# 分支：数据结构（ds）
+branch:
+  id: ds
+  name: 数据结构
+  color: "#10b981"
+  description: 组织数据的方寸之间——从线性表到图。
+  skills:
+    - id: ds.array
+      name: 线性结构：数组与链表
+      tier: 1
+      summary: 最基本的数据组织：顺序存储与链式存储的特性和操作。
+      keywords: [array, list, linked, 数组, 链表, 列表, slice, vector]
+      prereqs: []
+      levels:
+        - level: 1
+          criteria:
+            - 正确使用数组/列表完成增删改查与遍历
+            - 能解释索引访问与插入删除的代价差异
+        - level: 2
+          criteria:
+            - 在项目中依据操作模式选择数组或链表并能说明理由
+            - 手写实现过链表（或等价结构）且边界正确（头尾、空表）
+        - level: 3
+          criteria:
+            - 能分析连续 vs 链式存储在缓存、内存分配上的实际影响
+            - 实现过带容量策略的动态结构（扩容、缩容）并论证参数
+
+    - id: ds.string
+      name: 字符串与文本处理
+      tier: 1
+      summary: 编码、切分、匹配——程序里最常见的数据形态。
+      keywords: [string, char, encode, utf, 正则, regex, split, 文本]
+      prereqs:
+        - skill: ds.array
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 正确进行字符串构造、切分、拼接与格式化
+            - 处理空串、特殊字符等基本情况不出错
+        - level: 2
+          criteria:
+            - 有编码意识（UTF-8、转义），跨来源的文本被规范化处理
+            - 使用正则或解析器解决匹配/提取问题且模式可读
+        - level: 3
+          criteria:
+            - 为文本处理选择合适算法/结构并能分析复杂度（如 KMP、Trie）
+            - 处理大规模文本的流式/分块策略并论证
+
+    - id: ds.stackqueue
+      name: 栈与队列
+      tier: 1
+      summary: 受限访问带来秩序：LIFO 与 FIFO 的场景化运用。
+      keywords: [stack, queue, deque, 栈, 队列, fifo, lifo]
+      prereqs:
+        - skill: ds.array
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 能解释栈与队列的语义差异并举出典型场景
+            - 正确使用内置栈/队列结构解决问题
+        - level: 2
+          criteria:
+            - 在真实场景中应用（撤销、括号匹配、任务排队、广度优先）且实现正确
+            - 手写实现过栈或队列，操作复杂度达标
+        - level: 3
+          criteria:
+            - 组合运用（双端队列、单调栈、循环队列）并论证选择
+            - 能分析受限结构如何约束问题空间从而简化证明/实现
+
+    - id: ds.hash
+      name: 哈希表与集合
+      tier: 2
+      summary: 以均摊 O(1) 组织查找：哈希思想、冲突与代价。
+      keywords: [hash, map, dict, set, 哈希, 字典, 映射, 集合, index]
+      prereqs:
+        - skill: ds.array
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 正确使用内置哈希/映射/集合完成存取与判重
+            - 能识别"遍历查找"应替换为哈希查找的场景
+        - level: 2
+          criteria:
+            - 在项目中把需要 O(n) 查找的逻辑改为哈希结构并保持行为正确
+            - 处理缺失键、键冲突、遍历顺序等边界
+        - level: 3
+          criteria:
+            - 能解释哈希函数、装载因子与扩容策略，并在项目中体现权衡（自定义键、容量预估）
+            - 依据访问模式论证哈希表与有序结构/树的取舍
+
+    - id: ds.tree
+      name: 树与二叉搜索树
+      tier: 2
+      summary: 层次关系的通用表示：遍历、有序性、平衡。
+      keywords: [tree, bst, binary, 树, 二叉, 节点, 遍历, traversal]
+      prereqs:
+        - skill: ds.stackqueue
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 能构建/遍历树（前中后序、层序）并解释各序语义
+            - 理解二叉搜索树的有序性质
+        - level: 2
+          criteria:
+            - 独立实现 BST 的插入/查找（删除至少了解），递归与迭代任一写法边界正确
+            - 在项目中用树形结构表达层次数据并正确序列化/还原
+        - level: 3
+          criteria:
+            - 能解释失衡问题与自平衡方案（AVL/红黑/B 树）的核心思想及适用场景
+            - 实现过带平衡/剪枝优化的树结构或论证其必要性
+
+    - id: ds.heap
+      name: 堆与优先队列
+      tier: 3
+      summary: 按优先级出列：堆的性质、维护与典型应用。
+      keywords: [heap, priority, 堆, 优先队列, topk, heapify]
+      prereqs:
+        - skill: ds.tree
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 能解释堆的完全二叉树性质与上浮/下沉操作
+            - 正确使用内置优先队列解决"取最值"类问题
+        - level: 2
+          criteria:
+            - 在项目中应用堆解决 Top-K、调度、合并有序流等问题且复杂度正确
+            - 手写实现过堆且边界（空、单元素、重复值）正确
+        - level: 3
+          criteria:
+            - 能论证堆与有序数组/BST 在不同操作组合下的取舍
+            - 实现过堆的变体（索引堆、双堆、延迟删除）处理真实约束
+
+    - id: ds.graph
+      name: 图结构
+      tier: 3
+      summary: 万物皆可连边：表示方法与基本遍历。
+      keywords: [graph, node, edge, 图, 邻接, adjacency, 顶点, bfs, dfs]
+      prereqs:
+        - skill: ds.tree
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 能用邻接表/矩阵表示图并解释空间差异
+            - 正确实现 BFS/DFS 遍历并避免重复访问
+        - level: 2
+          criteria:
+            - 将真实问题建模为图（依赖、关系、路径）且建模合理
+            - 能判断连通性、环、层级等基本性质
+        - level: 3
+          criteria:
+            - 处理加权/有向/带约束的图结构并说明表示选择的代价
+            - 能论证图算法选型与数据规模的匹配（稀疏 vs 稠密）

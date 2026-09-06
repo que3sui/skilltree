@@ -1,0 +1,23 @@
+# 经济学 · 分级要求（班型 → 节点最低等级）——LLM 组装草稿，待课程教师审阅
+- 班型: "基地班"  # 理论推导与计量上机均要求 L3：能独立推导并比较模型，能独立设计识别策略并完成可复现实证研究。
+  - {skill: "micro.consumer-theory", minLevel: 3}
+  - {skill: "micro.producer-market", minLevel: 3}
+  - {skill: "micro.market-failure", minLevel: 3}
+  - {skill: "macro.growth-theory", minLevel: 3}
+  - {skill: "macro.short-run-fluctuation", minLevel: 3}
+  - {skill: "metrics.regression", minLevel: 3}
+  - {skill: "metrics.causal-inference", minLevel: 3}
+  - {skill: "metrics.econometric-software", minLevel: 3}
+  - {skill: "lib.repro", minLevel: 3}
+  - {skill: "econ-comm.empirical-paper", minLevel: 3}
+- 班型: "普通班"  # 理论推导类 L2（能套用模型解题），计量上机类 L2（能完成给定策略的复现）。
+  - {skill: "micro.consumer-theory", minLevel: 2}
+  - {skill: "micro.producer-market", minLevel: 2}
+  - {skill: "micro.market-failure", minLevel: 2}
+  - {skill: "macro.growth-theory", minLevel: 2}
+  - {skill: "macro.short-run-fluctuation", minLevel: 2}
+  - {skill: "metrics.regression", minLevel: 2}
+  - {skill: "metrics.causal-inference", minLevel: 2}
+  - {skill: "metrics.econometric-software", minLevel: 2}
+  - {skill: "lib.repro", minLevel: 2}
+  - {skill: "econ-comm.empirical-paper", minLevel: 2}

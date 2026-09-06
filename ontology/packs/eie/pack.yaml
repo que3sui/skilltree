@@ -1,0 +1,12 @@
+# 电子信息与嵌入式 · 本体草稿（deepseek-v4-pro @ api.llm.ustc.edu.cn（temperature=0, json mode, stream） 组装，待人工审阅后 PR 立法）
+# 组装输入：电路分析,模拟电子技术,数字逻辑,微机原理与接口,嵌入式系统,信号与系统；分级：竞赛班:系统节点 L3、方法节点 L2;课程班:系统节点 L2、方法节点 L1
+
+schemaVersion: 1
+id: "eie"
+name: "电子信息与嵌入式"
+version: "0.1.1"
+description: "从电路分析到嵌入式系统的软硬件贯通能力——电子设计竞赛、嵌入式课程设计与硬件 Hackathon 的公共底座。覆盖模拟/数字电路、微处理器接口、嵌入式软件与系统集成，强调软硬件协同、测试验证与工程文档化。"
+levelSemantics:
+  - {level: 1, title: 认知与模仿, description: 读懂既有实现，在指导下修改与套用}
+  - {level: 2, title: 独立应用, description: 面对新问题独立写出正确实现，处理边界情况}
+  - {level: 3, title: 迁移与权衡, description: 跨场景迁移，论证方案取舍，评估风险}

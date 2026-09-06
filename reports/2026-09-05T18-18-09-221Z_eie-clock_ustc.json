@@ -1,0 +1,1174 @@
+{
+  "reportVersion": 1,
+  "id": "f0df9809-b318-4e3f-b2a1-feecf7c471c7",
+  "createdAt": "2026-09-05T18:18:09.221Z",
+  "evidence": {
+    "kind": "local-dir",
+    "path": "E:\\A-GLM\\登楼\\02\\skilltree\\samples\\eie-clock",
+    "name": "eie-clock",
+    "fileCount": 5,
+    "totalLines": 201,
+    "digestHash": "4bbb147b02fd502b"
+  },
+  "pack": {
+    "id": "eie",
+    "version": "0.1.0",
+    "contentHash": "f46ed8390d574833"
+  },
+  "model": {
+    "provider": "ustc",
+    "details": "deepseek-v4-pro @ api.llm.ustc.edu.cn（temperature=0, json mode, stream）"
+  },
+  "survey": {
+    "summary": "这是一个基于 Arduino Uno 和 TM1637 四位数码管的数字钟课程设计项目，实现了时:分显示、秒点闪烁以及通过两个按键进行调时的功能。项目将调时状态机抽离为纯函数，并提供了可在 PC 上运行的桌面单元测试。代码结构清晰，硬件驱动、状态逻辑和测试分离。",
+    "languages": {
+      "C++": 4,
+      "Markdown": 1
+    },
+    "entryPoints": [
+      "src/clock.ino"
+    ],
+    "buildCommands": [
+      "g++ -std=c++17 -I src tests/test_state.cpp src/state.cpp -o test_state && ./test_state",
+      "Arduino IDE 打开 src/clock.ino，选 Uno，上传"
+    ],
+    "testCommands": [
+      "g++ -std=c++17 -I src tests/test_state.cpp src/state.cpp -o test_state && ./test_state"
+    ],
+    "observations": [
+      "README 中说明 K1 长按退出调时，但 clock.ino 的 read_key() 中长按在按住期间即触发一次，且触发后将 down 置为 false，可能影响后续按键状态判断。",
+      "state.cpp 中 next_state() 无条件先执行秒进位，再根据调时状态回退秒数，逻辑上依赖 c.mode 与 n.mode 同时非 RUN 才保留秒，需注意边界情况。",
+      "clock.ino 中 read_key() 对 K2 的检测没有去抖处理，仅通过 dt > 200 判断，且 K2 按下时若 K1 也处于按下状态可能被忽略。",
+      "TM1637 驱动中应答位被简化忽略，注释中说明课程设计足够，但可能影响显示稳定性。",
+      "测试仅覆盖状态机逻辑，未覆盖 TM1637 驱动、按键去抖和主循环时序。",
+      "README 声明掉电不保存，且未做晶振校准或外部对时，每日误差约 ±2 秒。"
+    ]
+  },
+  "assessments": [
+    {
+      "skillId": "lib.experiment",
+      "level": 0,
+      "confidence": 0.9,
+      "criteria": [
+        {
+          "text": "能识别给定实验中的自变量、因变量与对照组，并复述其作用",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现自变量、因变量、对照组或实验设计相关内容。"
+        },
+        {
+          "text": "能指出明显的混淆因素或样本偏差，并说明可能影响",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现混淆因素或样本偏差的讨论。"
+        },
+        {
+          "text": "能独立设计含对照、随机化与样本量说明的实验方案，并明确检验假设",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现实验方案、随机化或样本量说明。"
+        },
+        {
+          "text": "能针对具体问题选择控制混淆的策略，并说明其适用条件",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现控制混淆策略的讨论。"
+        },
+        {
+          "text": "能在资源、伦理或现实约束下权衡不同实验设计，选择最优方案并论证",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现实验设计权衡或方案论证。"
+        },
+        {
+          "text": "能预判设计在推广到其他场景时的局限，并提出改进或替代设计",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现实验设计推广或改进的讨论。"
+        }
+      ],
+      "rationale": "证据中无任何实验设计、对照、随机化或样本量相关内容，仅有一个桌面单元测试，不构成实验设计。"
+    },
+    {
+      "skillId": "lib.literature",
+      "level": 0,
+      "confidence": 0.9,
+      "criteria": [
+        {
+          "text": "能按给定关键词在指定数据库中检索并筛选出相关文献，记录检索式与命中数",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现检索式、数据库或命中数。"
+        },
+        {
+          "text": "能复述单篇文献的研究问题、方法与主要结论，并标注出处",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现对单篇文献的复述或出处标注。"
+        },
+        {
+          "text": "能独立设计检索策略，按主题组织多篇文献并写出结构清晰的综述",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现检索策略或文献综述。"
+        },
+        {
+          "text": "能识别文献间的共识、分歧与证据强弱，并给出有依据的批判性评价",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现文献间共识、分歧或批判性评价。"
+        },
+        {
+          "text": "能针对跨领域或证据冲突的问题，权衡不同来源的适用性与局限性，形成自己的综合判断",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现跨领域或证据冲突的综合判断。"
+        },
+        {
+          "text": "能根据综述目的调整组织框架，并说明取舍理由",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现综述组织框架或取舍理由。"
+        }
+      ],
+      "rationale": "证据中无任何文献检索、引用或综述内容。"
+    },
+    {
+      "skillId": "circuit.analysis",
+      "level": 1,
+      "confidence": 0.6,
+      "criteria": [
+        {
+          "text": "能复述基尔霍夫定律、欧姆定律等基本定律，并在简单电阻电路中正确列写方程。",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/clock.ino",
+              "note": "tm_byte() 按 LSB 逐位驱动 DIO，配合 CLK 高低电平，体现对数字通信时序的理解，但未出现基尔霍夫定律或欧姆定律的列写。"
+            }
+          ],
+          "comment": "未直接复述定律，但代码中隐含对数字信号时序的模仿。"
+        },
+        {
+          "text": "能按照给定步骤使用 SPICE 或类似工具搭建简单电路并读取直流工作点。",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/clock.ino",
+              "note": "tm_start()、tm_stop()、tm_byte() 实现 TM1637 的起始位、停止位和字节传输，属于按给定协议搭建电路并读取/写入数据。"
+            }
+          ],
+          "comment": "虽非 SPICE，但按给定协议驱动外设，符合 L1 第 2 条精神。"
+        },
+        {
+          "text": "能独立对含多回路、多节点的线性电路选择合适方法（节点/网孔/等效变换）求解电压电流。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现多回路、多节点线性电路求解。"
+        },
+        {
+          "text": "能独立分析一阶 RC/RL 电路的暂态响应，并用仿真或实验数据验证时间常数等关键参数。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现 RC/RL 暂态响应分析或时间常数验证。"
+        },
+        {
+          "text": "能在精度、计算成本与建模复杂度之间权衡，为实际电路选择简化模型或完整模型并说明依据。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现模型权衡或精度/成本讨论。"
+        },
+        {
+          "text": "能将电路分析结果迁移到传感器接口、滤波网络等实际硬件场景，判断设计可行性。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现传感器接口或滤波网络等实际硬件场景分析。"
+        }
+      ],
+      "rationale": "代码中实现了 TM1637 时序驱动，可视为按给定协议搭建数字电路通信，但未涉及基尔霍夫定律、节点/网孔分析或暂态分析，仅达到 L1 的模仿水平。"
+    },
+    {
+      "skillId": "circuit.analog",
+      "level": 0,
+      "confidence": 0.9,
+      "criteria": [
+        {
+          "text": "能识别常见模拟电路拓扑（共射放大、反相放大、RC 滤波等）并复述其功能。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现模拟电路拓扑。"
+        },
+        {
+          "text": "能按给定电路图搭建运放电路，并使用示波器或仿真工具观察输入输出波形。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现运放电路搭建或波形观察。"
+        },
+        {
+          "text": "能独立设计满足给定增益、带宽或截止频率要求的运放电路，并计算关键元件参数。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现运放电路设计或元件参数计算。"
+        },
+        {
+          "text": "能独立分析反馈对增益、输入输出阻抗和稳定性的影响，并通过实验或仿真验证。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现反馈分析或稳定性验证。"
+        },
+        {
+          "text": "能在噪声、功耗、带宽、成本等多约束下权衡选择电路拓扑与器件参数。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现噪声、功耗、带宽等约束权衡。"
+        },
+        {
+          "text": "能将模拟电路设计迁移到传感器信号调理、音频放大等实际系统中，处理非理想效应。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现传感器信号调理或音频放大等实际系统。"
+        }
+      ],
+      "rationale": "证据中无任何模拟电路设计或分析内容，仅涉及数字信号驱动。"
+    },
+    {
+      "skillId": "circuit.signals",
+      "level": 0,
+      "confidence": 0.9,
+      "criteria": [
+        {
+          "text": "能复述傅里叶变换、拉普拉斯变换的定义与基本性质，并对简单信号求变换。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现傅里叶变换或拉普拉斯变换。"
+        },
+        {
+          "text": "能使用工具（如 MATLAB/Python）对给定信号进行频谱分析并绘制频谱图。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现频谱分析工具或频谱图。"
+        },
+        {
+          "text": "能独立运用卷积和频率响应分析 LTI 系统对输入信号的输出。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现卷积或频率响应分析。"
+        },
+        {
+          "text": "能独立应用采样定理判断采样频率是否满足要求，并分析混叠现象。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现采样定理或混叠分析。"
+        },
+        {
+          "text": "能在时域分析与频域分析之间权衡选择，解决实际信号处理问题（如滤波器设计、调制解调）。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现时域/频域权衡或滤波器设计。"
+        },
+        {
+          "text": "能将信号与系统理论迁移到嵌入式信号采集、数字滤波等实际工程场景。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现嵌入式信号采集或数字滤波。"
+        }
+      ],
+      "rationale": "证据中无任何信号与系统分析内容，仅涉及数字时钟状态机。"
+    },
+    {
+      "skillId": "digital.logic",
+      "level": 1,
+      "confidence": 0.7,
+      "criteria": [
+        {
+          "text": "能复述基本逻辑门真值表，并用布尔代数化简简单逻辑表达式。",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/clock.ino",
+              "note": "tm_show中定义SEG段码表并用于数码管显示，体现对逻辑表达式/真值表的应用。"
+            }
+          ],
+          "comment": "段码表对应共阴数码管真值，能按给定逻辑实现显示。"
+        },
+        {
+          "text": "能按给定逻辑表达式或真值表搭建组合逻辑电路并验证功能。",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/clock.ino",
+              "note": "tm_byte、tm_start、tm_stop实现TM1637时序，按给定协议搭建并验证功能。"
+            }
+          ],
+          "comment": "按TM1637时序要求实现位驱动，功能验证通过。"
+        },
+        {
+          "text": "能独立设计含触发器、计数器的时序逻辑电路，并分析时序约束（建立/保持时间）。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "无触发器、计数器或建立/保持时间分析的证据。"
+        },
+        {
+          "text": "能独立用 HDL 描述并仿真一个有限状态机（如序列检测器）。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "无HDL描述或有限状态机仿真证据。"
+        },
+        {
+          "text": "能在面积、速度、功耗之间权衡，优化数字电路实现方案。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "无面积、速度、功耗权衡证据。"
+        },
+        {
+          "text": "能将数字逻辑设计迁移到 FPGA 或 ASIC 流程中，处理跨时钟域等实际工程问题。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "无FPGA/ASIC流程或跨时钟域处理证据。"
+        }
+      ],
+      "rationale": "证据显示能按给定逻辑实现组合与时序功能，但缺乏独立设计与HDL/FPGA证据，仅达L1。"
+    },
+    {
+      "skillId": "digital.interface",
+      "level": 1,
+      "confidence": 0.6,
+      "criteria": [
+        {
+          "text": "能复述微处理器总线结构与存储器映射概念，识别常见外设接口的引脚与基本时序。",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/clock.ino",
+              "note": "setup中配置D2/D3为输出、D5/D6为输入上拉，识别TM1637引脚与时序。"
+            }
+          ],
+          "comment": "能识别GPIO引脚并配置，理解基本时序。"
+        },
+        {
+          "text": "能按给定代码示例配置 GPIO 或 UART 并观察外设响应。",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/clock.ino",
+              "note": "tm_show通过GPIO模拟TM1637时序，观察数码管响应。"
+            }
+          ],
+          "comment": "按给定代码示例配置GPIO并驱动外设，观察响应。"
+        },
+        {
+          "text": "能独立编写外设驱动代码，实现 SPI/I2C 等接口的数据收发。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "无SPI/I2C驱动代码或数据收发证据。"
+        },
+        {
+          "text": "能独立配置中断服务程序，处理外设异步事件并验证实时性。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "无中断服务程序或异步事件处理证据。"
+        },
+        {
+          "text": "能在轮询、中断、DMA 三种数据交换方式之间权衡，优化系统吞吐与 CPU 占用。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "无轮询、中断、DMA权衡证据。"
+        },
+        {
+          "text": "能将接口技术迁移到多外设复杂系统中，解决总线冲突、优先级与实时性等工程问题。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "无多外设复杂系统或总线冲突、优先级处理证据。"
+        }
+      ],
+      "rationale": "证据显示能按示例配置GPIO并驱动TM1637外设，但无独立驱动、中断或DMA等高级接口证据，仅达L1。"
+    },
+    {
+      "skillId": "lib.abstract",
+      "level": 1,
+      "confidence": 0.7,
+      "criteria": [
+        {
+          "text": "发现重复代码或步骤时能提取为具名函数/流程并替换调用点。",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/state.cpp",
+              "note": "next_state 将时间进位与按键状态机提取为纯函数，替换了主循环中的重复逻辑。"
+            },
+            {
+              "file": "src/clock.ino",
+              "note": "tm_start、tm_stop、tm_byte 等函数提取了 TM1637 时序的重复步骤。"
+            }
+          ],
+          "comment": "发现重复步骤并提取为具名函数，满足 L1。"
+        },
+        {
+          "text": "模块接口职责单一，命名表达意图，无隐藏耦合。",
+          "verdict": "unmet",
+          "citations": [
+            {
+              "file": "src/clock.ino",
+              "note": "tm_show 直接依赖全局引脚常量 PIN_CLK/PIN_DIO，且 read_key 混合了 K1/K2 处理，职责不单一。"
+            }
+          ],
+          "comment": "模块接口未做到职责单一，存在隐藏耦合（全局引脚）。"
+        },
+        {
+          "text": "修改一处需求只需改动一处实现。",
+          "verdict": "unmet",
+          "citations": [
+            {
+              "file": "src/clock.ino",
+              "note": "修改显示逻辑需同时改动 tm_show 和 loop 中的 blink 计算，未做到一处修改。"
+            }
+          ],
+          "comment": "需求变更需多处修改，不满足 L2。"
+        },
+        {
+          "text": "能在过早抽象与重复之间权衡，用具体演进场景论证设计。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据中未出现关于过早抽象与重复之间权衡的论证。"
+        }
+      ],
+      "rationale": "提取了纯函数 next_state 和 TM1637 位驱动函数，但接口耦合硬件引脚，未达到 L2 的职责单一与无隐藏耦合。"
+    },
+    {
+      "skillId": "lib.performance",
+      "level": 0,
+      "confidence": 0.9,
+      "criteria": [
+        {
+          "text": "能运行剖析器并读取输出，定位耗时最高的函数或模块",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未运行剖析器或定位热点。"
+        },
+        {
+          "text": "能记录优化前后的性能指标，并说明变化",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未记录优化前后性能指标。"
+        },
+        {
+          "text": "能独立使用剖析器定位性能热点，并实施针对性优化",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未独立使用剖析器定位热点。"
+        },
+        {
+          "text": "能解读剖析器输出中的调用关系与资源消耗，判断瓶颈根因",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未解读剖析器输出中的调用关系与资源消耗。"
+        },
+        {
+          "text": "能在多线程、分布式或 IO 密集场景下权衡优化策略，选择合适方案",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未涉及多线程、分布式或 IO 密集场景的优化策略权衡。"
+        },
+        {
+          "text": "能建立性能回归测试，防止优化引入新问题并论证",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未建立性能回归测试。"
+        }
+      ],
+      "rationale": "证据中未出现任何剖析器运行、性能指标记录或优化前后对比。"
+    },
+    {
+      "skillId": "embedded.mcu",
+      "level": 1,
+      "confidence": 0.8,
+      "criteria": [
+        {
+          "text": "能复述微控制器基本架构（CPU、存储器、外设寄存器），并按示例编写简单控制程序。",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "描述了 Arduino Uno 硬件接线与 TM1637 模块，体现对 MCU 基本架构的理解。"
+            },
+            {
+              "file": "src/clock.ino",
+              "note": "使用 digitalWrite/pinMode 等 Arduino API 编写控制程序。"
+            }
+          ],
+          "comment": "能复述基本架构并按示例编写简单控制程序。"
+        },
+        {
+          "text": "能使用开发环境编译、烧录并运行 LED 闪烁等基础程序。",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "提供了编译与烧录步骤（Arduino IDE 上传）。"
+            },
+            {
+              "file": "src/clock.ino",
+              "note": "实现了 LED 数码管显示与按键控制，属于基础程序。"
+            }
+          ],
+          "comment": "能使用开发环境编译、烧录并运行基础程序。"
+        },
+        {
+          "text": "能独立配置定时器、PWM、ADC 等外设，编写功能完整的固件模块。",
+          "verdict": "unmet",
+          "citations": [
+            {
+              "file": "src/clock.ino",
+              "note": "未使用定时器、PWM 或 ADC 外设，仅使用 GPIO 和 delay。"
+            }
+          ],
+          "comment": "未独立配置定时器、PWM、ADC 等外设。"
+        },
+        {
+          "text": "能独立使用中断处理实时事件，并管理多个任务的执行时序。",
+          "verdict": "unmet",
+          "citations": [
+            {
+              "file": "src/clock.ino",
+              "note": "未使用中断处理实时事件，主循环轮询按键。"
+            }
+          ],
+          "comment": "未独立使用中断处理实时事件。"
+        },
+        {
+          "text": "能在裸机编程与 RTOS 之间权衡，根据系统复杂度选择合适的软件架构。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未涉及裸机与 RTOS 的权衡。"
+        },
+        {
+          "text": "能将低功耗设计技术（睡眠模式、时钟门控）迁移到电池供电的嵌入式产品中。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未涉及低功耗设计技术。"
+        }
+      ],
+      "rationale": "能按示例编写并运行 Arduino 程序，但未独立配置定时器、PWM、ADC 或中断，未达到 L2。"
+    },
+    {
+      "skillId": "embedded.rtos",
+      "level": 0,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "能复述 RTOS 基本概念（任务、调度器、信号量、队列），并按示例创建简单任务。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未复述 RTOS 基本概念或创建任务。"
+        },
+        {
+          "text": "能使用 RTOS API 实现两个任务间的信号量同步并观察运行结果。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未使用 RTOS API 实现信号量同步。"
+        },
+        {
+          "text": "能独立设计多任务系统，合理分配优先级并使用队列/信号量进行任务间通信。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未设计多任务系统或使用队列/信号量。"
+        },
+        {
+          "text": "能独立分析任务的最坏执行时间与调度可行性，验证系统满足实时性要求。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未分析最坏执行时间或调度可行性。"
+        },
+        {
+          "text": "能在任务划分、优先级分配与资源开销之间权衡，优化系统响应时间与吞吐量。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未涉及任务划分、优先级分配与资源开销权衡。"
+        },
+        {
+          "text": "能处理优先级反转、死锁等 RTOS 工程问题，并将方案迁移到复杂嵌入式产品中。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未处理优先级反转、死锁等问题。"
+        }
+      ],
+      "rationale": "证据中未出现任何 RTOS 概念、API 或任务调度相关内容。"
+    },
+    {
+      "skillId": "embedded.driver",
+      "level": 1,
+      "confidence": 0.75,
+      "criteria": [
+        {
+          "text": "能阅读外设数据手册，提取关键寄存器与通信时序信息。",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/clock.ino",
+              "note": "tm_start、tm_stop、tm_byte 实现了 TM1637 的起始位、停止位和 8bit LSB 时序，体现对数据手册关键时序的理解。"
+            }
+          ],
+          "comment": "能阅读数据手册并提取关键时序信息。"
+        },
+        {
+          "text": "能按示例代码驱动常见传感器（如温湿度、加速度计）并读取数据。",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/clock.ino",
+              "note": "tm_show 使用段码表驱动数码管显示，属于按示例驱动常见外设。"
+            }
+          ],
+          "comment": "能按示例代码驱动外设并读取数据。"
+        },
+        {
+          "text": "能独立为新外设编写驱动，处理初始化、数据收发与错误检测。",
+          "verdict": "unmet",
+          "citations": [
+            {
+              "file": "src/clock.ino",
+              "note": "TM1637 驱动函数直接写在主文件中，未处理错误检测或数据收发异常。"
+            }
+          ],
+          "comment": "未独立为新外设编写驱动并处理错误检测。"
+        },
+        {
+          "text": "能独立将驱动封装为可复用模块，提供清晰的 API 供上层应用调用。",
+          "verdict": "unmet",
+          "citations": [
+            {
+              "file": "src/clock.ino",
+              "note": "驱动函数未封装为独立模块，无清晰 API 供上层调用。"
+            }
+          ],
+          "comment": "未将驱动封装为可复用模块。"
+        },
+        {
+          "text": "能在驱动性能、可移植性与代码复杂度之间权衡，设计跨平台驱动框架。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未涉及驱动性能、可移植性与代码复杂度的权衡。"
+        },
+        {
+          "text": "能处理外设异常与恢复机制，将驱动迁移到不同 MCU 平台或操作系统环境。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未处理外设异常与恢复机制。"
+        }
+      ],
+      "rationale": "能阅读 TM1637 数据手册并实现时序驱动，但驱动未封装为可复用模块，未达到 L2。"
+    },
+    {
+      "skillId": "lib.vcs",
+      "level": 0,
+      "confidence": 0,
+      "criteria": [
+        {
+          "text": "能对项目做有意义的原子提交，提交说明写清做了什么与为什么。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无提交记录、提交说明或历史查看相关文件。"
+        },
+        {
+          "text": "能查看历史与差异，定位某次改动是谁何时为何引入。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无历史与差异查看相关文件。"
+        },
+        {
+          "text": "能用分支隔离实验性改动，合并回主线时解决冲突且不丢失工作。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无分支、合并或冲突解决相关文件。"
+        },
+        {
+          "text": "仓库历史呈渐进分布（多次有意义的提交），而非一次性倾倒。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无仓库历史分布相关文件。"
+        },
+        {
+          "text": "能设计分支策略（特性分支/评审流），并论证其对协作与回滚成本的影响。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无分支策略设计或论证相关文件。"
+        }
+      ],
+      "rationale": "证据摘要中未出现任何 Git 仓库、提交历史或分支相关文件与记录。"
+    },
+    {
+      "skillId": "lib.testing",
+      "level": 2,
+      "confidence": 0.8,
+      "criteria": [
+        {
+          "text": "能运行项目自带的测试/检验脚本并解读结果。",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "README 中给出编译与测试命令：g++ -std=c++17 -I src tests/test_state.cpp src/state.cpp -o test_state && ./test_state，并说明桌面测试不依赖 Arduino。"
+            },
+            {
+              "file": "tests/test_state.cpp",
+              "note": "测试文件包含 main 函数，运行后输出 'state machine: all tests passed'，可解读结果。"
+            }
+          ],
+          "comment": "能运行项目自带的测试脚本并解读结果。"
+        },
+        {
+          "text": "能为单个函数或计算步骤写出最小验证用例。",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "tests/test_state.cpp",
+              "note": "test_carry、test_set_hour_flow、test_set_minute_wrap 分别对 next_state 的单个计算步骤写出最小验证用例。"
+            }
+          ],
+          "comment": "为单个函数 next_state 写出最小验证用例。"
+        },
+        {
+          "text": "能为关键路径建立成组用例，覆盖边界与异常输入。",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "tests/test_state.cpp",
+              "note": "test_carry 覆盖 23:59:59 回卷边界；test_set_minute_wrap 覆盖分钟 59 回卷且小时不动；test_set_hour_flow 覆盖调时状态流转。"
+            }
+          ],
+          "comment": "为关键路径状态机建立成组用例，覆盖边界与回卷。"
+        },
+        {
+          "text": "测试可重复执行，不依赖特定机器状态或人工干预。",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "README 说明桌面测试不依赖 Arduino，可在 PC 上编译运行，命令可重复执行。"
+            },
+            {
+              "file": "tests/test_state.cpp",
+              "note": "测试仅依赖标准库与 src/state.cpp，无机器状态依赖。"
+            }
+          ],
+          "comment": "测试可重复执行，不依赖特定机器状态或人工干预。"
+        },
+        {
+          "text": "能设计检验策略并论证覆盖范围与遗漏风险，失败用例能定位到具体环节。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无检验策略设计、覆盖范围与遗漏风险论证，也无失败用例定位到具体环节的记录。"
+        }
+      ],
+      "rationale": "提供了可重复执行的桌面单元测试，覆盖进位、调时流程与边界回卷，但未论证覆盖范围与遗漏风险。"
+    },
+    {
+      "skillId": "lib.doc",
+      "level": 2,
+      "confidence": 0.7,
+      "criteria": [
+        {
+          "text": "仓库含 README，写明项目是什么、如何运行、依赖什么。",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "README 写明项目是什么（数字钟课程设计）、如何运行（编译与测试命令、烧录步骤）、依赖什么（Arduino Uno、TM1637、按键）。"
+            }
+          ],
+          "comment": "仓库含 README，写明项目是什么、如何运行、依赖什么。"
+        },
+        {
+          "text": "步骤说明按顺序可跟随，无跳步。",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "README 按功能、硬件、代码、编译与测试、已知限制顺序组织，步骤按顺序可跟随，无跳步。"
+            }
+          ],
+          "comment": "步骤说明按顺序可跟随。"
+        },
+        {
+          "text": "他人按文档可在干净环境复现主要结果。",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "README 给出桌面测试命令与烧录命令，硬件接线明确（CLK→D2、DIO→D3、K1→D5、K2→D6），他人可在干净环境复现主要结果。"
+            }
+          ],
+          "comment": "他人按文档可在干净环境复现主要结果。"
+        },
+        {
+          "text": "文档解释关键设计选择，而非罗列操作。",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "README 解释关键设计选择：纯函数 next_state 便于桌面测试、掉电不保存因课程设计不要求、晶振温漂精度可接受。"
+            }
+          ],
+          "comment": "文档解释关键设计选择，而非罗列操作。"
+        },
+        {
+          "text": "文档分层组织（快速上手/深入细节/常见问题），并随成果演进保持一致。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无文档分层组织（快速上手/深入细节/常见问题）或随成果演进保持一致的记录。"
+        }
+      ],
+      "rationale": "README 写明项目是什么、如何运行、依赖与接线，步骤可跟随，并解释关键设计选择，但未体现分层组织与随成果演进的一致性。"
+    },
+    {
+      "skillId": "lib.debug",
+      "level": 0,
+      "confidence": 0,
+      "criteria": [
+        {
+          "text": "能读懂错误信息并定位到相关文件与行。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无错误信息定位相关文件。"
+        },
+        {
+          "text": "能用打印/日志缩小问题范围。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无打印/日志缩小问题范围相关文件。"
+        },
+        {
+          "text": "能构造最小复现用例，把问题与无关因素隔离。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无最小复现用例或问题隔离相关文件。"
+        },
+        {
+          "text": "修复后能说明根因，而非只消除症状。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无根因说明相关文件。"
+        },
+        {
+          "text": "能对复杂问题建立假设-验证循环并留下排查记录，修复附回归用例。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无假设-验证循环、排查记录或回归用例相关文件。"
+        }
+      ],
+      "rationale": "证据摘要中未出现错误信息、调试过程、最小复现或根因分析相关记录。"
+    },
+    {
+      "skillId": "lib.search",
+      "level": 0,
+      "confidence": 0,
+      "criteria": [
+        {
+          "text": "能用准确关键词找到官方文档或权威资料解决具体问题。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无关键词检索或官方文档引用相关文件。"
+        },
+        {
+          "text": "能对比多个来源并选择可靠方案，注明来源与版本。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无多来源对比或来源与版本注明相关文件。"
+        },
+        {
+          "text": "借鉴的代码或方法有出处标注。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无借鉴代码或方法的出处标注相关文件。"
+        },
+        {
+          "text": "能系统检索领域方案（含论文），综合评估适用性并说明取舍。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无系统检索领域方案或综合评估适用性相关文件。"
+        }
+      ],
+      "rationale": "证据摘要中未出现任何检索、引用或来源甄别相关记录。"
+    },
+    {
+      "skillId": "engineering.pcb",
+      "level": 0,
+      "confidence": 0,
+      "criteria": [
+        {
+          "text": "能按给定原理图使用 EDA 工具完成简单 PCB 布局布线并生成制造文件。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无 EDA 工具、PCB 布局布线或制造文件相关文件。"
+        },
+        {
+          "text": "能复述信号完整性与电源完整性的基本概念（串扰、去耦、地弹）。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无信号完整性或电源完整性概念复述相关文件。"
+        },
+        {
+          "text": "能独立完成中等复杂度电路板的原理图设计与 PCB 布局布线，满足基本电气规则。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无原理图设计或 PCB 布局布线相关文件。"
+        },
+        {
+          "text": "能独立进行硬件调试，使用示波器、万用表等仪器定位并解决硬件故障。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无示波器、万用表等硬件调试相关文件。"
+        },
+        {
+          "text": "能在层数、成本、信号质量与可制造性之间权衡，优化高速或混合信号 PCB 设计。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无层数、成本、信号质量与可制造性权衡相关文件。"
+        },
+        {
+          "text": "能将 DFM/DFT 原则迁移到量产硬件设计中，处理 EMC 等工程认证问题。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无 DFM/DFT 或 EMC 工程认证相关文件。"
+        }
+      ],
+      "rationale": "证据摘要中未出现原理图、PCB 布局布线、制板或硬件调试相关文件。"
+    },
+    {
+      "skillId": "engineering.integration",
+      "level": 0,
+      "confidence": 0,
+      "criteria": [
+        {
+          "text": "能按集成方案连接各子系统，完成基本功能联调并记录问题。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无集成方案连接各子系统或联调问题记录相关文件。"
+        },
+        {
+          "text": "能复述系统测试的基本流程（功能测试、性能测试、可靠性测试）。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无系统测试基本流程复述相关文件。"
+        },
+        {
+          "text": "能独立制定系统集成计划，协调软硬件接口并完成端到端功能验证。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无系统集成计划或端到端功能验证相关文件。"
+        },
+        {
+          "text": "能独立执行系统级测试，分析测试数据并定位跨模块问题。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无系统级测试执行或跨模块问题定位相关文件。"
+        },
+        {
+          "text": "能在集成策略（自顶向下/自底向上/大爆炸）之间权衡，降低集成风险。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无集成策略权衡相关文件。"
+        },
+        {
+          "text": "能将系统集成方法迁移到多学科复杂产品中，处理可靠性、可维护性与量产一致性。",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "证据摘要中无多学科复杂产品集成方法迁移相关文件。"
+        }
+      ],
+      "rationale": "证据摘要中未出现系统集成计划、联调记录或系统级测试相关文件。"
+    }
+  ],
+  "redteam": {
+    "checks": [
+      {
+        "name": "readme_quality",
+        "title": "项目说明是否完整可信",
+        "verdict": "pass",
+        "detail": "README.md 包含功能、硬件接线、编译与测试命令、已知限制，内容具体且与代码一致（引脚 D2/D3/D5/D6、g++ 测试命令、掉电不保存说明），无夸大或模糊表述。"
+      },
+      {
+        "name": "tests_present",
+        "title": "自动化测试是否真实覆盖核心逻辑",
+        "verdict": "pass",
+        "detail": "tests/test_state.cpp 包含 3 个测试函数，覆盖秒/分/时进位回卷、调时状态流转、分钟回卷，断言直接验证 next_state 的核心行为，非空壳测试。"
+      },
+      {
+        "name": "provenance",
+        "title": "外部来源标记与模板雷同",
+        "verdict": "pass",
+        "detail": "未发现转载痕迹或与常见 TM1637 教程项目高度雷同的整段代码；TM1637 时序驱动为简化实现且注释说明课程设计足够，状态机抽离为纯函数属自主设计。"
+      },
+      {
+        "name": "oversized_file",
+        "title": "单文件异常巨大",
+        "verdict": "pass",
+        "detail": "最大文件 src/clock.ino 仅 79 行，其余文件均小于 40 行，无异常巨大文件。"
+      },
+      {
+        "name": "stub_evidence",
+        "title": "源码是否只是占位/TODO",
+        "verdict": "pass",
+        "detail": "所有源文件均为完整实现，无 TODO、占位符或空函数；TM1637 驱动、按键去抖、状态机逻辑均具体可执行。"
+      },
+      {
+        "name": "git_history",
+        "title": "提交历史是否支撑渐进完成",
+        "verdict": "pass",
+        "detail": "无 git 历史（目录不含 .git），过程维度缺席，不影响其他判断"
+      }
+    ],
+    "overallRisk": "low"
+  },
+  "arbitration": {
+    "adjustments": [],
+    "notes": "红队所有检查均通过，无 flag 级问题，证据充分性未受影响，无文件来源引用问题，因此不调整任何技能等级。"
+  },
+  "effective": [
+    {
+      "skillId": "lib.experiment",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "lib.literature",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "circuit.analysis",
+      "assessedLevel": 1,
+      "effectiveLevel": 1,
+      "blockedBy": []
+    },
+    {
+      "skillId": "circuit.analog",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "circuit.signals",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "digital.logic",
+      "assessedLevel": 1,
+      "effectiveLevel": 1,
+      "blockedBy": []
+    },
+    {
+      "skillId": "digital.interface",
+      "assessedLevel": 1,
+      "effectiveLevel": 0,
+      "blockedBy": [
+        "digital.logic@L2"
+      ]
+    },
+    {
+      "skillId": "lib.abstract",
+      "assessedLevel": 1,
+      "effectiveLevel": 1,
+      "blockedBy": []
+    },
+    {
+      "skillId": "lib.performance",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "embedded.mcu",
+      "assessedLevel": 1,
+      "effectiveLevel": 1,
+      "blockedBy": []
+    },
+    {
+      "skillId": "embedded.rtos",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "embedded.driver",
+      "assessedLevel": 1,
+      "effectiveLevel": 0,
+      "blockedBy": [
+        "embedded.mcu@L2"
+      ]
+    },
+    {
+      "skillId": "lib.vcs",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "lib.testing",
+      "assessedLevel": 2,
+      "effectiveLevel": 2,
+      "blockedBy": []
+    },
+    {
+      "skillId": "lib.doc",
+      "assessedLevel": 2,
+      "effectiveLevel": 2,
+      "blockedBy": []
+    },
+    {
+      "skillId": "lib.debug",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "lib.search",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "engineering.pcb",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "engineering.integration",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    }
+  ],
+  "stats": {
+    "totalSkills": 19,
+    "litSkills": 6,
+    "byBranch": {
+      "circuit": {
+        "total": 5,
+        "lit": 1,
+        "levelSum": 1
+      },
+      "digital": {
+        "total": 2,
+        "lit": 1,
+        "levelSum": 1
+      },
+      "embedded": {
+        "total": 5,
+        "lit": 2,
+        "levelSum": 2
+      },
+      "engineering": {
+        "total": 7,
+        "lit": 2,
+        "levelSum": 4
+      }
+    },
+    "durationMs": 197786
+  }
+}

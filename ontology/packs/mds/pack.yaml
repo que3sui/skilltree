@@ -1,0 +1,12 @@
+# 数学建模与数据科学 · 本体草稿（deepseek-v4-pro @ api.llm.ustc.edu.cn（temperature=0, json mode, stream） 组装，待人工审阅后 PR 立法）
+# 组装输入：数学分析,线性代数,概率论与数理统计,数据结构与算法,数学建模,计算方法；分级：拔尖班:建模核心节点要求 L3、方法节点 L2;普通班:建模核心节点 L2、方法节点 L1
+
+schemaVersion: 1
+id: "mds"
+name: "数学建模与数据科学"
+version: "0.1.1"
+description: "用数据、统计与优化模型解决实际问题的能力体系，覆盖数模竞赛、数据分析课程设计与科研入门的公共底座。强调从问题抽象、数据获取与清洗、模型构建与求解，到验证、可视化与成果文档化的完整闭环。"
+levelSemantics:
+  - {level: 1, title: 认知与模仿, description: 读懂既有实现，在指导下修改与套用}
+  - {level: 2, title: 独立应用, description: 面对新问题独立写出正确实现，处理边界情况}
+  - {level: 3, title: 迁移与权衡, description: 跨场景迁移，论证方案取舍，评估风险}

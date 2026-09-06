@@ -1,0 +1,30 @@
+{
+  "name": "skilltree-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "建木 · 基于技能树的去绩点化能力评价体系（MVP）",
+  "scripts": {
+    "validate": "tsx packages/evaluator/src/cli.ts validate --pack ontology/packs/cs",
+    "evaluate": "tsx packages/evaluator/src/cli.ts run",
+    "server": "pnpm --filter @skilltree/server dev",
+    "web": "pnpm --filter @skilltree/web dev",
+    "build": "pnpm -r build",
+    "test": "tsx --test packages/schema/test/schema.test.ts packages/evaluator/test/digest.test.ts packages/evaluator/test/pipeline.test.ts packages/evaluator/test/redact.test.ts",
+    "eval:regression": "tsx scripts/eval-regression.mjs",
+    "suggest-skill": "tsx scripts/suggest-skill.mjs",
+    "assemble-pack": "tsx scripts/assemble-pack.mjs",
+    "flow-check": "tsx scripts/flow-check.mjs",
+    "arch:check": "tsx scripts/check-architecture.mjs",
+    "resource:coverage": "tsx scripts/resource-coverage.mjs",
+    "rubric:impact": "tsx scripts/rubric-impact.mjs",
+    "demo:bundle": "tsx scripts/demo-bundle.mjs",
+    "demo:build": "tsx scripts/demo-bundle.mjs && pnpm --filter @skilltree/web build",
+    "gate": "pnpm arch:check && pnpm validate && pnpm test && pnpm eval:regression && pnpm build",
+    "demo": "tsx packages/evaluator/src/cli.ts run --repo samples/task-todo --provider mock && tsx packages/evaluator/src/cli.ts run --repo samples/algo-notebook --provider mock && tsx packages/evaluator/src/cli.ts run --repo samples/empty-stub --provider mock"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

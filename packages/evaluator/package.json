@@ -1,0 +1,13 @@
+{
+  "name": "@skilltree/evaluator",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@skilltree/schema": "workspace:*",
+    "yaml": "^2.6.0"
+  }
+}

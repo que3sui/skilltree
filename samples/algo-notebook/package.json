@@ -1,0 +1,9 @@
+{
+  "name": "algo-notebook",
+  "version": "0.2.0",
+  "description": "算法学习笔记：排序、链表、BST 的 JS 实现",
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/"
+  }
+}

@@ -1,0 +1,3372 @@
+{
+  "reportVersion": 1,
+  "id": "4c445015-68ce-4c55-be35-7d1e131c9fda",
+  "createdAt": "2026-09-02T09:27:22.077Z",
+  "evidence": {
+    "kind": "local-dir",
+    "path": "E:\\A-GLM\\登楼\\02\\skilltree\\samples\\task-todo",
+    "name": "task-todo",
+    "fileCount": 8,
+    "totalLines": 444,
+    "digestHash": "58d314aa176e4eb6"
+  },
+  "pack": {
+    "id": "cs",
+    "version": "0.1.0",
+    "contentHash": "ef17ae2cea8659c6"
+  },
+  "model": {
+    "provider": "deepseek",
+    "details": "deepseek-v4-flash @ https://api.deepseek.com（temperature=0, json mode）"
+  },
+  "survey": {
+    "summary": "task-todo 是一个零依赖的命令行待办事项管理器，使用 JSON 文件持久化（默认 ~/.todo.json，可用 TODO_FILE 覆盖），数据写入采用原子替换。项目分为存储层、业务层、校验层和参数解析层，支持 add/list/done/rm/stats 命令，并附带使用 node:test 编写的单元测试。当前版本为 1.0.0。",
+    "languages": {
+      "js": 6,
+      "json": 1,
+      "md": 1
+    },
+    "entryPoints": [
+      "src/index.js"
+    ],
+    "buildCommands": [
+      "npm start",
+      "node src/index.js"
+    ],
+    "testCommands": [
+      "npm test"
+    ],
+    "observations": [
+      "项目采用 ESM 模块（type: module），无第三方运行时依赖。",
+      "store.js 通过 resolveStorePath 读取 TODO_FILE，不设置时使用 homedir 下的 .todo.json。",
+      "写入使用同目录临时文件加 rename 的原子替换，失败时会清理临时文件。",
+      "commands.js 中的排序使用优先级分桶的 Map 来实现 O(n) 复杂度，而不是全量比较排序。",
+      "错误体系通过 userFacing 标志区分：用户输入错误退出码为 1，内部错误退出码为 2。",
+      "README 指出了两个已知局限：多终端同时写无文件锁、大列表 list 渲染慢，并说明已在 issues 中记录思路。"
+    ]
+  },
+  "assessments": [
+    {
+      "skillId": "algo.complexity",
+      "level": 0,
+      "confidence": 0.5,
+      "criteria": [
+        {
+          "text": "能对常见代码片段给出时间复杂度并解释计数方式",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "list() 注释直接标注 'O(n) 分桶替代全量比较排序'。"
+            },
+            {
+              "file": "README.md",
+              "note": "设计说明中写明 '用 Map 建优先级索引做 O(n) 分桶'。"
+            }
+          ],
+          "comment": "给出了 O(n) 结论，但没有逐条说明循环/操作计数方式。"
+        },
+        {
+          "text": "理解 O(1)/O(log n)/O(n)/O(n²) 的实际含义差异",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "提到 '条目超过万级后 list 全量渲染会慢'，体现出对线性增长的直观理解。"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "使用 O(n) 分桶而非比较排序，隐含线性与超线性的差异意识。"
+            }
+          ],
+          "comment": "能体现 O(n) 的实际影响，但未覆盖 O(1)/O(log n)/O(n²) 之间的系统差异。"
+        },
+        {
+          "text": "在项目决策中使用复杂度分析（如说明为何用哈希代替遍历）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "'优先级排序：……用 Map 建优先级索引做 O(n) 分桶而不是每次比较排序'。"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "list() 实现与注释对应这项基于复杂度的决策。"
+            }
+          ],
+          "comment": "在真实项目决策中主动用复杂度分析选择线性分桶，符合 L2 项目级证据。"
+        },
+        {
+          "text": "能识别嵌套循环、递归主定理等复合结构的复杂度",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "代码中没有嵌套循环或递归结构，也没有对复合结构的复杂度识别。"
+            }
+          ],
+          "comment": "未出现主定理或嵌套循环复杂度分析。"
+        },
+        {
+          "text": "进行摊还分析与空间换时间的系统权衡，并在代码/文档中留有痕迹",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "原子写入是数据一致性设计，不是摊还分析或系统性空间换时间复杂度权衡。"
+            }
+          ],
+          "comment": "没有摊还分析痕迹。"
+        },
+        {
+          "text": "用实测（基准、剖析）验证理论分析，处理常数因子与缓存等现实因素",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "只在已知局限中写'会慢'，没有基准或剖析数据。"
+            }
+          ],
+          "comment": "缺少实测验证理论分析。"
+        }
+      ],
+      "rationale": "项目在 list 的优先级分桶中明确做了一次 O(n) 复杂度取舍，具有 L1/L2 的部分证据，但缺少复合结构识别、摊还分析和实测验证，故宁低勿高定在 L1。"
+    },
+    {
+      "skillId": "algo.sort",
+      "level": 0,
+      "confidence": 0.6,
+      "criteria": [
+        {
+          "text": "正确实现至少一种 O(n²) 排序，并能解释过程",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "未实现冒泡/插入等 O(n²) 排序。"
+            }
+          ],
+          "comment": "无手写平方级排序实现与过程解释。"
+        },
+        {
+          "text": "正确使用语言内置排序并理解比较语义（稳定性、比较器）",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "使用 [...buckets.keys()].sort((a, b) => b - a) 作为内置排序调用。"
+            },
+            {
+              "file": "test/commands.test.js",
+              "note": "'list：按优先级分桶排序，桶内保持插入顺序' 验证了排序结果。"
+            }
+          ],
+          "comment": "内置 sort 只作用于常数个键，且未完整展示稳定性/自定义比较语义。"
+        },
+        {
+          "text": "独立实现 O(n log n) 排序（快排/归并/堆排），边界与重复元素正确",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "没有快排/归并/堆排实现。"
+            }
+          ],
+          "comment": "未实现 O(n log n) 排序。"
+        },
+        {
+          "text": "测试覆盖基本与 adversarial 输入（已排序、全相同、逆序）",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "test/commands.test.js",
+              "note": "测试只覆盖功能顺序，没有已排序、全相同、逆序等 adversarial 输入。"
+            }
+          ],
+          "comment": "缺少对抗性排序测试。"
+        },
+        {
+          "text": "能论证不同排序在稳定性、原地性、最坏情况间的取舍并按数据特征选择",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "未讨论稳定性、原地性、最坏情况之间的取舍。"
+            }
+          ],
+          "comment": "无不同排序算法间的权衡论证。"
+        },
+        {
+          "text": "理解非比较排序（计数/基数）的适用边界",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "没有计数排序/基数排序等非比较排序的使用或讨论。"
+            }
+          ],
+          "comment": "未涉及非比较排序边界。"
+        }
+      ],
+      "rationale": "项目只使用内置 sort 对常数个优先级键做排序，没有实现任何 O(n²) 或 O(n log n) 排序算法，也缺少 adversarial 排序测试，证据不足。"
+    },
+    {
+      "skillId": "algo.search",
+      "level": 0,
+      "confidence": 0.9,
+      "criteria": [
+        {
+          "text": "在有序数据上正确使用/实现二分查找",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/validate.js",
+              "note": "parseIndex 只做整数与范围校验，没有对有序数据使用二分。"
+            }
+          ],
+          "comment": "无二分查找实现。"
+        },
+        {
+          "text": "理解循环不变式与终止条件",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "未见任何说明循环不变式或二分终止条件的代码/注释。"
+            }
+          ],
+          "comment": "无相关证据。"
+        },
+        {
+          "text": "正确处理左右边界变体（首个/最后一个、插入点），无差一错误",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "没有 first/last、插入点等二分变体。"
+            }
+          ],
+          "comment": "无边界变体实现。"
+        },
+        {
+          "text": "将二分思想迁移到答案空间（如最小满足条件的值）",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "没有把二分思想迁移到答案空间的任何实现。"
+            }
+          ],
+          "comment": "无答案空间二分。"
+        },
+        {
+          "text": "能论证二分适用前提（单调性）并在非显然场景识别可二分结构",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "未讨论单调性或二分适用前提。"
+            }
+          ],
+          "comment": "无适用性论证。"
+        },
+        {
+          "text": "结合剪枝/启发式控制搜索规模并分析复杂度",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "项目未涉及搜索剪枝/启发式。"
+            }
+          ],
+          "comment": "无搜索规模控制证据。"
+        }
+      ],
+      "rationale": "项目中没有二分查找、有序数据搜索或搜索树/剪枝相关代码，未点亮。"
+    },
+    {
+      "skillId": "algo.recursion",
+      "level": 0,
+      "confidence": 0.9,
+      "criteria": [
+        {
+          "text": "正确写出基础递归（阶乘、斐波那契、树遍历）并解释基线条件",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "所有函数均为命令式/迭代实现，没有基础递归。"
+            }
+          ],
+          "comment": "无递归实现。"
+        },
+        {
+          "text": "理解调用栈与递归深度的关系",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "处理参数使用循环和 switch，没有递归深度/调用栈分析。"
+            }
+          ],
+          "comment": "无调用栈与递归深度关系的体现。"
+        },
+        {
+          "text": "用回溯系统性枚举（排列/组合/子集/棋盘类），状态正确恢复",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "没有排列/组合/子集/棋盘等回溯枚举。"
+            }
+          ],
+          "comment": "无回溯枚举与状态恢复。"
+        },
+        {
+          "text": "有剪枝意识并在代码中体现",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "代码中没有剪枝逻辑。"
+            }
+          ],
+          "comment": "无剪枝体现。"
+        },
+        {
+          "text": "分析搜索空间规模并论证剪枝有效性",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "未分析搜索空间规模或剪枝有效性。"
+            }
+          ],
+          "comment": "无空间分析。"
+        },
+        {
+          "text": "能在递归与显式栈迭代间转换并说明取舍",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "没有递归与显式栈迭代之间的转换。"
+            }
+          ],
+          "comment": "无转换及取舍说明。"
+        }
+      ],
+      "rationale": "项目为命令式 CLI，没有递归函数、回溯枚举或调用栈相关实现，未点亮。"
+    },
+    {
+      "skillId": "algo.greedy",
+      "level": 0,
+      "confidence": 0.9,
+      "criteria": [
+        {
+          "text": "能复述经典贪心/分治问题（区间调度、归并排序）的思路",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "未复述任何经典贪心或分治问题的思路。"
+            }
+          ],
+          "comment": "无经典问题描述。"
+        },
+        {
+          "text": "在明确适合的场景中正确应用",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "项目逻辑不是贪心或分治应用。"
+            }
+          ],
+          "comment": "无明确适用场景中的贪心/分治应用。"
+        },
+        {
+          "text": "独立识别可分解子结构并设计分治策略（含合并步骤的正确性）",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "原子写入是 IO 设计，不是可分解子结构的分治设计。"
+            }
+          ],
+          "comment": "无分治策略及合并步骤。"
+        },
+        {
+          "text": "对贪心选择给出交换论证或反例检验",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "test/commands.test.js",
+              "note": "测试没有覆盖贪心选择或反例构造。"
+            }
+          ],
+          "comment": "无贪心正确性验证。"
+        },
+        {
+          "text": "能证明贪心策略的最优性或构造反例说明失效场景",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "没有贪心最优性证明或失效反例。"
+            }
+          ],
+          "comment": "无证明/反例。"
+        },
+        {
+          "text": "在贪心/DP/分治之间做出有依据的技术选型",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "没有在贪心/DP/分治之间做选型。"
+            }
+          ],
+          "comment": "无技术选型依据。"
+        }
+      ],
+      "rationale": "项目没有区间调度、归并排序等贪心/分治问题，也没有交换论证或反例检验，未点亮。"
+    },
+    {
+      "skillId": "algo.dp",
+      "level": 0,
+      "confidence": 0.9,
+      "criteria": [
+        {
+          "text": "能把朴素递归改造为记忆化搜索并解释重叠子问题",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "未见递归函数或记忆化缓存。"
+            }
+          ],
+          "comment": "无记忆化搜索实现。"
+        },
+        {
+          "text": "理解状态与转移的定义方式",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "没有状态与转移定义。"
+            }
+          ],
+          "comment": "无状态设计。"
+        },
+        {
+          "text": "独立定义状态与转移解决经典模型（线性 DP、背包、LIS/LCS）",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "没有线性 DP/背包/LIS/LCS 等模型。"
+            }
+          ],
+          "comment": "无经典 DP 实现。"
+        },
+        {
+          "text": "正确处理初始化、边界与遍历顺序",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "test/commands.test.js",
+              "note": "没有 DP 初始化、边界、遍历顺序相关测试。"
+            }
+          ],
+          "comment": "无边界与遍历顺序证据。"
+        },
+        {
+          "text": "进行维度/空间优化并保持正确性论证",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "没有维度/空间优化及正确性论证。"
+            }
+          ],
+          "comment": "无空间优化。"
+        },
+        {
+          "text": "面对新问题能自主设计状态（含多维、状态压缩）并分析复杂度",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "未遇到需自主设计 DP 状态的新问题。"
+            }
+          ],
+          "comment": "无自主状态设计。"
+        }
+      ],
+      "rationale": "项目完全没有动态规划/记忆化搜索/状态转移代码或讨论，未点亮。"
+    },
+    {
+      "skillId": "algo.graphalg",
+      "level": 0,
+      "confidence": 0.9,
+      "criteria": [
+        {
+          "text": "正确实现 BFS 最短路（无权）与拓扑排序",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "没有邻接表/图遍历或拓扑排序。"
+            }
+          ],
+          "comment": "无 BFS/拓扑实现。"
+        },
+        {
+          "text": "理解各算法的适用前提",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "没有提到任何图算法的适用前提。"
+            }
+          ],
+          "comment": "无图算法前提讨论。"
+        },
+        {
+          "text": "在带权图上正确应用 Dijkstra（或 Bellman-Ford 处理负权）并说明差异",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "没有带权图或 Dijkstra/Bellman-Ford。"
+            }
+          ],
+          "comment": "无最短路算法。"
+        },
+        {
+          "text": "将工程问题正确建图为图算法问题（依赖调度、路由）",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "项目问题没有被建模为图的迹象。"
+            }
+          ],
+          "comment": "无建图应用。"
+        },
+        {
+          "text": "掌握 MST/强连通等进阶算法并能论证正确性",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "文件存储无关 MST/强连通等进阶图算法。"
+            }
+          ],
+          "comment": "无进阶图算法。"
+        },
+        {
+          "text": "依据图的规模与性质（稀疏/稠密、静态/动态）选择算法与数据结构",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "没有依据图的规模/性质选择算法的讨论。"
+            }
+          ],
+          "comment": "无算法选择依据。"
+        }
+      ],
+      "rationale": "项目没有图结构，也没有 BFS/拓扑/Dijkstra/MST/连通性等任何图算法实现或建图问题，未点亮。"
+    },
+    {
+      "skillId": "db.model",
+      "level": 0,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "能将业务对象表示为带主键的表并建立基本关系",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "README声明数据存储在JSON文件中，无数据库表、主键或关系建模内容。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "字段类型与约束（非空、唯一）使用合理",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/validate.js",
+              "note": "字段校验仅存在于应用层（非空、长度、优先级枚举），未体现数据库字段类型与约束。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "关系设计正确（一对多/多对多），消除明显冗余（符合基本范式）",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "只有单一todo实体类型，没有一对多/多对多关系设计，也未提及范式。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "模式演进有考虑（迁移脚本或版本记录）",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "README和代码中均无数据库迁移脚本或版本记录。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "能论证规范化与反范式的取舍（读放大 vs 写放大）",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "未讨论规范化与反范式、读写放大等数据库权衡概念。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "建模体现对业务约束的完整捕获（部分唯一、复合键、软删除策略）",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "done/doneAt字段仅表示完成状态，未体现数据库级软删除策略、部分唯一或复合键约束的建模。"
+            }
+          ],
+          "comment": ""
+        }
+      ],
+      "rationale": "项目采用JSON文件持久化待办数据，没有数据库表、关系、迁移等概念，证据无法支撑任何建模/Rubric级别。"
+    },
+    {
+      "skillId": "db.sql",
+      "level": 0,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "正确编写单表与简单连接查询，过滤与排序符合需求",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "list函数使用filter、Map分桶实现，无SQL SELECT、JOIN、ORDER BY等。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "理解 NULL 语义与聚合函数行为",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "JSON文件读写仅处理基础数据，无SQL NULL语义或聚合函数的体现。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "熟练使用多表连接、分组聚合、子查询/CTE 解决实际报表类需求",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "stats使用JS循环计数，没有SQL多表连接、分组聚合、子查询或CTE。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "参数化查询，无拼接注入风险",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "全部通过命令行参数传递，无SQL查询，也就没有参数化查询或防注入的设计。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "能读写复杂查询（窗口函数、递归 CTE）并优化可读性",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "没有窗口函数、递归CTE等复杂SQL查询实现。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "能分析查询语义陷阱（重复行、连接放大、聚合时机）",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "由于无SQL连接操作，亦不存在重复行、连接放大、聚合时机等语义陷阱分析。"
+            }
+          ],
+          "comment": ""
+        }
+      ],
+      "rationale": "项目完全没有使用SQL，所有查询均为JavaScript数组方法实现，无任何SQL能力证据。"
+    },
+    {
+      "skillId": "db.tx",
+      "level": 0,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "理解事务的原子性并能正确开启/提交/回滚",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "save采用临时文件+rename实现原子替换，但没有事务开启、提交、回滚等数据库事务机制。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "能解释脏读、不可重复读的直观含义",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "README记录多终端写并发只靠rename原子性，未解释脏读/不可重复读等事务隔离现象。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "在应用中正确圈定事务边界（多步写入的成败一致）",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "操作（如done修改对象后save）没有包裹在事务边界中，不满足多步写入一致性设计。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "理解隔离级别与常见并发异常的对应关系",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "未提及任何数据库隔离级别或对应并发异常。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "能分析并解决死锁/长事务问题（加锁顺序、超时、重试）",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "仅使用文件rename，无锁顺序、死锁检测、超时或重试机制的讨论/实现。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "对一致性需求做出有依据的隔离级别/乐观锁选型",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "未对隔离级别、乐观锁等方案做选型论证，只简单提及缺少文件锁。"
+            }
+          ],
+          "comment": ""
+        }
+      ],
+      "rationale": "项目只有文件级原子替换写入，没有数据库事务、隔离级别、锁或并发异常处理，无法点亮事务技能。"
+    },
+    {
+      "skillId": "db.perf",
+      "level": 0,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "理解索引加速查找的原理与代价（写入放大、存储）",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "使用Map分桶排序属于算法级优化，未涉及索引原理、写入放大或存储代价。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "能为主键/外键/常用过滤字段建立索引",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "JSON文件存储无数据库索引定义，无法针对主键、外键或常用过滤字段建索引。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "使用执行计划（EXPLAIN）定位全表扫描并针对性建索引",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "没有SQL执行计划（EXPLAIN），也没有对全表扫描问题的数据库层面定位。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "能识别索引失效写法（函数包裹、类型不匹配、前导通配）",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "无SQL查询，不能识别函数包裹、类型不匹配、前导通配等索引失效写法。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "系统性优化案例：测量→分析→改写/索引→复测，并保留证据",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "README提到的已知局限是JSON文件规模大后list慢，但没有测量-分析-索引改写-复测的优化案例。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "理解存储引擎层面的代价（页、缓冲、WAL）并能解释选型",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "写入实现只依赖文件系统page缓存等隐式行为，未讨论页、缓冲池、WAL或存储引擎选型。"
+            }
+          ],
+          "comment": ""
+        }
+      ],
+      "rationale": "项目中仅有用Map做优先级分桶排序的JavaScript优化，无数据库索引、EXPLAIN或存储引擎优化证据。"
+    },
+    {
+      "skillId": "db.nosql",
+      "level": 0,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "能说出文档/键值/关系库的核心差异与典型场景",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "README没有对比文档/键值/关系库的核心差异与典型场景，也未介绍任何NoSQL系统。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "正确使用一种非关系存储完成读写",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "代码仅通过fs读写JSON文件，并未使用Redis、MongoDB等非关系型存储产品，也未实现NoSQL API。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "在项目中合理引入（如缓存层、会话存储）并处理失效/一致性",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "没有引入缓存层或会话存储，也没有缓存失效与一致性处理设计。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "理解其弱事务/弱模式带来的边界并防御",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "store只简单检查JSON结构和items数组，没有围绕弱模式数据提供防御性校验或迁移兼容处理。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "能论证存储选型（数据形态、访问模式、一致性需求）",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "README只解释选用了JSON文件存储，但未论证相对文档/键值存储或考虑一致性需求后的选型依据。"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "处理过真实问题：缓存击穿/穿透、淘汰策略、序列化兼容",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "未处理缓存穿透/击穿、淘汰策略或序列化版本兼容问题，仅包含固定JSON结构写入。"
+            }
+          ],
+          "comment": ""
+        }
+      ],
+      "rationale": "项目使用JSON文件作为持久化手段，既非典型NoSQL数据库也非缓存组件，且无任何选型或缓存治理证据。"
+    },
+    {
+      "skillId": "ds.array",
+      "level": 0,
+      "confidence": 0.7,
+      "criteria": [
+        {
+          "text": "正确使用数组/列表完成增删改查与遍历",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "add 通过 push 插入，complete 通过数组索引访问，remove 通过 filter 删除，list 通过 filter/map 遍历"
+            },
+            {
+              "file": "test/commands.test.js",
+              "note": "增删改查正常与边界路径均有测试覆盖"
+            }
+          ],
+          "comment": "数组/列表基本操作正确"
+        },
+        {
+          "text": "能解释索引访问与插入删除的代价差异",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "设计说明提到 O(n) 分桶与万级渲染慢，但没有解释索引访问与插入/删除的复杂度差异"
+            }
+          ],
+          "comment": "缺少顺序存储代价差异的说明"
+        },
+        {
+          "text": "在项目中依据操作模式选择数组或链表并能说明理由",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "固定使用数组存储待办，未依据操作模式说明选择数组还是链表的理由"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "手写实现过链表（或等价结构）且边界正确（头尾、空表）",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "数据模型仅为 seq + items 数组，无链表或等价结构实现"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "能分析连续 vs 链式存储在缓存、内存分配上的实际影响",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "未讨论连续存储与链式存储在缓存、内存分配上的实际影响"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "实现过带容量策略的动态结构（扩容、缩容）并论证参数",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "只使用原生数组，未实现带容量策略的动态扩容/缩容结构"
+            }
+          ],
+          "comment": ""
+        }
+      ],
+      "rationale": "能在代码中正确使用数组完成基本增删改查，但未展示对数组索引与插入删除代价差异的解释，也未涉及链表或动态容量策略。"
+    },
+    {
+      "skillId": "ds.string",
+      "level": 0,
+      "confidence": 0.85,
+      "criteria": [
+        {
+          "text": "正确进行字符串构造、切分、拼接与格式化",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "rest.join(' ') 拼接标题、模板字符串格式化输出"
+            },
+            {
+              "file": "src/validate.js",
+              "note": "parseTitle 对标题做 trim、类型与长度检查"
+            }
+          ],
+          "comment": "字符串构造、拼接、格式化得到实际应用"
+        },
+        {
+          "text": "处理空串、特殊字符等基本情况不出错",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/validate.js",
+              "note": "parseTitle 拒绝空串与超长标题；parseIndex 拒绝非整数/越界"
+            },
+            {
+              "file": "test/commands.test.js",
+              "note": "空标题、超长标题、重复完成、越界均有测试覆盖"
+            }
+          ],
+          "comment": "空串与常见异常输入被正确处理"
+        },
+        {
+          "text": "有编码意识（UTF-8、转义），跨来源的文本被规范化处理",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "文件读写统一使用 UTF-8，JSON.stringify/parse 负责转义与结构解析"
+            },
+            {
+              "file": "src/validate.js",
+              "note": "标题、优先级、TODO_FILE 等外部输入经过 trim/lowercase/长度校验规范化"
+            }
+          ],
+          "comment": "体现编码意识与跨来源文本规范化"
+        },
+        {
+          "text": "使用正则或解析器解决匹配/提取问题且模式可读",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "parseArgs 手写循环解析命令行参数"
+            },
+            {
+              "file": "src/store.js",
+              "note": "JSON.parse 作为 JSON 文本解析器使用"
+            }
+          ],
+          "comment": "有解析行为但模式简单，没有使用正则表达式的匹配/提取"
+        },
+        {
+          "text": "为文本处理选择合适算法/结构并能分析复杂度（如 KMP、Trie）",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "未提及 KMP、Trie 等文本算法或复杂度分析"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "处理大规模文本的流式/分块策略并论证",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "使用 readFileSync/writeFileSync 一次性读写，无流式或分块处理"
+            }
+          ],
+          "comment": ""
+        }
+      ],
+      "rationale": "能正确完成字符串构造、切分、拼接、规范化与编码处理，但对正则/解析器使用较浅，未达到 L2 完整要求，也无 L3 内容。"
+    },
+    {
+      "skillId": "ds.stackqueue",
+      "level": 0,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "能解释栈与队列的语义差异并举出典型场景",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "未涉及栈与队列的语义差异或典型场景说明"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "正确使用内置栈/队列结构解决问题",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "列表仅按普通数组 push/filter 处理，不以 LIFO/FIFO 受限结构使用"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "在真实场景中应用（撤销、括号匹配、任务排队、广度优先）且实现正确",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "无撤销、括号匹配、任务排队、广度优先等真实场景应用"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "手写实现过栈或队列，操作复杂度达标",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "没有手写实现栈或队列"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "组合运用（双端队列、单调栈、循环队列）并论证选择",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "未讨论双端队列、单调栈、循环队列等组合结构"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "能分析受限结构如何约束问题空间从而简化证明/实现",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "命令分发流程未借助受限结构来约束问题空间"
+            }
+          ],
+          "comment": ""
+        }
+      ],
+      "rationale": "项目中没有任何栈/队列语义的运用、实现或解释。"
+    },
+    {
+      "skillId": "ds.hash",
+      "level": 0,
+      "confidence": 0.9,
+      "criteria": [
+        {
+          "text": "正确使用内置哈希/映射/集合完成存取与判重",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "list 使用 new Map() 作为优先级分桶，set/get 存取桶；buckets.has(w) 判断缺失"
+            },
+            {
+              "file": "src/validate.js",
+              "note": "PRIORITIES 使用 Map 存储优先级到权重的映射并用于 has/get 查找"
+            }
+          ],
+          "comment": "哈希映射/集合的基本使用正确"
+        },
+        {
+          "text": "能识别\"遍历查找\"应替换为哈希查找的场景",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "注释 'O(n) 分桶替代全量比较排序' 体现用哈希桶避免排序比较的意识"
+            },
+            {
+              "file": "src/validate.js",
+              "note": "优先级合法性直接用 Map.has 检查，而非遍历数组"
+            }
+          ],
+          "comment": "识别了使用哈希结构替代线性遍历/排序的场景"
+        },
+        {
+          "text": "在项目中把需要 O(n) 查找的逻辑改为哈希结构并保持行为正确",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "complete/remove 定位元素仍通过 list 返回的数组按索引访问，未用 Map 索引替换线性查找"
+            },
+            {
+              "file": "README.md",
+              "note": "未记录对 O(n) 查找做哈希改造的决策或对比"
+            }
+          ],
+          "comment": "没有把线性查找逻辑真正改造成哈希查找"
+        },
+        {
+          "text": "处理缺失键、键冲突、遍历顺序等边界",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "buckets.has(w) 处理缺失优先级键，之后显式对 buckets.keys() 排序控制遍历顺序；stats 用 ?? 处理缺失计数"
+            }
+          ],
+          "comment": "缺失键与遍历顺序有处理，但优先级枚举有限，未出现真实键冲突场景"
+        },
+        {
+          "text": "能解释哈希函数、装载因子与扩容策略，并在项目中体现权衡（自定义键、容量预估）",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "未讨论哈希函数、装载因子、扩容策略或自定义键哈希"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "依据访问模式论证哈希表与有序结构/树的取舍",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "没有与有序数组/树的访问模式对比论证"
+            }
+          ],
+          "comment": ""
+        }
+      ],
+      "rationale": "正确使用 Map 完成映射/分桶并处理了缺失键与遍历顺序，但未展示将线性查找改为哈希结构的整体行为或哈希函数/装载因子权衡。"
+    },
+    {
+      "skillId": "ds.tree",
+      "level": 0,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "能构建/遍历树（前中后序、层序）并解释各序语义",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "数据模型 {seq, items} 是扁平列表，没有树节点或树结构，也没有前中后序/层序遍历"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "理解二叉搜索树的有序性质",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "未使用节点的有序性质，所有排序基于数组列表"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "独立实现 BST 的插入/查找（删除至少了解），递归与迭代任一写法边界正确",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "无 BST 插入/查找/删除实现"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "在项目中用树形结构表达层次数据并正确序列化/还原",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "存取的数据为扁平 items，未用树表达层次数据"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "能解释失衡问题与自平衡方案（AVL/红黑/B 树）的核心思想及适用场景",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "未涉及失衡、AVL/红黑/B 树等自平衡概念"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "实现过带平衡/剪枝优化的树结构或论证其必要性",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "没有实现带平衡/剪枝优化的树结构"
+            }
+          ],
+          "comment": ""
+        }
+      ],
+      "rationale": "todo 数据是扁平数组，项目中无任何树/二叉树表示、遍历或 BST 操作。"
+    },
+    {
+      "skillId": "ds.heap",
+      "level": 0,
+      "confidence": 0.9,
+      "criteria": [
+        {
+          "text": "能解释堆的完全二叉树性质与上浮/下沉操作",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "list 使用桶 + flatMap 排序，没有涉及堆的完全二叉树性质或上浮/下沉"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "正确使用内置优先队列解决\"取最值\"类问题",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "没有使用内置优先队列或取最值操作"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "在项目中应用堆解决 Top-K、调度、合并有序流等问题且复杂度正确",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "无 Top-K、任务调度、合并有序流等堆典型应用"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "手写实现过堆且边界（空、单元素、重复值）正确",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "没有手写堆及空、单元素、重复值边界处理"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "能论证堆与有序数组/BST 在不同操作组合下的取舍",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "未比较堆与有序数组/BST 在不同操作组合下的取舍"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "实现过堆的变体（索引堆、双堆、延迟删除）处理真实约束",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "无索引堆、双堆或延迟删除等变体实现"
+            }
+          ],
+          "comment": ""
+        }
+      ],
+      "rationale": "项目使用 Map 分桶排序而非堆/优先队列，无 Top-K、调度或堆实现。"
+    },
+    {
+      "skillId": "ds.graph",
+      "level": 0,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "能用邻接表/矩阵表示图并解释空间差异",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "数据仅有 seq 和 items 数组，没有邻接表/矩阵等图结构"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "正确实现 BFS/DFS 遍历并避免重复访问",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "只有数组 filter/map，没有 BFS/DFS 遍历或避免重复访问逻辑"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "将真实问题建模为图（依赖、关系、路径）且建模合理",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "业务待办相互独立，没有依赖、关系或路径建模"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "能判断连通性、环、层级等基本性质",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "未判断连通性、环或层级等图性质"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "处理加权/有向/带约束的图结构并说明表示选择的代价",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "没有加权/有向/带约束的图结构及表示代价说明"
+            }
+          ],
+          "comment": ""
+        },
+        {
+          "text": "能论证图算法选型与数据规模的匹配（稀疏 vs 稠密）",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "未讨论图算法选型与稀疏/稠密数据规模匹配"
+            }
+          ],
+          "comment": ""
+        }
+      ],
+      "rationale": "任务数据无实体/关系依赖，没有图结构表示或遍历。"
+    },
+    {
+      "skillId": "net.http",
+      "level": 0,
+      "confidence": 0.98,
+      "criteria": [
+        {
+          "text": "正确发起/处理 HTTP 请求，理解方法与状态码语义",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "所有代码均为本地 CLI 逻辑，从未发起或处理 HTTP 请求。"
+        },
+        {
+          "text": "能解释一次请求-响应的完整路径（客户端、DNS、服务器）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未出现任何对请求-响应路径（客户端、DNS、服务器）的解释。"
+        },
+        {
+          "text": "在项目中正确处理头、查询参数、状态码与超时/重试",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "本地 JSON 文件读写不涉及请求头、查询参数、状态码、超时或重试。"
+        },
+        {
+          "text": "能用工具（curl/抓包）诊断实际请求问题",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未使用 curl/抓包等工具进行网络诊断。"
+        },
+        {
+          "text": "理解缓存、连接复用、HTTPS/TLS 握手的机制并能据此优化或排障",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有与缓存、连接复用、HTTPS/TLS 相关的实现或讨论。"
+        },
+        {
+          "text": "能论证 RESTful 约定或替代风格（RPC、GraphQL）的取舍",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有对 RESTful 或替代 API 风格的取舍论证。"
+        }
+      ],
+      "rationale": "项目为纯命令行待办工具，完全没有涉及 HTTP 请求/响应、方法、状态码、头部或网络工具的使用。"
+    },
+    {
+      "skillId": "net.api",
+      "level": 0,
+      "confidence": 0.98,
+      "criteria": [
+        {
+          "text": "实现过对外 HTTP 接口，路由与动词使用合理",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "src/index.js 处理的是 process.argv，不是 HTTP 路由或动词。"
+        },
+        {
+          "text": "响应格式一致（统一包裹/错误结构）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "输出为控制台文本，无统一 HTTP 响应包裹或错误结构。"
+        },
+        {
+          "text": "资源建模清晰（名词化、层级、分页/过滤约定），输入有校验",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "输入校验（validate.js）仅针对 CLI 文本，没有资源建模、分页、过滤约定。"
+        },
+        {
+          "text": "错误响应可行动（明确的错误码、信息、状态码正确）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "无 HTTP 错误码或可行动错误响应设计。"
+        },
+        {
+          "text": "有接口契约（文档/OpenAPI）与版本化/兼容性意识",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "缺少 OpenAPI/文档等接口契约，也没有版本化讨论。"
+        },
+        {
+          "text": "能论证鉴权、幂等、限流等横切设计的选择",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未涉及鉴权、幂等、限流等横切设计。"
+        }
+      ],
+      "rationale": "项目只提供命令行字符串参数接口，从未实现任何对外 HTTP API，也无契约或版本化意识。"
+    },
+    {
+      "skillId": "net.tcp",
+      "level": 0,
+      "confidence": 0.98,
+      "criteria": [
+        {
+          "text": "能解释 TCP 与 UDP 的核心差异及适用场景",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未提及 TCP 与 UDP 差异或适用场景。"
+        },
+        {
+          "text": "使用过 socket/网络库完成基本的收发",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "代码中未使用任何 socket/网络库，src/store.js 用的是 fs 而非网络 API。"
+        },
+        {
+          "text": "处理过流式传输的现实问题（分包/粘包、编码、心跳、断线重连）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "无流式传输场景，自然没有分包、粘包、心跳、断线重连等处理。"
+        },
+        {
+          "text": "连接生命周期管理正确（超时、关闭、资源释放）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "连接管理概念未出现；只涉及文件句柄，无超时/关闭/资源释放的网络层面问题。"
+        },
+        {
+          "text": "设计过应用层协议（帧格式、握手、错误恢复）并论证",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有应用层协议设计或相关论证。"
+        },
+        {
+          "text": "能基于拥塞控制/背压原理诊断或优化传输行为",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未涉及拥塞控制或背压原理。"
+        }
+      ],
+      "rationale": "项目完全没有使用 socket 或网络库，仅做本地文件 IO，不涉及 TCP/UDP、连接管理或自定义协议。"
+    },
+    {
+      "skillId": "net.sec",
+      "level": 0,
+      "confidence": 0.98,
+      "criteria": [
+        {
+          "text": "理解注入/XSS/CSRF 的原理与基本防御（参数化、转义、token）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "无任何与注入、XSS、CSRF 相关的说明或防御代码。"
+        },
+        {
+          "text": "不在代码中硬编码密钥/口令",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "代码中虽然没有硬编码密钥，但整个项目不涉及敏感凭据，无法证明对该实践的理解。"
+        },
+        {
+          "text": "在项目中落实防御（参数化查询、输出编码、CORS/头配置）并校验输入来源",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未落实任何 Web 防护（参数化查询、输出编码、CORS/头配置）；validate.js 只针对普通文本输入。"
+        },
+        {
+          "text": "密码等敏感数据处理正确（加盐哈希、不落日志）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未处理任何真实密码或敏感数据。"
+        },
+        {
+          "text": "系统性威胁建模：识别信任边界并给出缓解（最小权限、审计）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未进行信任边界识别或威胁建模。"
+        },
+        {
+          "text": "对会话/令牌的生成、存储、失效有完整且正确的设计",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "无会话或令牌的生成、存储、失效的任何代码。"
+        }
+      ],
+      "rationale": "项目无 Web 攻击面，没有针对注入/XSS/CSRF 的代码、解释或测试，不符合任何安全等级要求。"
+    },
+    {
+      "skillId": "prog.syntax",
+      "level": 0,
+      "confidence": 0.7,
+      "criteria": [
+        {
+          "text": "项目中存在能独立运行的源码，正确使用变量、运算与基本数据类型",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "存在可运行的命令行入口，正确使用变量、运算、字符串/数字/对象/布尔等基本类型"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "业务层使用数组、对象、Map 等数据结构并正确赋值"
+            }
+          ],
+          "comment": "源代码可独立运行，类型使用自然。"
+        },
+        {
+          "text": "能读懂并小幅修改既有代码（存在对依赖库/模板代码的有意义改动）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "在 node:fs/JSON 的既有 API 基础上做了有意义的封装改造：临时文件、rename、清理等"
+            },
+            {
+              "file": "src/validate.js",
+              "note": "对用户输入约束做抽取与修改，体现对既有代码的进一步阅读与调整"
+            }
+          ],
+          "comment": "基于 Node 内置库的用法不是简单照抄，而是改造为带错误处理与原子写语义的自定义实现。"
+        },
+        {
+          "text": "综合运用分支、循环、集合等构造完成完整功能单元，而非仅拼接示例代码",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "综合运用 filter、for...of、Map 分桶、flatMap、map 构建完整功能单元"
+            },
+            {
+              "file": "src/index.js",
+              "note": "用 switch、循环、参数解析完成命令分发"
+            }
+          ],
+          "comment": "并非拼凑示例代码，而是完整、可组合的功能单元。"
+        },
+        {
+          "text": "代码风格一致，能通过格式化/静态检查（含配置或结果痕迹）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "整体采用一致的两空格缩进、分号、ESM 风格"
+            },
+            {
+              "file": "package.json",
+              "note": "脚本与模块类型明确，代码可被 node --test 解析运行"
+            }
+          ],
+          "comment": "代码风格统一，虽无独立 lint 配置，但从多文件看一致性明确且能通过执行验证。"
+        },
+        {
+          "text": "针对语言特性做出取舍并能说明理由（如值语义 vs 引用、可变性控制）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "README 与代码中没有关于值语义/引用、可变性控制等语言特性取舍的说明。"
+        },
+        {
+          "text": "使用语言中高级特性解决实际问题（如迭代器/生成器、解构、泛型约束）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "解构参数 { title, priority }、默认参数 { all = false }、Map/迭代器/flatMap 解决排序分桶问题"
+            },
+            {
+              "file": "src/index.js",
+              "note": "for...of、展开与默认参数用于 CLI 参数解析"
+            }
+          ],
+          "comment": "使用了 ES2020+ 的高级语言特性解决实际问题。"
+        }
+      ],
+      "rationale": "源码完整可运行且较熟练地使用分支、循环、集合与语言特性，但缺少对语言特性取舍的明确论证，故停在 L2。"
+    },
+    {
+      "skillId": "prog.control",
+      "level": 0,
+      "confidence": 0.85,
+      "criteria": [
+        {
+          "text": "正确使用条件与循环表达业务规则",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "switch 分发命令，if 处理缺失参数与帮助"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "if/for...of 表达过滤、完成、删除等业务规则"
+            }
+          ],
+          "comment": "业务规则由条件与循环正确表达。"
+        },
+        {
+          "text": "能识别并描述程序中的关键状态（如条目是否完成）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "每一项用 done/doneAt 字段刻画是否完成"
+            },
+            {
+              "file": "README.md",
+              "note": "描述未完成/已完成、完成第 N 项等关键状态"
+            }
+          ],
+          "comment": "能够识别待办是否完成这一关键状态。"
+        },
+        {
+          "text": "状态转换集中、可追踪（如集中管理数据而非散落的标志位）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "complete/remove 在一个集中位置修改 store.items 与条目状态，没有散落的标志位"
+            },
+            {
+              "file": "src/store.js",
+              "note": "load 返回统一存储结构 { seq, items }，状态入口集中"
+            }
+          ],
+          "comment": "状态转换逻辑集中在 commands 层，可追踪。"
+        },
+        {
+          "text": "循环与条件覆盖边界情况（空输入、越界、终止条件）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/validate.js",
+              "note": "parseIndex 拒绝非整数、越界；parseTitle 拒绝空/超长"
+            },
+            {
+              "file": "test/commands.test.js",
+              "note": "覆盖空输入、越界、重复完成等边界"
+            }
+          ],
+          "comment": "边界情况由校验函数与测试明确覆盖。"
+        },
+        {
+          "text": "用状态机/表驱动等方式治理复杂分支，代码可读性显著优于堆叠 if",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未使用状态机/更复杂表驱动治理；当前流程不复杂。"
+        },
+        {
+          "text": "能解释状态设计的演进理由及替代方案",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有关于状态设计演进或替代方案的解释。"
+        }
+      ],
+      "rationale": "条件、循环与集中式状态管理都有扎实证据，并覆盖常见边界；但未出现状态机/表驱动或设计演进论证，故为 L2。"
+    },
+    {
+      "skillId": "prog.functions",
+      "level": 0,
+      "confidence": 0.8,
+      "criteria": [
+        {
+          "text": "能把重复逻辑提取为函数并正确传参/返回",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/validate.js",
+              "note": "抽出 parseTitle/parsePriority/parseIndex 等重复校验逻辑"
+            },
+            {
+              "file": "src/store.js",
+              "note": "load/save 抽出统一读写逻辑，被 commands 复用"
+            }
+          ],
+          "comment": "重复逻辑被合理提取为函数并正确传参/返回。"
+        },
+        {
+          "text": "项目拆分为多个源文件/模块，职责可辨认",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "业务命令模块，职责可辨认"
+            },
+            {
+              "file": "src/store.js",
+              "note": "存储层模块"
+            },
+            {
+              "file": "src/index.js",
+              "note": "CLI 参数与展示模块"
+            }
+          ],
+          "comment": "项目拆分为多个源文件，职责边界清楚。"
+        },
+        {
+          "text": "模块间通过明确接口交互，无跨越边界的隐式耦合（如隐藏全局状态）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "命令函数接收 store 参数，不依赖全局可变状态"
+            },
+            {
+              "file": "src/store.js",
+              "note": "store 通过 load/save 函数显式传入数据与路径参数（路径可注入测试）"
+            }
+          ],
+          "comment": "模块通过明确函数参数和返回交互，未出现跨模块隐式共享状态。"
+        },
+        {
+          "text": "函数职责单一，参数与返回值语义清晰，命名一致",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "add/list/complete/remove/stats 各函数职责单一，返回语义清晰"
+            },
+            {
+              "file": "src/validate.js",
+              "note": "校验函数命名与行为一致"
+            }
+          ],
+          "comment": "函数名字、参数和返回值与实际行为对应良好。"
+        },
+        {
+          "text": "抽象层次分明：核心逻辑与 I/O、展示分离，替换底层不影响上层",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "明确存储层/命令层/解析展示层分离，新增命令不需要改存储层"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "commands 注释说明存储层可替换，验证可注入测试"
+            }
+          ],
+          "comment": "核心逻辑、I/O 与展示分层明显，替换存储实现不会影响业务规则。"
+        },
+        {
+          "text": "能说明模块划分的权衡（合并 vs 拆分、依赖方向）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "README 未讨论模块合并 vs 拆分、依赖方向等权衡代价。"
+        }
+      ],
+      "rationale": "模块边界与职责分离清晰，函数抽取良好，并有 L3 的分层证据；但缺少对模块划分权衡的详细说明，故保守停在 L2。"
+    },
+    {
+      "skillId": "prog.types",
+      "level": 0,
+      "confidence": 0.85,
+      "criteria": [
+        {
+          "text": "为核心概念选择了合适的基础数据结构并保持一致使用",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "待办项使用 { id, title, priority, done, createdAt, doneAt } 统一对象结构"
+            },
+            {
+              "file": "src/store.js",
+              "note": "存储结构使用 { seq, items }，items 为数组"
+            }
+          ],
+          "comment": "核心概念选用了合适的对象/数组/Map 表示，且使用一致。"
+        },
+        {
+          "text": "数据形态有约定可循（命名、结构统一）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "所有新建 item 字段结构完全一致"
+            },
+            {
+              "file": "src/validate.js",
+              "note": "PRIORITIES 使用 Map 固定了优先级枚举"
+            }
+          ],
+          "comment": "数据形态命名统一、结构可循。"
+        },
+        {
+          "text": "存在显式的类型/结构定义或输入校验，非法数据被拒绝而非默默传播",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/validate.js",
+              "note": "parseTitle/parsePriority/parseIndex 对用户输入做显式校验并拒绝非法值"
+            },
+            {
+              "file": "src/store.js",
+              "note": "load 对 items 是否为数组、data 是否为对象做了结构校验，损坏结构抛 StoreError"
+            }
+          ],
+          "comment": "在动态语言中通过运行时校验拒绝非法数据。"
+        },
+        {
+          "text": "数据表示与领域语义对应（而非一切皆字符串/字典）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "不用裸字典/字符串表示待办，title/priority/done 等字段都有明确领域语义"
+            },
+            {
+              "file": "src/store.js",
+              "note": "store 中 seq 和 items 的类型/含义明确"
+            }
+          ],
+          "comment": "数据表示紧密对应待办领域。"
+        },
+        {
+          "text": "利用类型系统消除一类错误（可辨识联合、泛型约束、不可变数据等）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "项目使用原生 JS，未使用可辨识联合、泛型约束、不可变数据等类型系统能力。"
+        },
+        {
+          "text": "能论证数据表示选择的代价（规范化 vs 便利、内存 vs 拷贝）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有对规范化/便利、内存/拷贝等取舍进行论证。"
+        }
+      ],
+      "rationale": "数据结构和领域语义对应，且有输入校验与存储结构检查；但未使用更高级类型手段，也没有表示代价论证，故为 L2。"
+    },
+    {
+      "skillId": "prog.io",
+      "level": 0,
+      "confidence": 0.7,
+      "criteria": [
+        {
+          "text": "能正确读写文件并选择合理的编码/格式（如 JSON）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "load 使用 fs.readFileSync + JSON.parse，save 使用 fs.writeFileSync + JSON.stringify"
+            },
+            {
+              "file": "README.md",
+              "note": "数据存放 ~/.todo.json，格式 JSON"
+            }
+          ],
+          "comment": "能正确读写 JSON 文件并选择合理编码。"
+        },
+        {
+          "text": "文件不存在、损坏等基础异常被处理",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "文件不存在返回空数据；空文件返回空；JSON 损坏抛出 StoreError 且保留原文件"
+            }
+          ],
+          "comment": "文件不存在、空文件、损坏等基础异常均有处理。"
+        },
+        {
+          "text": "持久化逻辑集中封装，数据格式有版本意识或迁移考虑",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "所有持久化逻辑集中在 load/save，并校验存储结构"
+            },
+            {
+              "file": "README.md",
+              "note": "说明了默认路径与 TODO_FILE 覆盖"
+            }
+          ],
+          "comment": "集中封装已做到，但没有版本字段或迁移策略；只有结构合法性检查。"
+        },
+        {
+          "text": "写入具备基本一致性意识（如先写临时文件再替换）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "save 先写同目录临时文件再 rename 替换，失败时清理临时文件"
+            },
+            {
+              "file": "test/store.test.js",
+              "note": "验证原子写入后不遗留 .tmp 文件"
+            }
+          ],
+          "comment": "写入具有基本一致性意识，符合先写临时文件再替换的要求。"
+        },
+        {
+          "text": "能论证持久化方案取舍（格式、位置、并发安全、体积）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "说明 JSON 格式、存储位置、环境变量覆盖、原子替换与多终端并发写入限制"
+            },
+            {
+              "file": "src/store.js",
+              "note": "写入与读取位置可通过 resolveStorePath 统一决策"
+            }
+          ],
+          "comment": "对格式、位置、并发安全与规模的限制有明确说明。"
+        },
+        {
+          "text": "处理真实故障模式：并发写、部分写入、磁盘异常",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "rename 原子替换与临时文件清理处理了部分写入/磁盘异常；写错误包装为 StoreError"
+            },
+            {
+              "file": "README.md",
+              "note": "承认未做文件锁，仅依靠 rename 原子性，多终端同时写仍可能丢失更新"
+            }
+          ],
+          "comment": "部分崩溃/写失败模式已覆盖，但没有锁或冲突检测来处理真正并发写。"
+        }
+      ],
+      "rationale": "持久化封装集中且有原子写入/损坏处理，策略理由清楚；但缺少版本迁移和锁机制，不足以达到 L3，仍符合 L2 独立应用。"
+    },
+    {
+      "skillId": "prog.cli",
+      "level": 0,
+      "confidence": 0.85,
+      "criteria": [
+        {
+          "text": "能解析命令行参数并分发到对应功能",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "parseArgs 解析 argv，switch 分发到 add/list/done/rm/stats"
+            },
+            {
+              "file": "README.md",
+              "note": "给出 add/list/done/rm 的完整命令示例"
+            }
+          ],
+          "comment": "能解析参数并正确分发。"
+        },
+        {
+          "text": "有基本的使用提示（-h/--help 或 README 示例）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "USAGE 常量提供使用说明，--help/无参数时打印"
+            },
+            {
+              "file": "README.md",
+              "note": "有基于 README 的使用说明"
+            }
+          ],
+          "comment": "帮助信息与 README 示例可支撑基本使用。"
+        },
+        {
+          "text": "错误用法有可读的报错与正确退出码，而非堆栈崩溃",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "ValidationError/StoreError 带 userFacing，catch 后输出错误并设置 exitCode 1；未知命令也有可读提示"
+            },
+            {
+              "file": "src/validate.js",
+              "note": "非法优先级/序号/标题在进入业务前被拦截"
+            }
+          ],
+          "comment": "不合法使用不会堆栈崩溃，而有可读错误和退出码。"
+        },
+        {
+          "text": "支持常见习惯（子命令或标志、默认值、管道/重定向友好输出）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/index.js",
+              "note": "支持子命令、--priority/--all 标志、默认优先级 normal、--help，list 输出为可解析的逐行文本"
+            },
+            {
+              "file": "README.md",
+              "note": "命令示例说明默认值和常用标志"
+            }
+          ],
+          "comment": "子命令、标志、默认值和列表输出适合管道重定向。"
+        },
+        {
+          "text": "交互设计有整体考量：输出可组合（机器可读模式）、进度反馈、破坏性操作确认",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "无机器可读输出模式，删除操作无二次确认，也无进度反馈。"
+        },
+        {
+          "text": "能说明 CLI 与其他界面形态（Web/API）的取舍",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "README/代码未讨论 CLI 与 Web/API 界面的取舍。"
+        }
+      ],
+      "rationale": "参数解析、帮助、退出码和常用 CLI 习惯都完整实现；但缺少机器可读输出、确认等交互设计，也无与其他界面形态的取舍讨论，故停在 L2。"
+    },
+    {
+      "skillId": "prog.error",
+      "level": 0,
+      "confidence": 0.9,
+      "criteria": [
+        {
+          "text": "对用户输入做基本校验，拒绝非法值而非崩溃或静默出错",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/validate.js",
+              "note": "对标题、优先级、序号做显式校验，拒绝非法输入"
+            },
+            {
+              "file": "src/index.js",
+              "note": "未知命令也作为 ValidationError 抛出并给出可读提示"
+            }
+          ],
+          "comment": "用户输入被校验，非法值不会静默传播。"
+        },
+        {
+          "text": "捕获可预期异常并给出可读提示",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "JSON 解析失败/读写失败被捕获并转为 StoreError"
+            },
+            {
+              "file": "src/index.js",
+              "note": "catch 中 userFacing 错误输出 stderr，非 userFacing 错误输出内部详情并 exitCode 2"
+            }
+          ],
+          "comment": "可预期异常都有可读提示，且区分用户错误与内部错误。"
+        },
+        {
+          "text": "错误有分类（用户错误 vs 程序缺陷），信息足以定位问题（上下文、原因链）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/validate.js",
+              "note": "ValidationError 专用于用户输入错误"
+            },
+            {
+              "file": "src/store.js",
+              "note": "StoreError 专用于存储层错误，都有 userFacing 标记"
+            },
+            {
+              "file": "src/index.js",
+              "note": "main catch 依据 userFacing 区分用户错误和程序缺陷，分别退出 1/2"
+            }
+          ],
+          "comment": "错误类型明确分类，信息包含原因与上下文。"
+        },
+        {
+          "text": "边界路径（空、超大、非法字符、重复操作）行为明确",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "test/commands.test.js",
+              "note": "空标题、超长标题、未知优先级、越界序号、重复完成等边界路径明确验证"
+            },
+            {
+              "file": "test/store.test.js",
+              "note": "损坏 JSON、原子写入临时文件清理等边界行为明确"
+            }
+          ],
+          "comment": "边界路径均有预期行为与测试保护。"
+        },
+        {
+          "text": "系统性错误策略：自定义错误类型、恢复/回滚路径、日志与报错分离",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "save 失败会清理临时文件，原数据不被破坏；采用先校验后写盘的模式避免脏数据"
+            },
+            {
+              "file": "src/index.js",
+              "note": "userFacing 错误输出与内部日志（错误详情）分离"
+            }
+          ],
+          "comment": "有自定义错误类型、失败恢复路径、日志与用户报错分离的系统性策略。"
+        },
+        {
+          "text": "失败测试或防御性设计表明对失败模式的预判",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "test/commands.test.js",
+              "note": "失败添加后不留下脏数据、重复完成被拒绝等预判"
+            },
+            {
+              "file": "test/store.test.js",
+              "note": "原子写入和损坏文件恢复测试体现对故障模式预判"
+            }
+          ],
+          "comment": "测试与防御性设计覆盖了典型失败模式。"
+        }
+      ],
+      "rationale": "错误分类、用户可读信息、自定义错误、恢复/回滚和故障预判测试均完整呈现，达到系统化错误处理的高等级要求。"
+    },
+    {
+      "skillId": "prog.fp",
+      "level": 0,
+      "confidence": 0.75,
+      "criteria": [
+        {
+          "text": "使用 map/filter/reduce（或等价物）替代手写循环完成数据变换",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "list 用 filter 筛出可见项，flatMap/map 完成排序与标号；remove 用 filter 删除"
+            },
+            {
+              "file": "src/index.js",
+              "note": "forEach 与 map 用于渲染展示"
+            }
+          ],
+          "comment": "数据变换使用了 map/filter/flatMap 等高阶方式，没有手写等效循环。"
+        },
+        {
+          "text": "理解回调/高阶函数的传参语义",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "sort 的 comparator、flatMap/map 的回调都正确接收参数并返回结果"
+            },
+            {
+              "file": "src/index.js",
+              "note": "forEach 回调与排序回调语义清楚"
+            }
+          ],
+          "comment": "高阶函数/回调传参理解正确。"
+        },
+        {
+          "text": "数据变换管道清晰可组合，中间状态不可变或最小化",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "list 函数从 filter 到 Map 分桶再到 flatMap/map，形成可读的变换链，中间只使用局部 Map"
+            },
+            {
+              "file": "test/commands.test.js",
+              "note": "list 输出可由纯数据断言，说明核心变换可组合"
+            }
+          ],
+          "comment": "list 的数据变换清晰，中间状态仅限函数内。"
+        },
+        {
+          "text": "副作用集中于边界，核心逻辑可测试",
+          "verdict": "unmet",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "add/complete/remove 在业务函数内部直接调用 save(store)，把 file I/O 副作用带进核心逻辑"
+            },
+            {
+              "file": "src/store.js",
+              "note": "save 的默认路径读取环境变量/家目录，commands 测试难以隔离持久化路径"
+            }
+          ],
+          "comment": "副作用没有集中在应用边界，核心命令测试会触达真实文件写入，不满足该条。"
+        },
+        {
+          "text": "自建高阶抽象（组合器、惰性序列、函数工厂）并说明适用边界",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有自建组合器、惰性序列、函数工厂等高阶抽象。"
+        },
+        {
+          "text": "能论证可变性/性能与函数式纯度的权衡",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未讨论函数式纯度与可变性/性能的权衡。"
+        }
+      ],
+      "rationale": "已经会用 map/filter/flatMap 等高阶函数做数据变换，但命令层仍直接在业务逻辑中调用 save 并修改 store，副作用未集中在边界，故达不到 L2。"
+    },
+    {
+      "skillId": "prog.tooling",
+      "level": 0,
+      "confidence": 0.8,
+      "criteria": [
+        {
+          "text": "项目有清单文件（依赖声明），安装即可运行",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "package.json",
+              "note": "声明了 name/bin/type/scripts，无第三方依赖，安装后即可运行"
+            },
+            {
+              "file": "README.md",
+              "note": "给出直接 node src/index.js 或 npm test 的运行方式"
+            }
+          ],
+          "comment": "清单文件完整且零依赖即可运行。"
+        },
+        {
+          "text": "常用操作脚本化（运行、测试），不依赖口口相传的命令",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "package.json",
+              "note": "scripts 提供 start 与 test，测试命令明确"
+            },
+            {
+              "file": "README.md",
+              "note": "标明 npm test 即可跑测试"
+            }
+          ],
+          "comment": "运行/测试都脚本化，不靠口口相传。"
+        },
+        {
+          "text": "配置有意识：lint/格式化/编译选项符合项目需要并能说明理由",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "项目没有 lint/format/编译配置，也没有相关配置文件或执行结果。"
+        },
+        {
+          "text": "依赖最小化，锁定版本，无无用依赖",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "package.json",
+              "note": "无 dependencies/devDependencies，体现依赖最小化"
+            },
+            {
+              "file": "src/index.js",
+              "note": "只使用 Node 内置模块，无无用依赖"
+            }
+          ],
+          "comment": "零依赖本身满足最小化，也没有多余依赖。"
+        },
+        {
+          "text": "工程链端到端可复现（环境、版本、构建产物），有证据（lockfile、CI 配置、说明）",
+          "verdict": "not-evidenced",
+          "citations": [
+            {
+              "file": "package.json",
+              "note": "虽有脚本但没有 lockfile、CI 配置或 engines 等端到端复现证据"
+            }
+          ],
+          "comment": "缺少版本锁定和环境固化证据。"
+        },
+        {
+          "text": "能论证工具链选型与简化空间",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未说明工具链选型理由或简化空间。"
+        }
+      ],
+      "rationale": "有 package.json 和脚本化测试，零依赖也体现依赖克制；但缺少 lint/格式配置、lockfile/CI 等工程链复现证据，故只能到 L1。"
+    },
+    {
+      "skillId": "prog.concurrency",
+      "level": 0,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "正确使用语言异步原语完成 I/O 等待，理解回调- promise - async 的关系",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "源码中无异步原语或并发 API 使用。"
+        },
+        {
+          "text": "并发操作的结果被正确收集（如等待全部完成）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有需要收集的并发结果。"
+        },
+        {
+          "text": "能识别并避免竞态（共享状态、乱序完成），错误在异步路径上被传播与处理",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未出现竞态处理或异步错误传播。"
+        },
+        {
+          "text": "并发度有控制（限流、队列、批处理）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有限流、队列、批处理等并发控制证据。"
+        },
+        {
+          "text": "理解底层模型（事件循环/线程调度）并能解释死锁、饥饿、活锁等失败模式",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有事件循环/线程调度/死锁等模型说明。"
+        },
+        {
+          "text": "项目中体现并发设计决策（同步边界、取消、超时）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "README 虽然提到并发写限制，但没有异步/并发设计决策证据。"
+        }
+      ],
+      "rationale": "项目全程使用同步 fs，没有 async/await、Promise、线程或并发原语，任何并发相应证据都未出现。"
+    },
+    {
+      "skillId": "sw.vcs",
+      "level": 0,
+      "confidence": 1,
+      "criteria": [
+        {
+          "text": "提交粒度合理、信息可读（描述\"为什么\"而非仅\"改了什么\"）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "无任何提交记录可检查提交粒度与信息质量。"
+        },
+        {
+          "text": "能完成基本循环：修改、暂存、提交、推送",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未见修改、暂存、提交、推送的循环证据。"
+        },
+        {
+          "text": "分支使用有策略（功能分支、合并/变基选择）并能解决普通冲突",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "无分支或合并/变基相关证据。"
+        },
+        {
+          "text": "历史可追溯（无大量 \"fix\"/\"update\" 噪声提交）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "无提交历史可供追溯，无法判断是否存在噪声提交。"
+        },
+        {
+          "text": "能安全地进行历史改写（变基、回滚、摘取）并解释风险",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未出现变基、回滚、摘取等操作记录。"
+        },
+        {
+          "text": "协作场景下有明确的工作流约定并能传授他人",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "无协作工作流约定或相关文档。"
+        }
+      ],
+      "rationale": "证据摘要中只有代码与文档，没有任何 Git 提交、分支、合并或协作记录，无法评估版本控制能力。"
+    },
+    {
+      "skillId": "sw.docs",
+      "level": 0,
+      "confidence": 0.7,
+      "criteria": [
+        {
+          "text": "README 交代项目是什么、如何运行、如何使用",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "README 描述了项目是什么、如何运行（用法命令）以及如何测试。"
+            }
+          ],
+          "comment": "L1 文档基本要求满足。"
+        },
+        {
+          "text": "关键非显然逻辑有注释解释意图",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/store.js",
+              "note": "原子写入的注释解释了为什么采用临时文件加 rename。"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "分桶排序的注释解释了为何用 Map 而非全量比较。"
+            }
+          ],
+          "comment": "关键非显然逻辑有注释说明意图。"
+        },
+        {
+          "text": "文档结构服务读者（安装→使用→示例→FAQ），与代码行为一致",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "文档内容与代码一致，但结构为描述+用法+设计说明+测试，没有 FAQ，也没有明确的安装/读者导航。"
+            }
+          ],
+          "comment": "有服务读者的意识但结构未达到示例中的典型分层。"
+        },
+        {
+          "text": "有决策记录或说明（为何选 A 不选 B）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "设计说明记录了分层、校验前置、排序策略和已知局限，解释了为什么这样选。"
+            }
+          ],
+          "comment": "有决策记录，满足 L2。"
+        },
+        {
+          "text": "文档是维护的一部分：随变更更新、有变更日志/接口文档",
+          "verdict": "unmet",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "仅一份静态 README，无变更日志或版本化接口文档，无法体现文档随维护更新。"
+            }
+          ],
+          "comment": "L3 要求的变更日志/接口文档缺失。"
+        },
+        {
+          "text": "能面向不同受众分层表达（用户文档 vs 开发者文档）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未面向用户与开发者分层编写文档。"
+        }
+      ],
+      "rationale": "README 完整给出了项目说明、用法与测试，代码注释解释了非显然逻辑，并有设计取舍记录；但缺少分层受众文档与变更日志，未达 L3。"
+    },
+    {
+      "skillId": "sw.testing",
+      "level": 0,
+      "confidence": 0.6,
+      "criteria": [
+        {
+          "text": "存在可自动运行的测试，覆盖核心函数的典型输入",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "test/commands.test.js",
+              "note": "对 add/list/complete/remove/stats 的正常输入有可自动运行的测试。"
+            },
+            {
+              "file": "test/store.test.js",
+              "note": "对 load/save 的往返、损坏文件等有测试。"
+            }
+          ],
+          "comment": "存在且覆盖核心函数典型输入。"
+        },
+        {
+          "text": "测试可重复、无外部依赖或依赖可控",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "test/commands.test.js",
+              "note": "add/complete 等会调用真实 save()，且测试未设置 TODO_FILE 或 mock 路径，会写入 ~/.todo.json，不够可控。"
+            },
+            {
+              "file": "test/store.test.js",
+              "note": "store 测试使用 mkdtemp 临时目录，隔离做得好，但整体测试套件仍受 commands.test 影响。"
+            }
+          ],
+          "comment": "由于命令测试缺少环境隔离，严格说未完全满足可重复且无外部依赖。"
+        },
+        {
+          "text": "测试覆盖边界与失败路径（空输入、非法值、异常分支），断言有意义",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "test/commands.test.js",
+              "note": "覆盖空标题、超长标题、非法优先级、重复完成、越界序号、非整型序号、删除后剩余数据等。"
+            }
+          ],
+          "comment": "边界与失败路径覆盖充分，断言有意义。"
+        },
+        {
+          "text": "代码为可测性做了设计（依赖注入、纯函数分离）",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "store 以参数传入，分离了核心逻辑；但 add/complete 仍直接调用 store.js 导出的具体 save()，没有将持久化作为可替换依赖注入。"
+            },
+            {
+              "file": "src/store.js",
+              "note": "路径可以注入，但命令测试没有使用，导致真实文件系统副作用。"
+            }
+          ],
+          "comment": "有一定的可测性设计，但持久化依赖的替换与隔离不完整。"
+        },
+        {
+          "text": "测试策略分层（单元/集成），测试即规格（命名表达行为）",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "test/commands.test.js",
+              "note": "测试命名描述了行为，如‘add：空标题与超长标题被拒绝’，但整个测试只有单元层，没有集成层。"
+            }
+          ],
+          "comment": "测试即规格的意图明显，但缺少分层策略。"
+        },
+        {
+          "text": "用测试驱动发现设计问题或修复过回归（有证据）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有回归或设计问题由测试驱动的记录。"
+        }
+      ],
+      "rationale": "测试覆盖大量正常与边界路径，但 commands.test.js 中的命令会通过真实默认路径调用 save，测试隔离有缺口，因此按宁低勿高只评到 L1。"
+    },
+    {
+      "skillId": "sw.debug",
+      "level": 0,
+      "confidence": 0.95,
+      "criteria": [
+        {
+          "text": "会用日志输出与最小复现来定位简单问题",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未发现日志输出或最小复现定位问题的过程。"
+        },
+        {
+          "text": "修复问题时能解释根因而非仅消除症状",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有修复故障与根因解释的记录。"
+        },
+        {
+          "text": "使用调试器/结构化日志系统性地缩小问题范围",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未使用调试器或结构化日志缩小问题范围。"
+        },
+        {
+          "text": "修复伴随回归测试或验证步骤",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有修复伴随回归测试或验证步骤的实例。"
+        },
+        {
+          "text": "有假设-验证的问题解决记录（issue/提交描述体现推理链）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有 issue、提交描述等形式显示的假设验证链。"
+        },
+        {
+          "text": "能定位跨模块/异步/时序类疑难问题",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未涉及跨模块/异步/时序问题定位。"
+        }
+      ],
+      "rationale": "证据中没有出现调试日志、断点、最小复现、问题修复或根因分析记录，无法评估调试技能。"
+    },
+    {
+      "skillId": "sw.collab",
+      "level": 0,
+      "confidence": 1,
+      "criteria": [
+        {
+          "text": "提交可评审的变更（小步、描述清楚、可独立理解）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有可评审的小步提交记录。"
+        },
+        {
+          "text": "能响应评审意见并迭代",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有响应评审意见的迭代记录。"
+        },
+        {
+          "text": "参与过双向评审：给他人有建设性的意见，接受意见并改进",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "不存在双向评审证据。"
+        },
+        {
+          "text": "遵守并推动项目约定（风格、提交规范、PR 模板）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未体现协作约定、提交规范或 PR 模板推动行为。"
+        },
+        {
+          "text": "能主导协作流程设计（分支策略、评审标准、发布节奏）并沉淀文档",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有协作流程设计与文档化。"
+        },
+        {
+          "text": "处理过跨人变更冲突与责任边界的协调",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有跨人冲突/责任边界协调的证据。"
+        }
+      ],
+      "rationale": "整个证据未提及任何协作要素：无 PR、评审、跨人冲突或团队约定，纯个人项目无法展示协作能力。"
+    },
+    {
+      "skillId": "sw.refactor",
+      "level": 0,
+      "confidence": 0.9,
+      "criteria": [
+        {
+          "text": "能识别明显坏味道（重复、超长函数、误导命名）并小步消除",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未识别并消除坏味道的过程记录。"
+        },
+        {
+          "text": "重命名/提取函数后行为不变",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有提取/重命名与行为不变的提交或对比证据。"
+        },
+        {
+          "text": "重构有测试保护，提交序列清晰（先测试后重构或小步交错）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未呈现‘先测试后重构’的提交序列。"
+        },
+        {
+          "text": "结构改善让后续需求变更更容易（有对比说明）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有说明结构改善如何让后续需求变更更容易。"
+        },
+        {
+          "text": "能设计渐进式重构路径（绞杀者、适配层）处理大面积遗留代码",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有针对遗留代码的渐进式重构设计。"
+        },
+        {
+          "text": "在重构收益与业务风险间做出明确权衡并记录",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未记录重构收益与业务风险的权衡。"
+        }
+      ],
+      "rationale": "代码虽然整洁有序，但没有任何重构行为记录（提交序列、重构前后对比、针对既有代码的改动），因此不能证明重构能力。"
+    },
+    {
+      "skillId": "sw.design",
+      "level": 0,
+      "confidence": 0.6,
+      "criteria": [
+        {
+          "text": "理解单一职责并能按层组织代码（逻辑/存储/展示）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "README 明确说明存储、命令、入口按层分离。"
+            },
+            {
+              "file": "src/commands.js",
+              "note": "commands 只做业务规则，store 由外部传入并分离数据结构操作。"
+            }
+          ],
+          "comment": "单层职责与分层组织清楚。"
+        },
+        {
+          "text": "能识别项目中的核心抽象并命名",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/validate.js",
+              "note": "parse* 函数和 ValidationError 构成输入抽象。"
+            },
+            {
+              "file": "src/store.js",
+              "note": "StoreError 与 load/save 形成存储抽象边界。"
+            }
+          ],
+          "comment": "能够识别并命名核心抽象。"
+        },
+        {
+          "text": "依赖方向合理，具体实现可替换（接口/注入），核心逻辑独立可测",
+          "verdict": "partial",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "store 作为纯数据传入使核心逻辑可测，但命令内部直接 import 并调用 store.js 的具体 save()，持久化实现并未真正可替换。"
+            },
+            {
+              "file": "src/store.js",
+              "note": "save() 依赖默认路径，虽然可注入路径但命令测试未体现这一替换能力。"
+            }
+          ],
+          "comment": "依赖方向大体合理但具体实现替换不彻底。"
+        },
+        {
+          "text": "恰当运用常见模式解决真实问题而非堆砌",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "src/commands.js",
+              "note": "用 Map 优先级分桶解决排序，是一种针对实际问题的轻量策略。"
+            },
+            {
+              "file": "src/store.js",
+              "note": "原子写入用临时文件+rename，错误分类用 StoreError，服务于真实边界而非堆砌。"
+            }
+          ],
+          "comment": "模式运用克制且贴合问题。"
+        },
+        {
+          "text": "能对设计做演进式决策并记录权衡（简单性 vs 扩展点）",
+          "verdict": "met",
+          "citations": [
+            {
+              "file": "README.md",
+              "note": "设计说明明确记录分层、校验前置、排序取舍和‘已知局限’，并在简单性 vs 扩展点之间做了选择。"
+            }
+          ],
+          "comment": "有演进式决策与权衡记录。"
+        },
+        {
+          "text": "从需求变化中反推设计缺陷并调整边界",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有从需求变化反推设计缺陷并调整边界的实例。"
+        }
+      ],
+      "rationale": "代码分层清晰、职责分离、核心逻辑可测，README 记录了设计理由与已知权衡；但依赖替换不完全、无需求变化反推设计的证据，故止于 L2。"
+    },
+    {
+      "skillId": "sw.ci",
+      "level": 0,
+      "confidence": 1,
+      "criteria": [
+        {
+          "text": "理解 CI 的价值：合并前自动运行检查",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未体现对 CI 自动检查价值的应用说明。"
+        },
+        {
+          "text": "配置或使用过现成的 CI 流程",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有任何 CI 配置或使用过现有 CI 平台的痕迹。"
+        },
+        {
+          "text": "搭建过基本流水线（lint+测试+构建），失败信息可定位",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有 lint+测试+构建的流水线配置。"
+        },
+        {
+          "text": "构建产物版本化，环境差异被管理",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "未见构建产物版本化或环境差异管理。"
+        },
+        {
+          "text": "设计过含质量门禁与发布策略的完整管线（环境晋升、回滚）",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有质量门禁、环境晋升或发布策略设计。"
+        },
+        {
+          "text": "能优化流水线（缓存、并行、失败快速反馈）并论证",
+          "verdict": "not-evidenced",
+          "citations": [],
+          "comment": "没有流水线优化记录或论证。"
+        }
+      ],
+      "rationale": "证据中没有 CI/CD 配置、流水线文件或构建发布说明，只有 package.json 的测试脚本，无法证明持续集成能力。"
+    }
+  ],
+  "redteam": {
+    "checks": [
+      {
+        "name": "readme_quality",
+        "title": "项目说明是否完整可信",
+        "verdict": "flag",
+        "detail": "README 声称项目可运行并提供用法，但实际 src/store.js 中包含 TypeScript 类型标注（如 `export function load(...): { seq: number; items: object[] }`），在 Node.js 原生环境下无法解析，任何命令都会出现 SyntaxError。README 用法示例中还遗漏 `/`（写成了 `src index.js`）。项目说明与代码不一致，不可信。依据：README.md 用法段落、src/store.js 第 6-12 行。"
+      },
+      {
+        "name": "tests_present",
+        "title": "是否存在自动化测试且真实覆盖核心逻辑",
+        "verdict": "flag",
+        "detail": "存在测试文件（test/commands.test.js、test/store.test.js），并导入 src/store.js，但后者包含非法类型标注，Node.js `--test` 加载模块即失败，所有断言实际上不会执行，因此测试并未真实覆盖核心逻辑，仅是有文本的摆设。依据：package.json 的 test 脚本、test/store.test.js 首段 import、src/store.js 类型标注。"
+      },
+      {
+        "name": "provenance",
+        "title": "外部来源标记、转载痕迹、与常见模板/教程项目的高度雷同",
+        "verdict": "warn",
+        "detail": "项目中未发现任何外部来源标记或注释声明，但代码结构高度模块化、注释专业，且存在将 TypeScript 类型语法误写入 JavaScript 这种常见于模板/AI生成后未手改的硬伤，结合零历史信息，无法排除项目整体源自教程模板或 AI 代写的可能性。依据：项目全文件。"
+      },
+      {
+        "name": "oversized_file",
+        "title": "单文件异常巨大、疑似整体粘贴或生成",
+        "verdict": "pass",
+        "detail": "所有源码文件行数均不超过 100 行（最大为 src/index.js 98 行），无超大单文件，不存在单文件整体粘贴或一键生成的特征。依据：src/ 目录下的 files。"
+      },
+      {
+        "name": "stub_evidence",
+        "title": "源码是否只是占位/TODO，不足以支撑结论",
+        "verdict": "flag",
+        "detail": "虽然函数体均有实现且无 TODO 占位，但核心 store.js 无法由 Node 解析（函数签名包含类型标注），意味着导出模块时直接报错，功能和测试均无法使用；纵有大量代码，也无法支撑证据中关于“可运行项目”的任何结论，实质等同于空壳注水。依据：src/store.js 第 6-12、18-27 等行。"
+      }
+    ],
+    "overallRisk": "high"
+  },
+  "arbitration": {
+    "adjustments": [
+      {
+        "skillId": "algo.complexity",
+        "from": 1,
+        "to": 0,
+        "reason": "红队 flag 证据充分性：store.js 含类型标注无法解析，测试无效，README 不实，所有技能证据失去支撑"
+      },
+      {
+        "skillId": "ds.string",
+        "from": 1,
+        "to": 0,
+        "reason": "红队 flag 证据充分性：store.js 含类型标注无法解析，测试无效，README 不实，所有技能证据失去支撑"
+      },
+      {
+        "skillId": "ds.hash",
+        "from": 1,
+        "to": 0,
+        "reason": "红队 flag 证据充分性：store.js 含类型标注无法解析，测试无效，README 不实，所有技能证据失去支撑"
+      },
+      {
+        "skillId": "prog.syntax",
+        "from": 2,
+        "to": 0,
+        "reason": "红队 flag 证据充分性：store.js 含类型标注无法解析，测试无效，README 不实，所有技能证据失去支撑"
+      },
+      {
+        "skillId": "prog.control",
+        "from": 2,
+        "to": 0,
+        "reason": "红队 flag 证据充分性：store.js 含类型标注无法解析，测试无效，README 不实，所有技能证据失去支撑"
+      },
+      {
+        "skillId": "prog.functions",
+        "from": 2,
+        "to": 0,
+        "reason": "红队 flag 证据充分性：store.js 含类型标注无法解析，测试无效，README 不实，所有技能证据失去支撑"
+      },
+      {
+        "skillId": "prog.types",
+        "from": 2,
+        "to": 0,
+        "reason": "红队 flag 证据充分性：store.js 含类型标注无法解析，测试无效，README 不实，所有技能证据失去支撑"
+      },
+      {
+        "skillId": "prog.io",
+        "from": 2,
+        "to": 0,
+        "reason": "红队 flag 证据充分性：store.js 含类型标注无法解析，测试无效，README 不实，所有技能证据失去支撑"
+      },
+      {
+        "skillId": "prog.cli",
+        "from": 2,
+        "to": 0,
+        "reason": "红队 flag 证据充分性：store.js 含类型标注无法解析，测试无效，README 不实，所有技能证据失去支撑"
+      },
+      {
+        "skillId": "prog.error",
+        "from": 3,
+        "to": 0,
+        "reason": "红队 flag 证据充分性：store.js 含类型标注无法解析，测试无效，README 不实，所有技能证据失去支撑"
+      },
+      {
+        "skillId": "prog.fp",
+        "from": 1,
+        "to": 0,
+        "reason": "红队 flag 证据充分性：store.js 含类型标注无法解析，测试无效，README 不实，所有技能证据失去支撑"
+      },
+      {
+        "skillId": "prog.tooling",
+        "from": 1,
+        "to": 0,
+        "reason": "红队 flag 证据充分性：store.js 含类型标注无法解析，测试无效，README 不实，所有技能证据失去支撑"
+      },
+      {
+        "skillId": "sw.docs",
+        "from": 2,
+        "to": 0,
+        "reason": "红队 flag 证据充分性：store.js 含类型标注无法解析，测试无效，README 不实，所有技能证据失去支撑"
+      },
+      {
+        "skillId": "sw.testing",
+        "from": 1,
+        "to": 0,
+        "reason": "红队 flag 证据充分性：store.js 含类型标注无法解析，测试无效，README 不实，所有技能证据失去支撑"
+      },
+      {
+        "skillId": "sw.design",
+        "from": 2,
+        "to": 0,
+        "reason": "红队 flag 证据充分性：store.js 含类型标注无法解析，测试无效，README 不实，所有技能证据失去支撑"
+      }
+    ],
+    "notes": "红队多项 flag 表明项目核心代码（src/store.js）无法被 Node.js 解析，测试实际无效，README 与代码不一致，导致所有技能评估所依据的证据整体不可信，故按规则将原非零技能全部降为 0。另有 warn 级问题：项目无外部来源标记，结构高度模板化且存在类型语法误用，不排除整体源自模板或 AI 生成，该问题不直接降级，但需警惕。"
+  },
+  "effective": [
+    {
+      "skillId": "algo.complexity",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "algo.sort",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "algo.search",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "algo.recursion",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "algo.greedy",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "algo.dp",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "algo.graphalg",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "db.model",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "db.sql",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "db.tx",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "db.perf",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "db.nosql",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "ds.array",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "ds.string",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "ds.stackqueue",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "ds.hash",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "ds.tree",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "ds.heap",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "ds.graph",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "net.http",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "net.api",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "net.tcp",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "net.sec",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "prog.syntax",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "prog.control",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "prog.functions",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "prog.types",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "prog.io",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "prog.cli",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "prog.error",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "prog.fp",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "prog.tooling",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "prog.concurrency",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "sw.vcs",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "sw.docs",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "sw.testing",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "sw.debug",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "sw.collab",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "sw.refactor",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "sw.design",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    },
+    {
+      "skillId": "sw.ci",
+      "assessedLevel": 0,
+      "effectiveLevel": 0,
+      "blockedBy": []
+    }
+  ],
+  "stats": {
+    "totalSkills": 41,
+    "litSkills": 0,
+    "byBranch": {
+      "algo": {
+        "total": 7,
+        "lit": 0,
+        "levelSum": 0
+      },
+      "db": {
+        "total": 5,
+        "lit": 0,
+        "levelSum": 0
+      },
+      "ds": {
+        "total": 7,
+        "lit": 0,
+        "levelSum": 0
+      },
+      "net": {
+        "total": 4,
+        "lit": 0,
+        "levelSum": 0
+      },
+      "prog": {
+        "total": 10,
+        "lit": 0,
+        "levelSum": 0
+      },
+      "sw": {
+        "total": 8,
+        "lit": 0,
+        "levelSum": 0
+      }
+    },
+    "durationMs": 778517
+  }
+}

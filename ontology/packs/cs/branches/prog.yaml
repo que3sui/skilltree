@@ -1,0 +1,224 @@
+# 分支：编程基础（prog）
+branch:
+  id: prog
+  name: 编程基础
+  color: "#f59e0b"
+  description: 从语法到并发——写出正确、健壮、组织良好的程序。
+  skills:
+    - id: prog.syntax
+      name: 语法与程序构造
+      tier: 0
+      summary: 掌握一门语言的变量、运算、基本构造，能写出可运行的小段代码。
+      keywords: [变量, 函数, 循环, syntax, function, loop, class]
+      prereqs: []
+      levels:
+        - level: 1
+          criteria:
+            - 项目中存在能独立运行的源码，正确使用变量、运算与基本数据类型
+            - 能读懂并小幅修改既有代码（存在对依赖库/模板代码的有意义改动）
+        - level: 2
+          criteria:
+            - 综合运用分支、循环、集合等构造完成完整功能单元，而非仅拼接示例代码
+            - 代码风格一致，能通过格式化/静态检查（含配置或结果痕迹）
+        - level: 3
+          criteria:
+            - 针对语言特性做出取舍并能说明理由（如值语义 vs 引用、可变性控制）
+            - 使用语言中高级特性解决实际问题（如迭代器/生成器、解构、泛型约束）
+
+    - id: prog.control
+      name: 流程控制与状态管理
+      tier: 0
+      summary: 用条件、循环与状态组织程序行为，避免失控分支。
+      keywords: [if, switch, while, state, 状态, 分支]
+      prereqs: []
+      levels:
+        - level: 1
+          criteria:
+            - 正确使用条件与循环表达业务规则
+            - 能识别并描述程序中的关键状态（如条目是否完成）
+        - level: 2
+          criteria:
+            - 状态转换集中、可追踪（如集中管理数据而非散落的标志位）
+            - 循环与条件覆盖边界情况（空输入、越界、终止条件）
+        - level: 3
+          criteria:
+            - 用状态机/表驱动等方式治理复杂分支，代码可读性显著优于堆叠 if
+            - 能解释状态设计的演进理由及替代方案
+
+    - id: prog.functions
+      name: 函数与模块化
+      tier: 1
+      summary: 分解问题：函数抽象、模块边界与复用。
+      keywords: [function, module, export, import, 模块, 重构, 复用]
+      prereqs:
+        - skill: prog.syntax
+          minLevel: 1
+        - skill: prog.control
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 能把重复逻辑提取为函数并正确传参/返回
+            - 项目拆分为多个源文件/模块，职责可辨认
+        - level: 2
+          criteria:
+            - 模块间通过明确接口交互，无跨越边界的隐式耦合（如隐藏全局状态）
+            - 函数职责单一，参数与返回值语义清晰，命名一致
+        - level: 3
+          criteria:
+            - 抽象层次分明：核心逻辑与 I/O、展示分离，替换底层不影响上层
+            - 能说明模块划分的权衡（合并 vs 拆分、依赖方向）
+
+    - id: prog.types
+      name: 类型系统与数据表示
+      tier: 1
+      summary: 选择恰当的数据表示；在动态语言中体现类型纪律。
+      keywords: [type, interface, schema, 类型, 结构, 校验, validation]
+      prereqs:
+        - skill: prog.syntax
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 为核心概念选择了合适的基础数据结构并保持一致使用
+            - 数据形态有约定可循（命名、结构统一）
+        - level: 2
+          criteria:
+            - 存在显式的类型/结构定义或输入校验，非法数据被拒绝而非默默传播
+            - 数据表示与领域语义对应（而非一切皆字符串/字典）
+        - level: 3
+          criteria:
+            - 利用类型系统消除一类错误（可辨识联合、泛型约束、不可变数据等）
+            - 能论证数据表示选择的代价（规范化 vs 便利、内存 vs 拷贝）
+
+    - id: prog.io
+      name: 文件与持久化
+      tier: 1
+      summary: 让数据越过一次进程的生命周期：读写文件、编码与原子性。
+      keywords: [file, read, write, fs, save, load, json, 持久化, 存储]
+      prereqs:
+        - skill: prog.functions
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 能正确读写文件并选择合理的编码/格式（如 JSON）
+            - 文件不存在、损坏等基础异常被处理
+        - level: 2
+          criteria:
+            - 持久化逻辑集中封装，数据格式有版本意识或迁移考虑
+            - 写入具备基本一致性意识（如先写临时文件再替换）
+        - level: 3
+          criteria:
+            - 能论证持久化方案取舍（格式、位置、并发安全、体积）
+            - 处理真实故障模式：并发写、部分写入、磁盘异常
+
+    - id: prog.cli
+      name: 命令行程序
+      tier: 2
+      summary: 参数解析、退出码与使用说明——人机界面的小完整闭环。
+      keywords: [cli, argv, args, 命令行, usage, help, commander, yargs]
+      prereqs:
+        - skill: prog.functions
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 能解析命令行参数并分发到对应功能
+            - 有基本的使用提示（-h/--help 或 README 示例）
+        - level: 2
+          criteria:
+            - 错误用法有可读的报错与正确退出码，而非堆栈崩溃
+            - 支持常见习惯（子命令或标志、默认值、管道/重定向友好输出）
+        - level: 3
+          criteria:
+            - 交互设计有整体考量：输出可组合（机器可读模式）、进度反馈、破坏性操作确认
+            - 能说明 CLI 与其他界面形态（Web/API）的取舍
+
+    - id: prog.error
+      name: 错误处理与健壮性
+      tier: 2
+      summary: 识别失败模式：校验输入、区分错误类型、给出可行动的信息。
+      keywords: [error, exception, try, catch, throw, 校验, validate, 错误]
+      prereqs:
+        - skill: prog.functions
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 对用户输入做基本校验，拒绝非法值而非崩溃或静默出错
+            - 捕获可预期异常并给出可读提示
+        - level: 2
+          criteria:
+            - 错误有分类（用户错误 vs 程序缺陷），信息足以定位问题（上下文、原因链）
+            - 边界路径（空、超大、非法字符、重复操作）行为明确
+        - level: 3
+          criteria:
+            - 系统性错误策略：自定义错误类型、恢复/回滚路径、日志与报错分离
+            - 失败测试或防御性设计表明对失败模式的预判
+
+    - id: prog.fp
+      name: 函数式思维
+      tier: 2
+      summary: 不可变与高阶函数：用变换代替过程式修改。
+      keywords: [map, filter, reduce, immutable, 纯函数, 高阶, 闭包]
+      prereqs:
+        - skill: prog.functions
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 使用 map/filter/reduce（或等价物）替代手写循环完成数据变换
+            - 理解回调/高阶函数的传参语义
+        - level: 2
+          criteria:
+            - 数据变换管道清晰可组合，中间状态不可变或最小化
+            - 副作用集中于边界，核心逻辑可测试
+        - level: 3
+          criteria:
+            - 自建高阶抽象（组合器、惰性序列、函数工厂）并说明适用边界
+            - 能论证可变性/性能与函数式纯度的权衡
+
+    - id: prog.tooling
+      name: 构建与工程链
+      tier: 2
+      summary: 依赖管理、构建脚本与工具配置，把项目变成可复制的产品。
+      keywords: [package.json, build, script, lint, format, tsconfig, 依赖, 构建]
+      prereqs:
+        - skill: prog.syntax
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 项目有清单文件（依赖声明），安装即可运行
+            - 常用操作脚本化（运行、测试），不依赖口口相传的命令
+        - level: 2
+          criteria:
+            - 配置有意识：lint/格式化/编译选项符合项目需要并能说明理由
+            - 依赖最小化，锁定版本，无无用依赖
+        - level: 3
+          criteria:
+            - 工程链端到端可复现（环境、版本、构建产物），有证据（lockfile、CI 配置、说明）
+            - 能论证工具链选型与简化空间
+
+    - id: prog.concurrency
+      name: 并发与异步
+      tier: 3
+      summary: 让程序等待、并行而不失控：异步模型、竞态与同步。
+      keywords: [async, await, promise, thread, goroutine, 并发, 异步, 锁]
+      prereqs:
+        - skill: prog.functions
+          minLevel: 2
+      levels:
+        - level: 1
+          criteria:
+            - 正确使用语言异步原语完成 I/O 等待，理解回调- promise - async 的关系
+            - 并发操作的结果被正确收集（如等待全部完成）
+        - level: 2
+          criteria:
+            - 能识别并避免竞态（共享状态、乱序完成），错误在异步路径上被传播与处理
+            - 并发度有控制（限流、队列、批处理）
+        - level: 3
+          criteria:
+            - 理解底层模型（事件循环/线程调度）并能解释死锁、饥饿、活锁等失败模式
+            - 项目中体现并发设计决策（同步边界、取消、超时）

@@ -1,0 +1,155 @@
+# 建木节点库 · 通用工程与研究能力（跨专业复用）
+#
+# 节点 = 可复用组合单元：与 pack 内技能同构（同一 schema），独立于任何学科。
+# 组装器（pnpm assemble-pack）从这里选材组装专业本体；社区通过 PR 扩充。
+# 铁律同 pack：标准必须行为化、可举证；LLM 只起草，人立法。
+
+nodes:
+  - id: lib.vcs
+    name: 版本控制
+    summary: 用 Git 等版本系统管理工作成果，形成可追溯的演进历史。
+    keywords: [git, commit, push, 提交, 分支, 版本控制]
+    tier: 0
+    prereqs: []
+    levels:
+      - level: 1
+        criteria:
+          - 能对项目做有意义的原子提交，提交说明写清做了什么与为什么。
+          - 能查看历史与差异，定位某次改动是谁何时为何引入。
+      - level: 2
+        criteria:
+          - 能用分支隔离实验性改动，合并回主线时解决冲突且不丢失工作。
+          - 仓库历史呈渐进分布（多次有意义的提交），而非一次性倾倒。
+      - level: 3
+        criteria:
+          - 能设计分支策略（特性分支/评审流），并论证其对协作与回滚成本的影响。
+
+  - id: lib.testing
+    name: 测试与验证
+    summary: 为结论建立可重复的检验手段——单元测试、对照实验或复算检验。
+    keywords: [测试, 单元测试, assert, 断言, 验证, test_, 复现]
+    tier: 1
+    prereqs: []
+    levels:
+      - level: 1
+        criteria:
+          - 能运行项目自带的测试/检验脚本并解读结果。
+          - 能为单个函数或计算步骤写出最小验证用例。
+      - level: 2
+        criteria:
+          - 能为关键路径建立成组用例，覆盖边界与异常输入。
+          - 测试可重复执行，不依赖特定机器状态或人工干预。
+      - level: 3
+        criteria:
+          - 能设计检验策略并论证覆盖范围与遗漏风险，失败用例能定位到具体环节。
+
+  - id: lib.doc
+    name: 成果文档化
+    summary: 让他人不看源码也能使用与复现你的成果——README、报告或说明文档。
+    keywords: [README, 文档, 报告, 说明, 注释, markdown]
+    tier: 1
+    prereqs: []
+    levels:
+      - level: 1
+        criteria:
+          - 仓库含 README，写明项目是什么、如何运行、依赖什么。
+          - 步骤说明按顺序可跟随，无跳步。
+      - level: 2
+        criteria:
+          - 他人按文档可在干净环境复现主要结果。
+          - 文档解释关键设计选择，而非罗列操作。
+      - level: 3
+        criteria:
+          - 文档分层组织（快速上手/深入细节/常见问题），并随成果演进保持一致。
+
+  - id: lib.debug
+    name: 系统化调试
+    summary: 面对错误不猜：定位、隔离、最小复现、修复、回归验证。
+    keywords: [调试, 排错, 复现, 日志, 串口, print]
+    tier: 1
+    prereqs: []
+    levels:
+      - level: 1
+        criteria:
+          - 能读懂错误信息并定位到相关文件与行。
+          - 能用打印/日志缩小问题范围。
+      - level: 2
+        criteria:
+          - 能构造最小复现用例，把问题与无关因素隔离。
+          - 修复后能说明根因，而非只消除症状。
+      - level: 3
+        criteria:
+          - 能对复杂问题建立假设-验证循环并留下排查记录，修复附回归用例。
+
+  - id: lib.data-clean
+    name: 数据获取与清洗
+    summary: 把原始数据变成可信可用的分析输入：获取、检查、缺失与异常处理。
+    keywords: [pandas, read_csv, 缺失, 异常值, 清洗, dropna, fillna, 去重]
+    tier: 1
+    prereqs: []
+    levels:
+      - level: 1
+        criteria:
+          - 能从文件或接口读入数据并检查规模、字段与类型。
+          - 能识别并统计缺失值与明显异常。
+      - level: 2
+        criteria:
+          - 清洗步骤有据可查（保留/丢弃/填补的理由），过程可重复执行。
+          - 清洗前后数据规模与分布的变化有核对。
+      - level: 3
+        criteria:
+          - 能设计数据质量检验清单，论证清洗对最终结论的影响方向与幅度。
+
+  - id: lib.viz
+    name: 数据可视化叙事
+    summary: 用图表回答问题——选对图型、标注完整、让结论一目了然。
+    keywords: [matplotlib, plot, 图表, 可视化, 柱状图, 折线图, 散点图, xlabel]
+    tier: 1
+    prereqs: []
+    levels:
+      - level: 1
+        criteria:
+          - 能用常见图型展示数据分布与对比，坐标轴与单位标注完整。
+      - level: 2
+        criteria:
+          - 图型选择与要回答的问题匹配（对比/趋势/构成/关系），不误用。
+          - 图表在报告中被文字引用并解读，而非孤立罗列。
+      - level: 3
+        criteria:
+          - 能组织多图叙事回答复杂问题，处理比例/基线/误导性展示等陷阱。
+
+  - id: lib.search
+    name: 技术检索与甄别
+    summary: 检索文档、论文与既有方案，甄别质量并正确引用。
+    keywords: [检索, 文献, 论文, 引用, datasheet, 手册, 综述]
+    tier: 0
+    prereqs: []
+    levels:
+      - level: 1
+        criteria:
+          - 能用准确关键词找到官方文档或权威资料解决具体问题。
+      - level: 2
+        criteria:
+          - 能对比多个来源并选择可靠方案，注明来源与版本。
+          - 借鉴的代码或方法有出处标注。
+      - level: 3
+        criteria:
+          - 能系统检索领域方案（含论文），综合评估适用性并说明取舍。
+
+  - id: lib.abstract
+    name: 抽象与复用
+    summary: 识别重复模式，提取可复用的函数/模块/模板并保持接口清晰。
+    keywords: [抽象, 复用, 模块, 重构, 封装, 函数]
+    tier: 2
+    prereqs: []
+    levels:
+      - level: 1
+        criteria:
+          - 发现重复代码或步骤时能提取为具名函数/流程并替换调用点。
+      - level: 2
+        criteria:
+          - 模块接口职责单一，命名表达意图，无隐藏耦合。
+          - 修改一处需求只需改动一处实现。
+      - level: 3
+        criteria:
+          - 能在过早抽象与重复之间权衡，用具体演进场景论证设计。

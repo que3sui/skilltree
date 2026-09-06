@@ -1,0 +1,74 @@
+/* ---------------- 主题层：Linear.app 精密深色（?theme=linear） ----------------
+   只覆盖令牌与少量组件形态，布局不动。
+   近黑三层背景（#08090a 画布 / #0f1011 面 / #16181c 浮起）承担全部结构，
+   分隔全靠 #1f2023 族 1px 发丝线；科大蓝 #004098 为魂：深底提亮为 #4d8dff 族，
+   只点亮计数、进度条、主按钮、分段选中四处；零渐变、零发光，安静、单一视觉重心。 */
+
+html[data-theme="linear"] {
+  /* 中性阶：三层近黑 + 两档发丝线（低对比但清晰，Linear 的层叠感） */
+  --bg: #08090a;
+  --surface: #0f1011;
+  --surface-2: #16181c;
+  --line: #1f2023;
+  --line-2: #26282c;
+
+  /* 文字三阶（对 --bg 的对比度）：主文 16.4:1，次文 7.6:1，弱文 5.2:1 */
+  --text: #e8e9ec;
+  --text-2: #9ba0aa;
+  --text-3: #7d828a;
+
+  /* 焦点色：科大蓝的深底提亮变体；hover 走 #6ba1ff 一族，克制不荧光 */
+  --accent: #4d8dff;
+  --accent-soft: rgba(77, 141, 255, 0.3);
+
+  /* 语义色：低饱和、小面积（分支点、等级、警示），大面积保持中性 */
+  --amber: #d9a04c;
+  --amber-soft: rgba(217, 160, 76, 0.4);
+  --green: #4cc38a;
+  --green-soft: rgba(76, 195, 138, 0.32);
+  --red: #eb5757;
+  --red-soft: rgba(235, 87, 87, 0.36);
+
+  /* 结构细节：未点亮圆点、蜂窝 hover 描边、图例「已点亮」取样（哑光蓝，呼应主色族） */
+  --pip: #2b2e34;
+  --edge-hover: #3f434b;
+  --legend-lit: #3d6db5;
+  --link: #7fabff;
+  --link-bg: rgba(127, 171, 255, 0.08);
+  --mask: rgba(4, 5, 6, 0.62);
+  --focus-border: #3f72d4;
+  --log-pct: #5a5f68;
+  --deck-card-bg: #101114;
+  --deck-shadow: 0 18px 44px rgba(0, 0, 0, 0.62);
+  --hex-digit: rgba(8, 9, 10, 0.66);
+  --btn-hover-border: #4a525f;
+}
+
+/* 顶栏：比画布高半档的 chrome 层（#0c0d0f），发丝线分隔——层叠感不靠投影靠色阶 */
+html[data-theme="linear"] .toolbar {
+  background: #0c0d0f;
+  border-bottom: 1px solid var(--line);
+}
+
+/* 主按钮：深底上唯一的面状焦点，实心科大蓝、白字 5.2:1；hover 亮半档仍 ≥ 4.6:1 */
+html[data-theme="linear"] .primary-btn {
+  background: #3566d6;
+  border-color: #3566d6;
+  color: #ffffff;
+}
+
+html[data-theme="linear"] .primary-btn:hover {
+  background: #3e70da;
+  border-color: #3e70da;
+}
+
+/* 分段选中态：蓝色水洗底 + 浅蓝字（对水洗底 9:1），不做第二颗实心按钮抢主按钮的重心 */
+html[data-theme="linear"] .segment button.seg-on {
+  background: rgba(77, 141, 255, 0.14);
+  color: #a9c7ff;
+}
+
+/* 设计要点：结构感全部来自三层近黑色阶与两档发丝线，无一处渐变与发光；科大蓝经深底提亮
+   变体 #4d8dff 族只进入计数/进度/主按钮/分段选中四处，其余保持中性，守住「一个视觉重心」。
+   可读性取舍：主文 16.4:1、次文压到 7.6:1（高于 4.5 底线，保证长摘要阅读）；仅弱文与
+   日志百分比降到 2.9–5.2:1，换取层级退后——退后的部分都不承载关键信息。 */

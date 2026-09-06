@@ -1,0 +1,128 @@
+branch:
+  id: "data"
+  name: "数据获取与洞察"
+  color: "#55A868"
+  description: "获取、清洗、探索与可视化数据，从数据中提取可支撑建模与决策的洞察。"
+  skills:
+    - id: "data.clean"
+      name: "数据获取与清洗"
+      summary: "从文件、数据库或 API 获取原始数据，处理缺失值、异常值与格式不一致，构建可分析的数据集。"
+      keywords:
+        - "pandas"
+        - "read_csv"
+        - "缺失"
+        - "异常值"
+        - "清洗"
+        - "dropna"
+        - "fillna"
+        - "去重"
+        - "dtype"
+      tier: 0
+      prereqs: []
+      levels:
+        - level: 1
+          criteria:
+            - "能从 CSV、Excel 或 JSON 文件读取数据，并识别缺失值与基本格式问题。"
+            - "能使用 pandas 或类似工具执行基本清洗操作（去重、填充缺失值、类型转换）。"
+        - level: 2
+          criteria:
+            - "能独立从 API 或数据库获取数据，并设计可重复的清洗流程处理异常值与不一致数据。"
+            - "能在项目中记录数据清洗步骤与决策依据，确保数据集可追溯与可复现。"
+        - level: 3
+          criteria:
+            - "能在多种数据源与清洗策略之间权衡，并针对脏数据设计自动化清洗管道。"
+            - "能将数据获取与清洗方案迁移到新领域（如流数据、非结构化数据），并形成可复用工具。"
+    - id: "data.exploration"
+      name: "探索性数据分析"
+      summary: "运用描述统计、相关分析与分组聚合，探索数据分布、关系与异常模式，为建模提供依据。"
+      keywords:
+        - "EDA"
+        - "describe"
+        - "groupby"
+        - "value_counts"
+        - "相关"
+        - "直方图"
+        - "分布"
+        - "探索"
+        - "统计"
+      tier: 1
+      prereqs:
+        - skill: "data.clean"
+          minLevel: 1
+        - skill: "foundation.probstat"
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - "能计算并解释均值、中位数、标准差、分位数等描述统计量。"
+            - "能使用分组聚合与相关矩阵发现数据中的基本关系与异常点。"
+        - level: 2
+          criteria:
+            - "能独立设计 EDA 流程，结合统计检验与可视化发现数据中的显著模式与潜在问题。"
+            - "能在项目中基于 EDA 结果提出可检验的建模假设，并指导特征选择。"
+        - level: 3
+          criteria:
+            - "能在多种 EDA 方法之间权衡，并针对高维或复杂数据设计系统的探索策略。"
+            - "能将 EDA 方法论迁移到新领域（如时空数据、文本数据），并形成可复用的分析模板。"
+    - id: "data.viz"
+      name: "数据可视化叙事"
+      summary: "选择合适的图表类型与视觉编码，构建清晰、诚实且有说服力的数据叙事，支撑建模结论沟通。"
+      keywords:
+        - "matplotlib"
+        - "plot"
+        - "图表"
+        - "可视化"
+        - "柱状图"
+        - "折线图"
+        - "散点图"
+        - "xlabel"
+        - "legend"
+      tier: 1
+      prereqs:
+        - skill: "data.exploration"
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - "能使用 matplotlib 或类似工具绘制基础图表（折线、柱状、散点、直方图），并正确标注轴与图例。"
+            - "能根据数据类型选择合适图表，并避免误导性视觉编码（如截断坐标轴）。"
+        - level: 2
+          criteria:
+            - "能独立设计多图组合或交互式可视化，清晰传达数据分析的关键发现与建模结论。"
+            - "能在项目中用可视化辅助模型诊断（如残差图、学习曲线），并解释其含义。"
+        - level: 3
+          criteria:
+            - "能在多种可视化方案之间权衡信息密度、可读性与受众背景，并形成设计准则。"
+            - "能将可视化叙事迁移到新场景（如报告、答辩、仪表盘），并形成可复用的图表模板。"
+    - id: "data.inference"
+      name: "统计建模与推断"
+      summary: "构建回归、分类或贝叶斯模型，对数据生成机制进行统计推断与预测，并量化不确定性。"
+      keywords:
+        - "回归"
+        - "分类"
+        - "拟合"
+        - "sklearn"
+        - "predict"
+        - "决策树"
+        - "随机森林"
+        - "贝叶斯"
+        - "置信"
+      tier: 2
+      prereqs:
+        - skill: "data.exploration"
+          minLevel: 2
+        - skill: "foundation.probstat"
+          minLevel: 2
+      levels:
+        - level: 1
+          criteria:
+            - "能拟合线性回归或逻辑回归模型，并解释系数、p 值与拟合优度。"
+            - "能使用训练好的模型对新数据进行预测，并报告预测误差。"
+        - level: 2
+          criteria:
+            - "能独立选择合适统计模型（如广义线性模型、贝叶斯回归）解决实际预测或推断问题。"
+            - "能在项目中量化预测不确定性（置信区间、后验区间），并据此支持决策。"
+        - level: 3
+          criteria:
+            - "能在多个统计模型之间权衡偏差、方差与可解释性，并形成模型选择与集成策略。"
+            - "能将统计建模方法论迁移到新领域（如因果推断、时间序列），并形成可复用的分析框架。"

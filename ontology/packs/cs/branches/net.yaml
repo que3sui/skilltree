@@ -1,0 +1,94 @@
+# 分支：网络（net）
+branch:
+  id: net
+  name: 网络
+  color: "#06b6d4"
+  description: 程序如何跨越机器对话——协议、接口与安全。
+  skills:
+    - id: net.http
+      name: HTTP 与 Web 工作原理
+      tier: 1
+      summary: 请求-响应的世界观：方法、状态码、头部与无状态。
+      keywords: [http, https, request, response, fetch, axios, 请求, 响应, header]
+      prereqs:
+        - skill: prog.syntax
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 正确发起/处理 HTTP 请求，理解方法与状态码语义
+            - 能解释一次请求-响应的完整路径（客户端、DNS、服务器）
+        - level: 2
+          criteria:
+            - 在项目中正确处理头、查询参数、状态码与超时/重试
+            - 能用工具（curl/抓包）诊断实际请求问题
+        - level: 3
+          criteria:
+            - 理解缓存、连接复用、HTTPS/TLS 握手的机制并能据此优化或排障
+            - 能论证 RESTful 约定或替代风格（RPC、GraphQL）的取舍
+
+    - id: net.api
+      name: API 设计
+      tier: 2
+      summary: 为他人造门：资源建模、契约一致与演进。
+      keywords: [api, rest, endpoint, route, controller, 接口, 路由, swagger]
+      prereqs:
+        - skill: net.http
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 实现过对外 HTTP 接口，路由与动词使用合理
+            - 响应格式一致（统一包裹/错误结构）
+        - level: 2
+          criteria:
+            - 资源建模清晰（名词化、层级、分页/过滤约定），输入有校验
+            - 错误响应可行动（明确的错误码、信息、状态码正确）
+        - level: 3
+          criteria:
+            - 有接口契约（文档/OpenAPI）与版本化/兼容性意识
+            - 能论证鉴权、幂等、限流等横切设计的选择
+
+    - id: net.tcp
+      name: 传输层与协议
+      tier: 2
+      summary: TCP/UDP 的承诺与极限：可靠传输、连接管理与自定义协议。
+      keywords: [tcp, udp, socket, 连接, 三次握手, packet, 粘包, net]
+      prereqs:
+        - skill: net.http
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 能解释 TCP 与 UDP 的核心差异及适用场景
+            - 使用过 socket/网络库完成基本的收发
+        - level: 2
+          criteria:
+            - 处理过流式传输的现实问题（分包/粘包、编码、心跳、断线重连）
+            - 连接生命周期管理正确（超时、关闭、资源释放）
+        - level: 3
+          criteria:
+            - 设计过应用层协议（帧格式、握手、错误恢复）并论证
+            - 能基于拥塞控制/背压原理诊断或优化传输行为
+
+    - id: net.sec
+      name: Web 安全基础
+      tier: 3
+      summary: 攻击面思维：注入、XSS、鉴权与最小信任。
+      keywords: [security, xss, csrf, sql injection, 注入, 安全, 鉴权, auth, token, hash password]
+      prereqs:
+        - skill: net.http
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 理解注入/XSS/CSRF 的原理与基本防御（参数化、转义、token）
+            - 不在代码中硬编码密钥/口令
+        - level: 2
+          criteria:
+            - 在项目中落实防御（参数化查询、输出编码、CORS/头配置）并校验输入来源
+            - 密码等敏感数据处理正确（加盐哈希、不落日志）
+        - level: 3
+          criteria:
+            - 系统性威胁建模：识别信任边界并给出缓解（最小权限、审计）
+            - 对会话/令牌的生成、存储、失效有完整且正确的设计

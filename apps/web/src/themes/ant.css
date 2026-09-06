@@ -1,0 +1,124 @@
+/* ---------------- 主题层：Ant Design 5 企业级秩序浅色（?theme=ant） ----------------
+   只覆盖令牌与少量组件形态，布局不动。
+   蓝灰底三层（#f5f7fa 页面 / #ffffff 卡片 / #f0f2f5 分层）+ #d9dce3 族 1px 边框建立秩序；
+   科大蓝 #004098 为魂：主按钮蓝底白字，focus 统一 2px 主色 20% 透明环；圆角收到 6px。 */
+
+html[data-theme="ant"] {
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --surface-2: #f0f2f5;
+  --line: #d9dce3;
+  --line-2: #c3c8d2;
+  --text: #1f2733;
+  --text-2: #4b5568;
+  --text-3: #66738a;
+  --accent: #004098;
+  --accent-soft: rgba(0, 64, 152, 0.32);
+  --amber: #9a6700;
+  --amber-soft: rgba(154, 103, 0, 0.42);
+  --green: #237804;
+  --green-soft: rgba(35, 120, 4, 0.35);
+  --red: #cf1322;
+  --red-soft: rgba(207, 19, 34, 0.38);
+  --pip: #d5dae2;
+  --edge-hover: #98a3b3;
+  --legend-lit: #389e0d;
+  --link: #0958d9;
+  --link-bg: rgba(9, 88, 217, 0.06);
+  --mask: rgba(15, 25, 47, 0.45);
+  --focus-border: #004098;
+  --log-pct: #7e8899;
+  --deck-card-bg: #ffffff;
+  --deck-shadow: 0 1px 2px rgba(15, 27, 61, 0.06), 0 12px 32px rgba(15, 27, 61, 0.12);
+  --hex-digit: rgba(255, 255, 255, 0.9);
+  --btn-hover-border: #adb7c6;
+}
+
+/* 顶栏：白底 + 1px 分隔线，官方仪表盘的安静页眉（不用彩色粗线，秩序靠对齐不靠强调） */
+html[data-theme="ant"] .toolbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+/* 分段切换：灰轨白钮的 Ant Segmented 形制，选中项描主色字 */
+html[data-theme="ant"] .segment {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+html[data-theme="ant"] .segment button {
+  border-radius: 4px;
+}
+
+html[data-theme="ant"] .segment button.seg-on {
+  background: var(--surface);
+  color: var(--accent);
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(15, 27, 61, 0.12);
+}
+
+/* 主按钮：科大蓝底白字 + Ant 标志性底投影；focus 为 2px 主色 20% 透明环 */
+html[data-theme="ant"] .primary-btn {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 2px 0 rgba(0, 35, 88, 0.1);
+}
+
+html[data-theme="ant"] .primary-btn:hover {
+  background: #0a52ba;
+  border-color: #0a52ba;
+}
+
+html[data-theme="ant"] .primary-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 64, 152, 0.2);
+}
+
+/* 下拉：白底描边控件，hover 加深边框，focus 落同一蓝环 */
+html[data-theme="ant"] .report-select,
+html[data-theme="ant"] .pack-select {
+  background: var(--surface);
+  border-radius: 6px;
+}
+
+html[data-theme="ant"] .report-select:hover,
+html[data-theme="ant"] .pack-select:hover {
+  border-color: var(--btn-hover-border);
+}
+
+html[data-theme="ant"] .report-select:focus,
+html[data-theme="ant"] .pack-select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(0, 64, 152, 0.2);
+}
+
+/* 抽屉：白底浮层 + 左缘 1px 线 + 单侧浅投影，贴近企业后台的弹层质感 */
+html[data-theme="ant"] .drawer {
+  background: var(--surface);
+  border-left: 1px solid var(--line);
+  box-shadow: -8px 0 24px rgba(15, 27, 61, 0.1);
+}
+
+/* 抽屉表单：输入系控件统一 6px 圆角与同一 focus 蓝环 */
+html[data-theme="ant"] .field input,
+html[data-theme="ant"] .field select {
+  border-radius: 6px;
+}
+
+html[data-theme="ant"] .field input:focus,
+html[data-theme="ant"] .field select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(0, 64, 152, 0.2);
+}
+
+/* 层叠卡片：10px 收敛到 6px，与全局圆角档一致 */
+html[data-theme="ant"] .deck-card {
+  border-radius: 6px;
+}
+
+/* 设计要点：秩序只来自三层蓝灰面 + #d9dce3 族 1px 边框这一套骨架，交互反馈全部收敛为
+   「边框变色 + 2px 主色 20% 蓝环」一种语言；科大蓝 #004098 只出现在主按钮、选中态与链接，其余面积保持中性、零装饰。 */

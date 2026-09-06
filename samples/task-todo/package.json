@@ -1,0 +1,11 @@
+{
+  "name": "task-todo",
+  "version": "1.0.0",
+  "description": "命令行待办事项管理：JSON 持久化 + node:test 测试",
+  "type": "module",
+  "bin": { "todo": "src/index.js" },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test test/"
+  }
+}

@@ -1,0 +1,92 @@
+# 建木学习资源索引库
+#
+# 条目 = {id, title, url, type, provider, notes, links:[{skill, minLevel}]}
+# 纪律：URL 只收录权威公开来源（官方文档/名校公开课/成熟社区）；LLM 推荐时
+# 只允许从本表选取，不得发明 URL（与评审管线同一反注入纪律）。
+# links.skill 可跨 pack 引用（如 cs 的 ds.recursion 或 mds 的 stat.inference 或 lib.* 通用节点）。
+
+resources:
+  - {id: r.linux-cs61a, title: "CS61A: Structure and Interpretation of Computer Programs（UC Berkeley 公开课）", url: "https://cs61a.org/", type: 课程, notes: 程序构造与抽象的最佳入门，作业全部公开, links: [{skill: prog.syntax, minLevel: 1}, {skill: prog.functions, minLevel: 1}]}
+  - {id: r.mdn-js, title: "MDN Web Docs — JavaScript 参考", url: "https://developer.mozilla.org/zh-CN/docs/Web/JavaScript", type: 文档, notes: 语法与标准库权威参考, links: [{skill: prog.syntax, minLevel: 1}]}
+  - {id: r.oi-wiki, title: "OI Wiki — 算法竞赛知识点整合", url: "https://oi-wiki.org/", type: 文档, notes: 数据结构与算法的中文体系化梳理，含复杂度分析, links: [{skill: algo.recursion, minLevel: 1}, {skill: algo.complexity, minLevel: 1}, {skill: ds.tree, minLevel: 1}, {skill: ds.hash, minLevel: 1}]}
+  - {id: r.visalgo, title: "VisuAlgo — 数据结构与算法可视化", url: "https://visualgo.net/zh", type: 工具, notes: 动画演示排序/树/图等结构, links: [{skill: ds.tree, minLevel: 1}, {skill: algo.sorting, minLevel: 1}]}
+  - {id: r.cs50, title: "CS50: 哈佛计算机科学导论（公开课）", url: "https://cs50.harvard.edu/x/", type: 课程, notes: 从零开始的系统入门，含 C 与 Python, links: [{skill: prog.syntax, minLevel: 1}, {skill: sw.cli, minLevel: 1}]}
+  - {id: r.git-book, title: "Pro Git（官方书，中文版）", url: "https://git-scm.com/book/zh/v2", type: 文档, notes: 版本控制从入门到分支策略, links: [{skill: lib.vcs, minLevel: 1}, {skill: sw.collab, minLevel: 1}, {skill: practice.vcs, minLevel: 1}]}
+  - {id: r.github-flow, title: "GitHub Flow 官方指南", url: "https://docs.github.com/zh/get-started/quickstart/github-flow", type: 文档, notes: 分支与协作流, links: [{skill: lib.vcs, minLevel: 2}, {skill: sw.collab, minLevel: 1}]}
+  - {id: r.testing-guide, title: "软件测试入门 — Google Testing Blog 精选", url: "https://testing.googleblog.com/", type: 博客, notes: 测试思维与用例设计, links: [{skill: sw.testing, minLevel: 1}, {skill: lib.testing, minLevel: 1}, {skill: practice.testing, minLevel: 1}]}
+  - {id: r.jest-docs, title: "Jest 官方文档", url: "https://jestjs.io/zh-Hans/docs/getting-started", type: 文档, notes: 单元测试实战, links: [{skill: sw.testing, minLevel: 2}]}
+  - {id: r.debug-cs, title: "How to Debug（Princeton COS333 讲义）", url: "https://www.cs.princeton.edu/courses/archive/spr25/cos333/debugging.html", type: 文档, notes: 系统化调试方法, links: [{skill: lib.debug, minLevel: 1}, {skill: practice.debug, minLevel: 1}]}
+  - {id: r.refactoring, title: "重构：改善既有代码的设计（第2版·示例）", url: "https://refactoring.com/", type: 书籍, notes: 目录与重构手法速查, links: [{skill: lib.abstract, minLevel: 2}, {skill: prog.functions, minLevel: 2}, {skill: practice.abstract, minLevel: 2}]}
+  - {id: r.clean-code, title: "Google 开源项目风格指南", url: "https://google.github.io/styleguide/", type: 文档, notes: 多语言代码风格基准, links: [{skill: prog.style, minLevel: 1}]}
+  - {id: r.markdown-guide, title: "Markdown 官方教程", url: "https://www.markdownguide.org/", type: 文档, notes: 文档写作基础, links: [{skill: lib.doc, minLevel: 1}]}
+  - {id: r.write-readme, title: "How to Write a README（standard-readme 规范）", url: "https://github.com/RichardLitt/standard-readme", type: 文档, notes: README 结构规范, links: [{skill: lib.doc, minLevel: 1}]}
+  - {id: r.regex-learn, title: "RegexOne — 正则表达式交互教程", url: "https://regexone.com/", type: 习题, notes: 边练边学, links: [{skill: ds.regex, minLevel: 1}]}
+  - {id: r.dp-learn, title: "动态规划入门 — labuladong 的算法小抄（在线版）", url: "https://labuladong.online/algo/", type: 教程, notes: DP 框架化讲解, links: [{skill: algo.dp, minLevel: 1}, {skill: algo.recursion, minLevel: 2}]}
+  - {id: r.net-course, title: "计算机网络：自顶向下方法（配套资源）", url: "https://gaia.cs.umass.edu/kurose_ross/", type: 课程, notes: 经典教材配套, links: [{skill: net.http, minLevel: 1}, {skill: net.socket, minLevel: 1}]}
+  - {id: r.mdn-http, title: "MDN — HTTP 概述", url: "https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Overview", type: 文档, notes: 协议基础, links: [{skill: net.http, minLevel: 1}]}
+  - {id: r.sql-mooc, title: "SQLZoo — SQL 交互练习", url: "https://sqlzoo.net/", type: 习题, notes: 边写边学关系查询, links: [{skill: db.sql, minLevel: 1}]}
+  - {id: r.db-design, title: "Use The Index, Luke — 索引与查询优化", url: "https://use-the-index-luke.com/", type: 教程, notes: 索引原理与调优, links: [{skill: db.sql, minLevel: 2}, {skill: db.model, minLevel: 1}]}
+  - {id: r.3b1b-linear, title: "3Blue1Brown — 线性代数的本质", url: "https://www.bilibili.com/video/BV1ys411472E", type: 视频, notes: 几何直觉建立, links: [{skill: stat.linear, minLevel: 1}, {skill: foundation.linalg, minLevel: 1}]}
+  - {id: r.3b1b-calculus, title: "3Blue1Brown — 微积分的本质", url: "https://www.bilibili.com/video/BV1qW4y1D7QV", type: 视频, notes: 极限与导数的直觉, links: [{skill: stat.calculus, minLevel: 1}, {skill: foundation.calculus, minLevel: 1}]}
+  - {id: r.prob-visualized, title: "看见统计（Seeing Theory，中文版）", url: "https://seeing-theory.brown.edu/cn.html", type: 交互, notes: 概率统计可视化直觉, links: [{skill: stat.inference, minLevel: 1}, {skill: stat.prob, minLevel: 1}, {skill: foundation.probstat, minLevel: 1}, {skill: data.inference, minLevel: 1}, {skill: modeling.simulation, minLevel: 1}]}
+  - {id: r.stat110, title: "Stat 110: 概率论（哈佛公开课）", url: "https://projects.iq.harvard.edu/stat110", type: 课程, notes: 概率思维严格训练, links: [{skill: stat.prob, minLevel: 2}, {skill: foundation.probstat, minLevel: 2}]}
+  - {id: r.islr, title: "ISL — 统计学习导论（在线免费书）", url: "https://www.statlearning.com/", type: 书籍, notes: 回归/分类/重抽样，附 R/Python 实验, links: [{skill: stat.regression, minLevel: 1}, {skill: stat.ml-basic, minLevel: 1}, {skill: data.inference, minLevel: 1}, {skill: foundation.probstat, minLevel: 2}]}
+  - {id: r.cmu-ml, title: "CMU 10-701 机器学习（公开讲义）", url: "http://www.cs.cmu.edu/~tom/10701_sp11/", type: 课程, notes: 机器学习理论脉络, links: [{skill: stat.ml-basic, minLevel: 2}]}
+  - {id: r.numerical, title: "Numerical Methods in Engineering with MATLAB（MIT OCW）", url: "https://ocw.mit.edu/courses/2-29-numerical-fluid-mechanics-spring-2015/", type: 课程, notes: 数值方法与实现, links: [{skill: stat.numerical, minLevel: 1}, {skill: foundation.numerical, minLevel: 1}]}
+  - {id: r.modeling-guide, title: "美赛官方 O 奖论文集与赛题（COMAP）", url: "https://www.comap.com/contests/mcm-icm-resources", type: 素材, notes: 获奖论文结构与分析范式, links: [{skill: md.modeling, minLevel: 1}, {skill: md.paper, minLevel: 1}, {skill: modeling.abstract, minLevel: 1}, {skill: modeling.validation, minLevel: 1}, {skill: modeling.optimization, minLevel: 1}]}
+  - {id: r.py-ds, title: "Python for Data Analysis（Wes McKinney 在线资源）", url: "https://wesmckinney.com/book/", type: 书籍, notes: pandas 数据处理权威, links: [{skill: lib.data-clean, minLevel: 1}, {skill: data.clean, minLevel: 1}, {skill: practice.doc, minLevel: 1}]}
+  - {id: r.matplotlib, title: "Matplotlib 官方教程", url: "https://matplotlib.org/stable/tutorials/index.html", type: 文档, notes: 图表从入门到出版级, links: [{skill: lib.viz, minLevel: 1}, {skill: data.viz, minLevel: 1}]}
+  - {id: r.tidy-viz, title: "数据可视化原则 — Financial Times Visual Vocabulary", url: "https://ft.com/vocabulary", type: 工具, notes: 按问题类型选图型的速查表, links: [{skill: lib.viz, minLevel: 2}, {skill: data.viz, minLevel: 2}]}
+  - {id: r.google-ds, title: "Google 数据分析课程（免费旁听）", url: "https://grow.google/certificates/data-analytics/", type: 课程, notes: 数据分析全流程, links: [{skill: lib.data-clean, minLevel: 1}, {skill: md.analysis, minLevel: 1}, {skill: data.exploration, minLevel: 1}, {skill: modeling.validation, minLevel: 1}]}
+  - {id: r.latex, title: "LaTeX 入门 — Overleaf 文档", url: "https://www.overleaf.com/learn", type: 文档, notes: 论文排版, links: [{skill: md.paper, minLevel: 1}, {skill: lib.doc, minLevel: 2}, {skill: practice.doc, minLevel: 2}]}
+  - {id: r.arduino, title: "Arduino 官方文档与教程", url: "https://docs.arduino.cc/", type: 文档, notes: 嵌入式入门权威, links: [{skill: emb.gpio, minLevel: 1}, {skill: embedded.mcu, minLevel: 1}]}
+  - {id: r.allaboutcircuits, title: "All About Circuits — 电路教科书（免费在线）", url: "https://www.allaboutcircuits.com/textbook/", type: 书籍, notes: 电路分析/数字/交流全覆盖, links: [{skill: circuit.analysis, minLevel: 1}, {skill: circuit.analog, minLevel: 1}, {skill: digital.interface, minLevel: 1}]}
+  - {id: r.eevblog, title: "EEVblog — 电子工程视频与基础篇", url: "https://www.eevblog.com/", type: 博客, notes: 仪器使用与调试实战, links: [{skill: circuit.measurement, minLevel: 1}, {skill: lib.debug, minLevel: 1}, {skill: engineering.pcb, minLevel: 1}]}
+  - {id: r.hdlex, title: "HDLBits — Verilog 在线练习", url: "https://hdlbits.01xz.net/", type: 习题, notes: 数字逻辑交互实战, links: [{skill: digital.hdl, minLevel: 1}, {skill: digital.fsm, minLevel: 1}, {skill: digital.logic, minLevel: 1}]}
+  - {id: r.embedded-book, title: "Embedded Artistry — 嵌入式工程最佳实践", url: "https://embeddedartistry.com/", type: 文档, notes: 从裸机到 RTOS 的工程方法, links: [{skill: emb.rtos, minLevel: 2}, {skill: emb.arch, minLevel: 1}, {skill: engineering.integration, minLevel: 2}]}
+  - {id: r.dsp-guide, title: "The Scientist and Engineer's Guide to DSP（免费全书）", url: "https://www.dspguide.com/", type: 书籍, notes: 信号与系统的直觉化讲解, links: [{skill: signal.sampling, minLevel: 1}, {skill: signal.filter, minLevel: 1}, {skill: circuit.signals, minLevel: 1}]}
+  - {id: r.csdiy, title: "CS 自学指南（社区共建）", url: "https://csdiy.wiki/", type: 导航, notes: 各领域自学路径地图, links: [{skill: lib.search, minLevel: 1}, {skill: practice.search, minLevel: 1}]}
+  - {id: r.kaggle-learn, title: "Kaggle Learn — 机器学习微课程", url: "https://www.kaggle.com/learn", type: 课程, notes: 边练边学，免费 GPU, links: [{skill: lib.ml, minLevel: 1}]}
+  - {id: r.nnfs, title: "Neural Networks from Scratch（配套免费章节）", url: "https://nnfs.io/", type: 书籍, notes: 手搓神经网络理解原理, links: [{skill: lib.ml, minLevel: 2}]}
+  - {id: r.gh-skills, title: "GitHub Skills — 交互式 Git/GitHub 实践", url: "https://skills.github.com/", type: 交互, notes: 官方交互教程, links: [{skill: lib.vcs, minLevel: 1}, {skill: lib.repro, minLevel: 1}]}
+  - {id: r.gsx-ethics, title: "数据伦理与负责研究（MIT 24.096 讲义选读）", url: "https://dspace.mit.edu/", type: 课程, notes: 研究伦理案例库（DSpace 检索课程编号）, links: [{skill: lib.academic-writing, minLevel: 2}]}
+  - {id: r.write-like, title: "学术写作指南 — 《Writing in the Sciences》(Stanford Online)", url: "https://www.coursera.org/course/sciwrite", type: 课程, notes: 科学写作经典课, links: [{skill: lib.academic-writing, minLevel: 1}]}
+  - {id: r.stats-50k, title: "Statistics Done Wrong — 常见统计误用", url: "https://www.statisticsdonewrong.com/", type: 书籍, notes: 反面教材学统计推断, links: [{skill: lib.stats, minLevel: 2}]}
+  - {id: r.sql-tutorial, title: "SQLBolt — 交互式 SQL 教程", url: "https://sqlbolt.com/", type: 交互, notes: 从 SELECT 到子查询, links: [{skill: lib.sql, minLevel: 1}]}
+  - {id: r.data-design, title: "Designing Data-Intensive Applications（作者博客与章节笔记）", url: "https://dataintensive.net/", type: 书籍, notes: 数据系统设计圣经, links: [{skill: lib.pipeline, minLevel: 2}, {skill: lib.er-model, minLevel: 2}]}
+  - {id: r.nielsen, title: "Nielsen Norman Group — 可用性文章库", url: "https://www.nngroup.com/articles/", type: 博客, notes: 启发式评估的出处, links: [{skill: lib.ux-heuristics, minLevel: 1}, {skill: lib.prototype, minLevel: 1}]}
+  - {id: r.refactoring-ui, title: "Refactoring UI（免费章节与博客）", url: "https://www.refactoringui.com/", type: 书籍, notes: 视觉层级速成, links: [{skill: lib.visual-hierarchy, minLevel: 1}]}
+  - {id: r.web-a11y, title: "Web Accessibility 入门 — W3C WAI 教程", url: "https://www.w3.org/WAI/tutorials/", type: 文档, notes: 官方无障碍指南, links: [{skill: lib.accessibility, minLevel: 1}]}
+  - {id: r.flask-docs, title: "Flask 官方文档（含部署章节）", url: "https://flask.palletsprojects.com/", type: 文档, notes: 从开发到部署, links: [{skill: lib.deploy, minLevel: 1}, {skill: net.http, minLevel: 2}]}
+  - {id: r.owasp-top10, title: "OWASP Top 10 — 应用安全风险清单", url: "https://owasp.org/www-project-top-ten/", type: 文档, notes: 安全卫生的常识基准, links: [{skill: lib.security-hygiene, minLevel: 1}]}
+  - {id: r.pytest, title: "pytest 官方入门", url: "https://docs.pytest.org/en/stable/getting-started.html", type: 文档, notes: Python 测试实战, links: [{skill: lib.testing, minLevel: 2}]}
+  - {id: r.perf-python, title: "Python 性能剖析指南 — pyinstrument 文档", url: "https://pyinstrument.readthedocs.io/", type: 文档, notes: 先测量再优化, links: [{skill: lib.performance, minLevel: 1}]}
+  - {id: r.kicad, title: "KiCad 官方文档（原理图/PCB/仿真）", url: "https://docs.kicad.org/", type: 文档, notes: 开源 EDA 全流程, links: [{skill: engineering.pcb, minLevel: 1}]}
+  - {id: r.freertos, title: "FreeRTOS 官方文档与实战手册", url: "https://www.freertos.org/Documentation", type: 文档, notes: RTOS 任务/队列/信号量权威, links: [{skill: embedded.rtos, minLevel: 1}]}
+  - {id: r.sparkfun, title: "SparkFun 教程库（传感器/总线/驱动）", url: "https://learn.sparkfun.com/tutorials", type: 教程, notes: I2C/SPI/UART 与外设实战, links: [{skill: digital.interface, minLevel: 1}, {skill: embedded.driver, minLevel: 1}]}
+  - {id: r.utembedded, title: "Embedded Systems – Shape The World（UT Austin 公开课）", url: "https://users.ece.utexas.edu/~valvano/edX/", type: 课程, notes: 从 GPIO 到 RTOS 的系统课（含实验）, links: [{skill: embedded.mcu, minLevel: 1}, {skill: engineering.integration, minLevel: 1}]}
+  - {id: r.cvx, title: "Convex Optimization（Boyd，免费全书+课件）", url: "https://web.stanford.edu/~boyd/cvxbook/", type: 书籍, notes: 优化建模的圣经, links: [{skill: modeling.optimization, minLevel: 2}]}
+  - {id: r.monte-carlo, title: "蒙特卡洛方法入门（Berkeley Stat 158 讲义风格资源集）", url: "https://www.stat.berkeley.edu/~aldous/157/", type: 课程, notes: 随机模拟与随机过程直觉, links: [{skill: modeling.simulation, minLevel: 1}]}
+  - {id: r.scholar, title: "Google 学术检索指南", url: "https://scholar.google.com/intl/zh-CN/scholar/help.html", type: 文档, notes: 文献检索基本功, links: [{skill: lib.literature, minLevel: 1}, {skill: practice.search, minLevel: 1}]}
+  - {id: r.expdesign, title: "实验与统计（OpenStax Introductory Statistics，免费教材）", url: "https://openstax.org/details/books/introductory-statistics", type: 书籍, notes: 对照/随机化/显著性入门, links: [{skill: lib.experiment, minLevel: 1}]}
+  - {id: r.visalgo-sort, title: "VisuAlgo — 排序与查找可视化", url: "https://visualgo.net/zh/sorting", type: 工具, notes: 排序/二分动画演示, links: [{skill: algo.sort, minLevel: 1}, {skill: algo.search, minLevel: 1}]}
+  - {id: r.greedy-divide, title: "分治与贪心 — 《算法导论》公开课件（MIT 6.006）", url: "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/", type: 课程, notes: MIT 算法课全课件与习题, links: [{skill: algo.greedy, minLevel: 1}, {skill: algo.graphalg, minLevel: 1}]}
+  - {id: r.use-index, title: "Use The Index, Luke — 索引与查询优化", url: "https://use-the-index-luke.com/", type: 教程, notes: 索引原理/执行计划/调优, links: [{skill: db.perf, minLevel: 1}, {skill: db.tx, minLevel: 1}]}
+  - {id: r.nosql-guide, title: "NoSQL Distilled（免费章节笔记与 MongoDB 大学入门）", url: "https://learn.mongodb.com/", type: 课程, notes: 非关系型存储模型与实战, links: [{skill: db.nosql, minLevel: 1}]}
+  - {id: r.cs61b, title: "CS61B: Data Structures（UC Berkeley 公开课）", url: "https://cs61b.org/", type: 课程, notes: 线性结构/堆/图系统训练, links: [{skill: ds.array, minLevel: 1}, {skill: ds.stackqueue, minLevel: 1}, {skill: ds.heap, minLevel: 1}, {skill: ds.graph, minLevel: 1}]}
+  - {id: r.string-utils, title: "字符串处理 — Python 官方教程（正则/格式化）", url: "https://docs.python.org/zh-cn/3/tutorial/stdtypes.html#text-sequence-type-str", type: 文档, notes: 字符串操作权威参考, links: [{skill: ds.string, minLevel: 1}, {skill: ds.regex, minLevel: 1}]}
+  - {id: r.rest-guide, title: "REST API 设计指南 — Microsoft Learn", url: "https://learn.microsoft.com/zh-cn/azure/architecture/best-practices/api-design", type: 文档, notes: API 设计最佳实践, links: [{skill: net.api, minLevel: 1}]}
+  - {id: r.beej, title: "Beej's Guide to Network Programming（套接字经典）", url: "https://beej.us/guide/bgnet/", type: 教程, notes: TCP/UDP 与协议编程, links: [{skill: net.tcp, minLevel: 1}, {skill: net.socket, minLevel: 1}]}
+  - {id: r.websec, title: "Web 安全入门 — OWASP Top 10（含中文版）", url: "https://owasp.org/www-project-top-ten/", type: 文档, notes: 注入/XSS/鉴权等十大风险, links: [{skill: net.sec, minLevel: 1}, {skill: lib.security-hygiene, minLevel: 1}]}
+  - {id: r.pyflow, title: "流程与状态 — CS50P（哈佛 Python 编程课）", url: "https://cs50.harvard.edu/python/", type: 课程, notes: 控制流/异常/IO 系统入门, links: [{skill: prog.control, minLevel: 1}, {skill: prog.error, minLevel: 1}, {skill: prog.io, minLevel: 1}]}
+  - {id: r.types-ts, title: "TypeScript 官方 Handbook（类型系统）", url: "https://www.typescriptlang.org/zh/docs/handbook/intro.html", type: 文档, notes: 类型系统与数据表示, links: [{skill: prog.types, minLevel: 1}]}
+  - {id: r.cli-book, title: "命令行程序设计 — 《The Linux Command Line》免费书", url: "https://linuxcommand.org/tlcl.php", type: 书籍, notes: CLI 参数/管道/退出码, links: [{skill: prog.cli, minLevel: 1}, {skill: sw.cli, minLevel: 1}]}
+  - {id: r.sicp-js, title: "SICP JS 版（函数式思维，免费在线）", url: "https://sicpjs.com/", type: 书籍, notes: 函数式与抽象的经典, links: [{skill: prog.fp, minLevel: 1}, {skill: lib.abstract, minLevel: 2}]}
+  - {id: r.make-book, title: "构建工具入门 — Make 与 CMake 官方文档集", url: "https://www.gnu.org/software/make/manual/", type: 文档, notes: 构建链与依赖管理, links: [{skill: prog.tooling, minLevel: 1}]}
+  - {id: r.async-mdn, title: "并发与异步 — MDN Promise/async 指南", url: "https://developer.mozilla.org/zh-CN/docs/Learn/JavaScript/Asynchronous", type: 教程, notes: 事件循环/Promise/竞态, links: [{skill: prog.concurrency, minLevel: 1}]}
+  - {id: r.vcs-learn, title: "Learn Git Branching（交互式可视化）", url: "https://learngitbranching.js.org/?locale=zh_CN", type: 交互, notes: 分支/合并/变基闯关练习, links: [{skill: sw.vcs, minLevel: 1}, {skill: lib.vcs, minLevel: 1}]}
+  - {id: r.write-docs, title: "技术写作 — Google Technical Writing Courses（免费）", url: "https://developers.google.com/tech-writing/one", type: 课程, notes: 清晰表达的技术写作训练, links: [{skill: sw.docs, minLevel: 1}, {skill: lib.doc, minLevel: 1}]}
+  - {id: r.debug-50, title: "Debugging — Princeton COS333 讲义（先复现，再隔离）", url: "https://www.cs.princeton.edu/courses/archive/spr25/cos333/debugging.html", type: 文档, notes: 系统化调试方法, links: [{skill: sw.debug, minLevel: 1}, {skill: lib.debug, minLevel: 1}]}
+  - {id: r.clean-code-book, title: "《代码整洁之道》要点速查 — Clean Code 周边资源", url: "https://cleancoders.com/", type: 视频, notes: Uncle Bob 系列讲座（部分免费）, links: [{skill: sw.refactor, minLevel: 1}, {skill: prog.style, minLevel: 1}]}
+  - {id: r.design-patterns, title: "Refactoring.Guru — 设计模式与重构（中文版）", url: "https://refactoringguru.cn/", type: 教程, notes: 模式/代码坏味道图解, links: [{skill: sw.design, minLevel: 1}, {skill: sw.refactor, minLevel: 2}]}
+  - {id: r.ci-guide, title: "持续集成入门 — GitHub Actions 官方文档", url: "https://docs.github.com/zh/actions", type: 文档, notes: 工作流/门禁/制品, links: [{skill: sw.ci, minLevel: 1}, {skill: lib.deploy, minLevel: 2}]}

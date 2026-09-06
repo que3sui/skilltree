@@ -1,0 +1,168 @@
+# 分支：算法（algo）
+branch:
+  id: algo
+  name: 算法
+  color: "#3b82f6"
+  description: 不只是解题——是带着复杂度意识的问题求解能力。
+  skills:
+    - id: algo.complexity
+      name: 复杂度分析
+      tier: 1
+      summary: 用增长的视角看待代码：时间、空间与摊还。
+      keywords: [complexity, big-o, o(n), 复杂度, 时间, 空间, 性能, optimize]
+      prereqs:
+        - skill: prog.functions
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 能对常见代码片段给出时间复杂度并解释计数方式
+            - 理解 O(1)/O(log n)/O(n)/O(n²) 的实际含义差异
+        - level: 2
+          criteria:
+            - 在项目决策中使用复杂度分析（如说明为何用哈希代替遍历）
+            - 能识别嵌套循环、递归主定理等复合结构的复杂度
+        - level: 3
+          criteria:
+            - 进行摊还分析与空间换时间的系统权衡，并在代码/文档中留有痕迹
+            - 用实测（基准、剖析）验证理论分析，处理常数因子与缓存等现实因素
+
+    - id: algo.sort
+      name: 排序算法
+      tier: 2
+      summary: 从冒泡到快排——理解排序家族的分工与边界。
+      keywords: [sort, quicksort, merge, bubble, 排序, order, 快排, 归并]
+      prereqs:
+        - skill: ds.array
+          minLevel: 1
+        - skill: algo.complexity
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 正确实现至少一种 O(n²) 排序，并能解释过程
+            - 正确使用语言内置排序并理解比较语义（稳定性、比较器）
+        - level: 2
+          criteria:
+            - 独立实现 O(n log n) 排序（快排/归并/堆排），边界与重复元素正确
+            - 测试覆盖基本与 adversarial 输入（已排序、全相同、逆序）
+        - level: 3
+          criteria:
+            - 能论证不同排序在稳定性、原地性、最坏情况间的取舍并按数据特征选择
+            - 理解非比较排序（计数/基数）的适用边界
+
+    - id: algo.search
+      name: 二分查找与搜索策略
+      tier: 2
+      summary: 在有序与解空间中导航：二分、边界与搜索树剪枝。
+      keywords: [binary search, 二分, search, 查找, upper, lower, bisect]
+      prereqs:
+        - skill: algo.sort
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 在有序数据上正确使用/实现二分查找
+            - 理解循环不变式与终止条件
+        - level: 2
+          criteria:
+            - 正确处理左右边界变体（首个/最后一个、插入点），无差一错误
+            - 将二分思想迁移到答案空间（如最小满足条件的值）
+        - level: 3
+          criteria:
+            - 能论证二分适用前提（单调性）并在非显然场景识别可二分结构
+            - 结合剪枝/启发式控制搜索规模并分析复杂度
+
+    - id: algo.recursion
+      name: 递归与回溯
+      tier: 2
+      summary: 自相似的思考：递归结构、状态恢复与剪枝。
+      keywords: [recursion, recursive, backtracking, 递归, 回溯, 排列, 组合, subset]
+      prereqs:
+        - skill: prog.functions
+          minLevel: 2
+        - skill: ds.stackqueue
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 正确写出基础递归（阶乘、斐波那契、树遍历）并解释基线条件
+            - 理解调用栈与递归深度的关系
+        - level: 2
+          criteria:
+            - 用回溯系统性枚举（排列/组合/子集/棋盘类），状态正确恢复
+            - 有剪枝意识并在代码中体现
+        - level: 3
+          criteria:
+            - 分析搜索空间规模并论证剪枝有效性
+            - 能在递归与显式栈迭代间转换并说明取舍
+
+    - id: algo.greedy
+      name: 贪心与分治
+      tier: 3
+      summary: 局部最优与问题分解：何时可靠，何时失效。
+      keywords: [greedy, divide, conquer, 贪心, 分治, interval, 区间]
+      prereqs:
+        - skill: algo.sort
+          minLevel: 1
+        - skill: algo.complexity
+          minLevel: 2
+      levels:
+        - level: 1
+          criteria:
+            - 能复述经典贪心/分治问题（区间调度、归并排序）的思路
+            - 在明确适合的场景中正确应用
+        - level: 2
+          criteria:
+            - 独立识别可分解子结构并设计分治策略（含合并步骤的正确性）
+            - 对贪心选择给出交换论证或反例检验
+        - level: 3
+          criteria:
+            - 能证明贪心策略的最优性或构造反例说明失效场景
+            - 在贪心/DP/分治之间做出有依据的技术选型
+
+    - id: algo.dp
+      name: 动态规划
+      tier: 3
+      summary: 记住子问题的答案：状态、转移与维度压缩。
+      keywords: [dp, dynamic programming, 动态规划, memo, 记忆化, 背包, 子序列]
+      prereqs:
+        - skill: algo.recursion
+          minLevel: 1
+        - skill: algo.complexity
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 能把朴素递归改造为记忆化搜索并解释重叠子问题
+            - 理解状态与转移的定义方式
+        - level: 2
+          criteria:
+            - 独立定义状态与转移解决经典模型（线性 DP、背包、LIS/LCS）
+            - 正确处理初始化、边界与遍历顺序
+        - level: 3
+          criteria:
+            - 进行维度/空间优化并保持正确性论证
+            - 面对新问题能自主设计状态（含多维、状态压缩）并分析复杂度
+
+    - id: algo.graphalg
+      name: 图算法
+      tier: 3
+      summary: 最短路、拓扑与最小生成树——图上的经典武器库。
+      keywords: [dijkstra, topological, mst, kruskal, prim, 最短路, 拓扑, 生成树]
+      prereqs:
+        - skill: ds.graph
+          minLevel: 1
+      levels:
+        - level: 1
+          criteria:
+            - 正确实现 BFS 最短路（无权）与拓扑排序
+            - 理解各算法的适用前提
+        - level: 2
+          criteria:
+            - 在带权图上正确应用 Dijkstra（或 Bellman-Ford 处理负权）并说明差异
+            - 将工程问题正确建图为图算法问题（依赖调度、路由）
+        - level: 3
+          criteria:
+            - 掌握 MST/强连通等进阶算法并能论证正确性
+            - 依据图的规模与性质（稀疏/稠密、静态/动态）选择算法与数据结构
