@@ -8,6 +8,7 @@ import GridView from "./components/GridView";
 import DeckView from "./components/DeckView";
 import SidePanel from "./components/SidePanel";
 import EvalDrawer from "./components/EvalDrawer";
+import DemoReplay from "./components/DemoReplay";
 import ReviewPanel from "./components/ReviewPanel";
 import ComparePanel from "./components/ComparePanel";
 import AssemblyNote from "./components/AssemblyNote";
@@ -44,6 +45,8 @@ export default function App() {
   const [selected, setSelected] = useState<string | null>(null);
   const [focusId, setFocusId] = useState<string | null>(null);
   const [evalOpen, setEvalOpen] = useState(false);
+  // 演示模式的「评测回放」抽屉：静态包给访客完整的四 agent 流程操作感（数据真实、过程回放）
+  const [replayOpen, setReplayOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
   const [compareReport, setCompareReport] = useState<Report | null>(null);
   const [trackOpen, setTrackOpen] = useState(false);
@@ -129,6 +132,22 @@ export default function App() {
 
   const vm = useMemo(() => (pack ? buildVM(pack, report) : null), [pack, report]);
   const order = useMemo(() => (vm ? revealOrder(vm) : []), [vm]);
+  // 演示包的 index 不分 pack（服务端才按 pack 过滤）：按技能总数对齐当前本体，
+  // 避免跨学科报告挂在错树上（如 eie 报告配 cs 树 → 首屏 0/41 全暗）
+  const shownReports = useMemo(
+    () => (mode === "demo" && vm ? reports.filter((r) => r.total === vm.total) : reports),
+    [mode, reports, vm],
+  );
+
+  // 当前选中的报告不属于当前本体（演示包落地默认/切包后）→ 自动切到匹配项中点亮最多的一份（首屏即高光）
+  useEffect(() => {
+    if (shownReports.length === 0) return;
+    if (current && shownReports.some((r) => r.file === current)) return;
+    const best = shownReports
+      .slice()
+      .sort((a, b) => (a.provider === "mock" ? 1 : 0) - (b.provider === "mock" ? 1 : 0) || b.lit - a.lit)[0];
+    setCurrent(best.file);
+  }, [shownReports, current]);
 
   const stopReveal = (): void => {
     if (revealTimer.current !== null) {
@@ -209,12 +228,12 @@ export default function App() {
         onPack={setPackId}
         view={view}
         onView={switchView}
-        reports={reports}
+        reports={shownReports}
         current={current}
         onReport={setCurrent}
         lit={vm.lit}
         total={vm.total}
-        onEvaluate={demoMode ? undefined : () => setEvalOpen(true)}
+        onEvaluate={demoMode ? () => setReplayOpen(true) : () => setEvalOpen(true)}
         onReplay={startReveal}
         demoMode={demoMode}
       />
@@ -371,11 +390,12 @@ export default function App() {
               <div className="empty-bulb">💡</div>
               <h2>还没有评测报告</h2>
               <p>
-                点击右上角 <b>⚡ 评测项目</b>，输入一个本地项目目录跑一次评测（mock 模式无需 API key）。
+                点击右上角 <b>⚡ 评测项目</b>
+                {demoMode ? "，观看一次评测的完整回放（演示数据）" : "，输入一个本地项目目录跑一次评测（mock 模式无需 API key）"}。
               </p>
               <p className="muted">推荐先试 samples/task-todo —— 一个带测试的命令行 todo 应用。</p>
-              <button className="primary-btn" onClick={() => setEvalOpen(true)}>
-                ⚡ 开始第一次评测
+              <button className="primary-btn" onClick={demoMode ? () => setReplayOpen(true) : () => setEvalOpen(true)}>
+                ⚡ {demoMode ? "观看评测回放" : "开始第一次评测"}
               </button>
               {packId !== "cs" && <AssemblyNote packId={packId} />}
             </div>
@@ -398,6 +418,18 @@ export default function App() {
 
       {!demoMode && (
         <EvalDrawer open={evalOpen} onClose={() => setEvalOpen(false)} onDone={onDone} packId={packId} />
+      )}
+      {demoMode && (
+        <DemoReplay
+          open={replayOpen}
+          onClose={() => setReplayOpen(false)}
+          onDone={(file) => {
+            setReplayOpen(false);
+            setCurrent(file);
+          }}
+          reports={shownReports}
+          current={current}
+        />
       )}
       {report && reviewOpen && (
         <ReviewPanel report={report} vm={vm} onClose={() => setReviewOpen(false)} />
