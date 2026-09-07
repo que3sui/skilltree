@@ -120,11 +120,13 @@ app.get("/api/reports", (c) => {
           file,
           id: r.id,
           repoName: (r.evidence as { name?: string } | undefined)?.name ?? "?",
+          packId: (r.pack as { id?: string } | undefined)?.id ?? "?",
           createdAt: r.createdAt,
           provider: (r.model as { provider?: string } | undefined)?.provider ?? "?",
           risk: (r.redteam as { overallRisk?: string } | undefined)?.overallRisk ?? "low",
           lit: (r.stats as { litSkills?: number } | undefined)?.litSkills ?? 0,
           total: (r.stats as { totalSkills?: number } | undefined)?.totalSkills ?? 0,
+          scoped: !!r.scope,
         };
       } catch {
         return null;
@@ -329,7 +331,14 @@ app.post("/api/evaluate", async (c) => {
   const release = (): void => {
     runningEvals = Math.max(0, runningEvals - 1);
   };
-  const body = (await c.req.json().catch(() => ({}))) as { repoPath?: string; repoUrl?: string; provider?: string; packId?: string };
+  const body = (await c.req.json().catch(() => ({}))) as {
+    repoPath?: string;
+    repoUrl?: string;
+    provider?: string;
+    packId?: string;
+    skills?: string[];
+    baseReport?: string;
+  };
   const repoPath = body.repoPath?.trim();
   const repoUrl = body.repoUrl?.trim();
   if (!repoPath && !repoUrl) {
@@ -344,6 +353,26 @@ app.post("/api/evaluate", async (c) => {
   }
   const providerKind: ProviderKind =
     body.provider === "deepseek" ? "deepseek" : body.provider === "ustc" ? "ustc" : "mock";
+
+  // 专项评测子集的形状闸：字符串数组、id 形状、数量上限——异常形状直接 400，不进流水线
+  let scopedSkills: string[] | undefined;
+  if (body.skills !== undefined) {
+    if (!Array.isArray(body.skills)) {
+      release();
+      return c.json({ error: "skills 必须是技能 id 字符串数组" }, 400);
+    }
+    const items = body.skills;
+    const badShape = items.some((s) => typeof s !== "string" || !/^[A-Za-z][A-Za-z0-9.-]{0,63}$/.test(s));
+    if (badShape) {
+      release();
+      return c.json({ error: "skills 元素须为技能 id（字母开头，字母/数字/点/连字符，≤64 字符）" }, 400);
+    }
+    if (items.length === 0 || items.length > 64) {
+      release();
+      return c.json({ error: "skills 数组须含 1-64 个技能 id" }, 400);
+    }
+    scopedSkills = [...new Set(items as string[])];
+  }
 
   const job: Job = { id: randomUUID(), status: "running", log: [] };
   jobs.set(job.id, job);
@@ -376,6 +405,9 @@ app.post("/api/evaluate", async (c) => {
     packDir,
     providerKind,
     outDir: REPORTS_DIR,
+    skills: scopedSkills,
+    baseReportFile: body.baseReport ? path.join(REPORTS_DIR, path.basename(body.baseReport)) : undefined,
+    repoUrl: repoUrl || undefined,
     onProgress: (e) => {
       job.log.push({ stage: e.stage, message: e.message, percent: e.percent, at: Date.now() });
       if (e.stage === "done" && e.percent === 100) job.reportFile = path.basename(e.message);

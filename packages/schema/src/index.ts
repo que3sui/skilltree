@@ -152,6 +152,17 @@ export const EffectiveLevelSchema = z.object({
 });
 export type EffectiveLevel = z.infer<typeof EffectiveLevelSchema>;
 
+/** 专项评测范围：本报告由子集重评合并而来，范围外技能的裁决沿自 baseReport */
+export const ReportScopeSchema = z.object({
+  skills: z.array(z.string()).min(1),
+  baseReportId: z.string(),
+  baseCreatedAt: z.string(),
+  /** 基础报告的评测通道（范围外技能的裁决来源）——与本次重评通道可能不同，展示层必须诚实区分。
+   *  default 兼容 schema 演进中间版本写出的报告（当时未记录通道） */
+  baseProvider: z.string().default("unknown"),
+});
+export type ReportScope = z.infer<typeof ReportScopeSchema>;
+
 export const ReportSchema = z.object({
   reportVersion: z.literal(1),
   id: z.string(),
@@ -191,6 +202,10 @@ export const ReportSchema = z.object({
     ),
     durationMs: z.number().int().min(0),
   }),
+  /** 仅专项评测合并报告携带；全量报告无此字段 */
+  scope: ReportScopeSchema.optional(),
+  /** 一键复现命令：报告自证"怎么跑出这份结论"；旧报告经 default 兼容为空串 */
+  repro: z.string().default(""),
 });
 export type Report = z.infer<typeof ReportSchema>;
 
@@ -363,4 +378,48 @@ export function computeStats(
     byBranch[b.id] = stat;
   }
   return { totalSkills, litSkills, byBranch, durationMs: 0 };
+}
+
+/**
+ * 专项评测合并（纯函数）：partial 只含 scope 内技能的新裁决，覆盖进 base 的对应位置，
+ * 范围外技能沿用 base 裁决（其等级已含 base 的仲裁结果）；红队/勘察/证据指纹/模型信息
+ * 取 partial（反映本次重跑时的仓库现状），仲裁留痕按技能分区合并；前置约束与统计用全量 pack 重算。
+ */
+export function mergeReports(base: Report, partial: Report, pack: SkillPack): Report {
+  const partialById = new Map(partial.assessments.map((a) => [a.skillId, a]));
+  const scoped = [...partialById.keys()];
+  const scopedSet = new Set(scoped);
+  if (scoped.length === 0) throw new Error("partial 报告不含任何裁决，无法合并");
+  // rubric 版本必须一致：范围外技能的裁决基于 base 的标准，标准不同则结论不可比
+  if (base.pack.id !== partial.pack.id || base.pack.contentHash !== partial.pack.contentHash) {
+    throw new Error(
+      `基础报告的本体 rubric 版本与当前不一致（base ${base.pack.contentHash.slice(0, 8)} vs 当前 ${partial.pack.contentHash.slice(0, 8)}）——范围外技能的裁决基于旧标准，拒绝合并；请重跑全量评测`,
+    );
+  }
+
+  const assessments = base.assessments.map((a) => partialById.get(a.skillId) ?? a);
+  const adjustments = [
+    ...base.arbitration.adjustments.filter((x) => !scopedSet.has(x.skillId)),
+    ...partial.arbitration.adjustments,
+  ];
+  const effective = applyPrereqCaps(pack, assessments);
+  const stats = computeStats(pack, effective);
+  stats.durationMs = partial.stats.durationMs;
+
+  return {
+    ...base,
+    id: partial.id,
+    createdAt: partial.createdAt,
+    evidence: partial.evidence,
+    pack: partial.pack,
+    model: partial.model,
+    survey: partial.survey,
+    assessments,
+    redteam: partial.redteam,
+    arbitration: { adjustments, notes: partial.arbitration.notes },
+    effective,
+    stats,
+    repro: partial.repro,
+    scope: { skills: scoped, baseReportId: base.id, baseCreatedAt: base.createdAt, baseProvider: base.model.provider },
+  };
 }

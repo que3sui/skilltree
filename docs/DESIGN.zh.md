@@ -277,7 +277,7 @@ web 三视角可视化 + 点亮回放 + 评审留痕 + 学习轨迹/成长对比
 | 技能本体 | `ontology/packs/{cs,mds,eie}` | 三个学科本体（计算机 41 / 数学建模 18 / 电子信息 19 技能），L1-L3 统一等级语义，PR 共建 |
 | 本体草稿 | `ontology/drafts/econ` | **课程大纲 .md 直读组装首例**：经济学大纲 → 4 分支/20 技能一次过校验（8 库原子逐字复用 + 12 起草） |
 | 节点库与组装器 | `ontology/library` + `scripts/assemble-pack.mjs` | 24 个可复用原子（通用/研究/数据/设计四域）；v3 支持 `--syllabus` 大纲直读与 `--out` 草稿目录；LLM 只起草，人审立法 |
-| 评测流水线 | `packages/evaluator` | 四 agent；mock（确定性，跨学科泛化，零 key 离线）/ ustc（科大统一入口）/ deepseek 三通道；GitHub 直评（白名单+浅克隆 50+用后即焚，**git 提交历史作为过程证据**） |
+| 评测流水线 | `packages/evaluator` | 四 agent；mock（确定性，跨学科泛化，零 key 离线）/ ustc（科大统一入口）/ deepseek 三通道；GitHub 直评（白名单+浅克隆 50+用后即焚，**git 提交历史作为过程证据**）；**专项评测**（`--skills` 子集重评 + mergeReports 合并进基础报告，scope 字段溯源混合通道，实测 2.6 分钟 vs 全量 7-11 分钟） |
 | 领域模型 | `packages/schema` | zod 单一事实源；DAG 校验、前置约束、统计纯函数（24 单元测试） |
 | 本地服务 | `apps/server` | Hono：本体/报告/组装日志/推荐 API + 评测触发；限速与并发闸、落盘脱敏闸 |
 | 可视化 | `apps/web` | 科技树/蜂窝/3D 层叠三视角 + 聚焦模式 + 评审留痕面板 + **学习轨迹/成长对比/申诉模板（页面内全文）/分享卡 PNG**；五套主题（默认科大配色）；静态演示模式含「评测回放」 |
@@ -308,6 +308,8 @@ web 三视角可视化 + 点亮回放 + 评审留痕 + 学习轨迹/成长对比
   「评测回放」按真实报告数据回放四 agent 全过程；
 - **源代码与本体**：https://github.com/que3sui/skilltree —— CI 质量门禁与样本测试双绿，
   v1.0.0 已发布；
-- **提交包内报告 JSON** 均带证据指纹与复现命令，可与在线演示逐项对照。
+- **提交包内报告 JSON** 均带证据指纹与复现命令，可与在线演示逐项对照；`pnpm verify:report`
+  对任意报告独立重算 effective/stats 并对账（schema/仲裁留痕/统计/scope 结构），
+  已纳入 flow-check 作为常驻断言。
 
 

@@ -105,6 +105,9 @@ function coerceAssessment(
   confidence = Math.max(0, Math.min(1, confidence));
 
   const flat = skill.levels.flatMap((ls) => ls.criteria.map((text) => ({ level: ls.level, text })));
+  // 口径说明：level 是模型的综合裁决，允许与个别判准 verdict 不一致（如综合 L2 但某 L1 判准
+  // unmet——模型在权衡整体证据）；红队/仲裁可依据这种张力质疑结论。仅在模型未给 verdict 时
+  // 才按 level 机械合成 fallback（met/partial/not-evidenced）。
   const criteria: CriterionVerdict[] = flat.map((spec, i) => {
     const rc = raw.criteria?.[i];
     const verdict = rc && rc.verdict && VERDICTS.has(rc.verdict)
@@ -173,13 +176,14 @@ export async function runRedTeam(
   digest: Digest,
   survey: Survey,
   assessments: Assessment[],
+  scopeNote?: string,
 ): Promise<RedTeamResult> {
   const lit = assessments.filter((a) => a.level > 0);
   const levelSummary = lit.length
     ? lit.map((a) => `${a.skillId}=L${a.level}`).join("、")
     : "全部技能均未点亮";
   const raw = (await completeJson(provider, {
-    ...buildRedTeamPrompt(digest, survey.summary, levelSummary),
+    ...buildRedTeamPrompt(digest, survey.summary, levelSummary, scopeNote),
   })) as { checks?: { name?: unknown; title?: unknown; verdict?: unknown; detail?: unknown }[]; overallRisk?: unknown };
 
   const allowed = new Set(["pass", "warn", "flag", "unknown"]);

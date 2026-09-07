@@ -19,12 +19,13 @@ pnpm demo:build          # = 打包演示数据 + vite 构建
 |---|---|---|
 | Cloudflare Pages | Create project → Direct Upload → 拖 dist | `*.pages.dev` 域名国内一般可访问 |
 | Vercel | `npx vercel deploy apps/web/dist --prod`（需登录） | 默认域名国内时好时坏 |
-| GitHub Pages | 建 repo 推送 dist → Settings/Pages 选分支 | 子路径也能跑（构建已用相对 base） |
+| GitHub Pages | 本仓库已配 `.github/workflows/pages.yml`：push 自动 demo:build 并部署（**https://que3sui.github.io/skilltree/ 即此管线**）；手动路径=推送 dist 到 gh-pages 分支后 Settings/Pages 选分支 | 子路径也能跑（构建已用相对 base） |
 
-拿到 URL 后生成二维码（海报 / PPT 用）：
+拿到 URL 后生成二维码（海报 / PPT 用；`qrcode-terminal` 在 Windows Git Bash 下静默空输出，勿用）：
 
 ```bash
-npx qrcode-terminal "https://你的域名/"
+python -m pip install qrcode pillow
+python -c "import qrcode; qrcode.make('https://你的域名/', box_size=12, border=3).save('qr.png')"
 ```
 
 评委在微信里直接打开这个链接即可浏览（H5，无需安装任何东西）。

@@ -25,7 +25,10 @@ function usage(): void {
 
 用法：
   skilltree validate [--pack <目录>]            校验技能本体（默认 ontology/packs/cs）
-  skilltree run --repo <路径> [--pack <目录>] [--provider mock|deepseek] [--out <目录>]
+  skilltree run --repo <路径> [--pack <目录>] [--provider mock|deepseek|ustc] [--out <目录>]
+                                                [--skills <id,id,...>] [--base <报告.json>]
+                                                专项评测：只重评指定技能并合并进基础报告
+                                                （--base 省略时自动取输出目录中该仓库的最新报告）
 `);
 }
 
@@ -47,17 +50,20 @@ function cmdValidate(packDir: string): number {
   return 0;
 }
 
-async function cmdRun(repo: string, packDir: string, providerKind: ProviderKind, outDir: string): Promise<number> {
+async function cmdRun(repo: string, packDir: string, providerKind: ProviderKind, outDir: string, skills?: string[], baseReportFile?: string): Promise<number> {
   console.log(c.cyan(`▶ 评测开始`));
   console.log(c.dim(`  证据: ${path.resolve(repo)}`));
   console.log(c.dim(`  本体: ${path.resolve(packDir)}`));
   console.log(c.dim(`  模型: ${providerKind}`));
+  if (skills && skills.length > 0) console.log(c.dim(`  专项: ${skills.join(", ")}`));
   try {
     const report = await runEvaluation({
       repoPath: repo,
       packDir,
       providerKind,
       outDir,
+      skills,
+      baseReportFile,
       onProgress: (e) => {
         if (e.stage === "done" && e.percent === 100) lastReportPath = e.message;
         process.stdout.write(`\r\x1b[K${c.dim(`[${e.percent.toString().padStart(3)}%]`)} ${e.message}`);
@@ -113,6 +119,8 @@ async function main(): Promise<number> {
       pack: { type: "string" },
       provider: { type: "string" },
       out: { type: "string" },
+      skills: { type: "string" },
+      base: { type: "string" },
     },
   });
   const cmd = args.positionals[0] ?? "help";
@@ -137,7 +145,11 @@ async function main(): Promise<number> {
       console.error(c.red(`未知 provider: ${providerKind}（可选 mock | deepseek | ustc）`));
       return 1;
     }
-    const code = await cmdRun(repo, packDir, providerKind, outDir);
+    const skills = typeof args.values.skills === "string"
+      ? args.values.skills.split(",").map((s) => s.trim()).filter(Boolean)
+      : undefined;
+    const base = typeof args.values.base === "string" ? args.values.base : undefined;
+    const code = await cmdRun(repo, packDir, providerKind, outDir, skills, base);
     return code;
   }
 

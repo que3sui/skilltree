@@ -7,7 +7,7 @@
 schemaVersion: 1
 id: cs
 name: 计算机与软件工程
-version: 0.1.0
+version: 0.1.1
 description: >
   面向本科计算机类课程的技能图谱种子。等级语义对所有分支统一；
   rubric 编写原则：可观察（能从项目证据中判定）、行为化（描述做了什么而非知道什么）、可证伪（红队能质疑）。

@@ -14,6 +14,8 @@ interface Props {
   packId: string;
   reportFile: string | null;
   onClose: () => void;
+  /** 发起专项评测（只重评该技能并合并进最新报告）；仅服务模式 + 本地目录证据可用 */
+  onScopedEval?: (skillId: string, skillName: string) => void;
 }
 
 const VERDICT_LABEL: Record<string, string> = {
@@ -30,7 +32,7 @@ const VERDICT_META: Record<string, { icon: string; label: string; cls: string }>
   "not-evidenced": { icon: "○", label: "无证据", cls: "v-none" },
 };
 
-export default function SidePanel({ vm, report, item, resources, serverMode, packId, reportFile, onClose }: Props) {
+export default function SidePanel({ vm, report, item, resources, serverMode, packId, reportFile, onClose, onScopedEval }: Props) {
   const [rec, setRec] = useState<RecommendResult | null>(null);
   const [asking, setAsking] = useState(false);
   const [appealCopied, setAppealCopied] = useState(false);
@@ -61,7 +63,12 @@ export default function SidePanel({ vm, report, item, resources, serverMode, pac
     lines.push(`- 标准：ontology/packs/${packId}（公开可查，rubric 版本随报告锁定）`);
     lines.push(`- 报告：${reportFile ?? "（当前会话）"} · 证据指纹 ${report.evidence.digestHash}`);
     lines.push(`- 模型：${report.model.details}`);
-    lines.push(`- 复现：pnpm evaluate --repo ${report.evidence.kind === "local-dir" ? report.evidence.path : report.evidence.name} --pack ontology/packs/${packId}`);
+    lines.push(`- 复现：${report.repro || `pnpm evaluate --repo ${report.evidence.kind === "local-dir" ? report.evidence.path : report.evidence.name} --pack ontology/packs/${packId}`}`);
+    if (report.scope) {
+      lines.push(
+        `- 报告性质：专项重评合并——${report.scope.skills.join("、")} 为本次重评，其余技能裁决沿自 ${report.scope.baseProvider} 基础报告（${report.scope.baseCreatedAt.slice(0, 10)}）；复现命令已带 --skills，合并语义见 README`,
+      );
+    }
     lines.push(`- 置信度：${Math.round(item.confidence * 100)}%（仲裁调整${item.adjustment ? `：L${item.adjustment.from} → L${item.adjustment.to}（${item.adjustment.reason}）` : "：无"}）`);
     const text = lines.join("\n");
     setAppealText(text); // 页面内展示全文——剪贴板不可用（如无手势/权限）也能看到并手动复制
@@ -218,6 +225,15 @@ export default function SidePanel({ vm, report, item, resources, serverMode, pac
 
       {report && (
         <section className="sp-section">
+          {onScopedEval && report.evidence.kind === "local-dir" && (
+            <button
+              className="ghost-btn sp-scoped"
+              onClick={() => onScopedEval(item.skill.id, item.skill.name)}
+              title="只重评这一项技能并合并进该仓库最新报告（约 3 分钟，远快于全量 11 分钟）——练完专项提交后的复核动线"
+            >
+              ⚡ 专项评测此技能
+            </button>
+          )}
           <button className="ghost-btn sp-appeal" onClick={copyAppeal}>
             📋 生成申诉说明
           </button>

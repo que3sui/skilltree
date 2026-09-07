@@ -45,6 +45,8 @@ export default function App() {
   const [selected, setSelected] = useState<string | null>(null);
   const [focusId, setFocusId] = useState<string | null>(null);
   const [evalOpen, setEvalOpen] = useState(false);
+  // 专项评测预设：SidePanel「专项评测此技能」带入（服务模式，本地目录证据）
+  const [evalPreset, setEvalPreset] = useState<{ repoPath: string; skills: string[]; label: string } | null>(null);
   // 演示模式的「评测回放」抽屉：静态包给访客完整的四 agent 流程操作感（数据真实、过程回放）
   const [replayOpen, setReplayOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
@@ -245,13 +247,14 @@ export default function App() {
               <div className="canvas-head">
                 <span
                   className="canvas-title"
-                  title={`证据指纹 ${report.evidence.digestHash} · rubric ${report.pack.contentHash} · ${new Date(report.createdAt).toLocaleString()}`}
+                  title={`证据指纹 ${report.evidence.digestHash} · rubric ${report.pack.contentHash} · ${new Date(report.createdAt).toLocaleString()}${report.scope ? ` · 合并报告：${report.scope.skills.length} 项本次重评（${report.model.provider}），其余沿自 ${report.scope.baseProvider === "unknown" ? "早期通道" : report.scope.baseProvider} 基础报告` : ""}`}
                 >
                   {report.evidence.name}
                   <span className="canvas-sub">
                     {" · "}
                     {report.model.provider} ·{" "}
                     {Math.round(report.stats.durationMs / 60000)} 分钟
+                    {report.scope ? ` · 合并（${report.scope.skills.length} 项本次重评，其余沿自 ${report.scope.baseProvider === "unknown" ? "早期通道" : report.scope.baseProvider}）` : ""}
                   </span>
                 </span>
                 <span className="canvas-head-right">
@@ -295,7 +298,7 @@ export default function App() {
                     // 学习轨迹：同仓库 ≥2 次评测即有曲线
                     const cur = reports.find((r) => r.file === current);
                     const series = cur
-                      ? reports.filter((r) => r.repoName === cur.repoName).sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+                      ? reports.filter((r) => r.repoName === cur.repoName && r.packId === cur.packId).sort((a, b) => a.createdAt.localeCompare(b.createdAt))
                       : [];
                     if (series.length < 2) return null;
                     return (
@@ -308,7 +311,7 @@ export default function App() {
                     // 同仓库还有更早报告 → 可对比（成长证明）
                     const cur = reports.find((r) => r.file === current);
                     const prev = cur
-                      ? reports.find((r) => r.repoName === cur.repoName && r.file !== cur.file && new Date(r.createdAt) < new Date(cur.createdAt))
+                      ? reports.find((r) => r.repoName === cur.repoName && r.packId === cur.packId && r.file !== cur.file && new Date(r.createdAt) < new Date(cur.createdAt))
                       : undefined;
                     if (!cur || !prev) return null;
                     return (
@@ -412,12 +415,29 @@ export default function App() {
             packId={packId}
             reportFile={current}
             onClose={() => setSelected(null)}
+            onScopedEval={
+              mode === "server" && report?.evidence.kind === "local-dir" && report.evidence.path
+                ? (skillId, skillName) => {
+                    setEvalPreset({ repoPath: report.evidence.kind === "local-dir" ? report.evidence.path : "", skills: [skillId], label: skillName });
+                    setEvalOpen(true);
+                  }
+                : undefined
+            }
           />
         )}
       </main>
 
       {!demoMode && (
-        <EvalDrawer open={evalOpen} onClose={() => setEvalOpen(false)} onDone={onDone} packId={packId} />
+        <EvalDrawer
+          open={evalOpen}
+          onClose={() => {
+            setEvalOpen(false);
+            setEvalPreset(null);
+          }}
+          onDone={onDone}
+          packId={packId}
+          preset={evalPreset}
+        />
       )}
       {demoMode && (
         <DemoReplay
@@ -441,7 +461,7 @@ export default function App() {
         (() => {
           const cur = reports.find((r) => r.file === current);
           const series = cur
-            ? reports.filter((r) => r.repoName === cur.repoName).sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+            ? reports.filter((r) => r.repoName === cur.repoName && r.packId === cur.packId).sort((a, b) => a.createdAt.localeCompare(b.createdAt))
             : [];
           return series.length >= 2 ? (
             <TrackPanel entries={series} onClose={() => setTrackOpen(false)} />

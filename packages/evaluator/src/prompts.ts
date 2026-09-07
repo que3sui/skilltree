@@ -105,7 +105,7 @@ ${digestBlock(digest)}
 // redteam
 // ---------------------------------------------------------------------------
 
-export function buildRedTeamPrompt(digest: Digest, surveySummary: string, levelSummary: string): Prompt {
+export function buildRedTeamPrompt(digest: Digest, surveySummary: string, levelSummary: string, scopeNote?: string): Prompt {
   return {
     system:
       "你是红队质疑员。你的职责是推翻或削弱取证结论：证据能证明是本人独立完成吗？项目真的能运行吗？" +
@@ -115,7 +115,7 @@ export function buildRedTeamPrompt(digest: Digest, surveySummary: string, levelS
 
 勘察结论：${surveySummary}
 取证等级概览：${levelSummary}
-
+${scopeNote ? `\n${scopeNote}\n` : ""}
 请从以下方面逐项核查并输出 JSON：
 {"checks": [{"name": "英文标识", "title": "中文名", "verdict": "pass|warn|flag", "detail": "依据与文件"}],
  "overallRisk": "low|medium|high"}

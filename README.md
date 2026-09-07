@@ -49,10 +49,16 @@ pnpm web      # http://127.0.0.1:5173
 # 从课程大纲组装一个新学科本体草稿（LLM 起草，人审立法；key 只走环境变量）
 USTC_API_KEY=sk-... USTC_MODEL=deepseek-v4-pro pnpm assemble-pack --provider ustc \
   --id econ --major 经济学 --syllabus docs/examples/syllabus-econ.md --out ontology/drafts/econ
+
+# 专项评测：只重评指定技能并自动合并进该仓库最新报告（约 3 分钟 vs 全量 7-11 分钟）
+# Web 侧等价入口 = 技能侧栏「⚡ 专项评测此技能」（服务模式，本地目录证据）
+pnpm evaluate --repo samples/task-todo --provider ustc --skills ds.hash
 ```
 
 接真实模型：`DEEPSEEK_API_KEY`（deepseek 官方通道）或 `USTC_API_KEY` + `USTC_MODEL`
-（科大统一模型入口，如 deepseek-v4-pro）环境变量切换；mock 通道零 key 离线可跑。
+（科大统一模型入口，如 deepseek-v4-pro）环境变量切换；mock 通道零 key 离线可跑
+（**关键词启发式，存在系统性虚高**——如对 `Array.map` 这类通用 token 误报哈希技能，
+仅用于管道测试与离线演示，评价结论以真实模型通道为准）。
 GitHub 直评：Web 评测框直接粘贴 github.com/gitee.com 公开仓库链接（浅克隆 + git 历史
 进红队核查 + 用后即焚）。
 

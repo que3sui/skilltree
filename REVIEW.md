@@ -98,3 +98,26 @@ Agent 按本文件对 PR/变更做多轮分类评审，输出按严重度排序�
     由用户在其终端（无此钩子）执行 commit；本轮所有变更已 git add 暂存待用户一键提交。
 
 
+
+- **2026-09-07 04:00，夜间对抗迭代 N1-N7 安全相关变更补记**（均为 agent 夜间自主改动，已 gate 29/29 + flow 21/21 验证，待用户 commit）：
+  - **digest 资源上限**（evaluator/digest.ts）：枚举封顶 MAX_FILES=5000 + MAX_DEPTH=12，遍历改名字排序确定性 DFS——封顶防超大目录树 DoS，排序保「同树→同哈希」承诺。真实加固。
+  - **baseReportFile 边界**（evaluator/pipeline.ts）：专项评测基础报告路径 resolve 后必须落在报告输出目录内（Mimosa L2 复查指认，非误报，已修）；服务端另做 basename 白名单，双层防线。
+  - **skills 形状闸**（server index.ts）：/api/evaluate 的 skills 数组元素形状/数量白名单（字母开头/字符集/≤64 字符/1-64 个/去重），恶意形状实测 400。
+  - **/api/reports meta 增加 packId 与 scoped**——只读派生字段，无新攻击面；/api/reports/:file 路径穿越白名单（basename+后缀）实弹复测 400 无恙。
+  - **repro 字段**（schema default 兼容）：报告内嵌复现命令；assertNoSecrets 对含 repro 的最终报告照常执行（密钥形态仍拒绝落盘）。
+  - 结论：本轮安全姿态净增强（3 处真加固 + 1 处 DoS 面消除）；无新增漏洞；commit 拦截预期仍按既有裁决类别，交用户终端执行。
+
+- **2026-09-07 06:15，端点安全矩阵（N11 沉淀，逐端点一行）**：
+  | 端点 | 输入闸 | 备注 |
+  |---|---|---|
+  | GET /api/packs | 无输入，只读 | — |
+  | GET /api/pack?name | packDirFor basename 白名单 + resolve 双重边界断言 | Mimosa 指认入口，已真加固 |
+  | GET /api/reports?pack | 只读 + meta mtime 缓存；顶层扫描（dev/ 不收录） | meta 含 packId/scoped |
+  | GET /api/assembly/:packId | packId 拒路径段（400）+ 32KB 截断闸 | flow-check 4 断言 |
+  | GET /api/resources | 无输入，只读 | — |
+  | POST /api/recommend | 限速 20/min；reportFile basename+后缀白名单 | 空态静默降级 |
+  | GET /api/reports/:file | basename + .json 白名单（穿越实弹 400） | — |
+  | POST /api/evaluate | 限速 6/min + 并发 ≤N；repoUrl assertSafeRepoUrl（https+白名单）；skills 形状闸；baseReport basename+目录边界（双层）；密钥脱敏闸 | 最大攻击面，闸最多 |
+  | GET /api/jobs/:id | UUID 查找，无路径面 | — |
+  | GET /* 静态 | serveWebFile 相对路径包含于 web/dist | CSP 由 index.html meta 提供 |
+  结论：10 端点全部有界；唯一写路径 /api/evaluate 五层闸；矩阵随新端点增补。

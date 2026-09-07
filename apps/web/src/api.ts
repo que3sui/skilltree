@@ -4,11 +4,15 @@ export interface ReportMeta {
   file: string;
   id: string;
   repoName: string;
+  /** 报告所属本体——轨迹/对比的同仓库序列必须同 pack，防跨学科同名混排 */
+  packId: string;
   createdAt: string;
   provider: string;
   risk: string;
   lit: number;
   total: number;
+  /** 专项重评合并报告——轨迹/时间线以 ⚡ 标注，提示曲线突变来自单技能重评 */
+  scoped?: boolean;
 }
 
 /**
@@ -153,11 +157,16 @@ export function startEvaluation(
   provider: string,
   packId?: string,
   isUrl = false,
+  skills?: string[],
 ): Promise<{ id: string }> {
   return fetch("api/evaluate", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify(isUrl ? { repoUrl: repoPath, provider, packId } : { repoPath, provider, packId }),
+    body: JSON.stringify(
+      isUrl
+        ? { repoUrl: repoPath, provider, packId, skills }
+        : { repoPath, provider, packId, skills },
+    ),
   }).then(async (res) => {
     const body = (await res.json()) as { id?: string; error?: string };
     if (!res.ok || !body.id) throw new Error(body.error ?? `评测启动失败（${res.status}）`);

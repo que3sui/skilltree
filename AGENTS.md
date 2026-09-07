@@ -12,6 +12,8 @@
 | 评测回归（样例行为不变量） | `pnpm eval:regression` |
 | 本体改动后的影响报告 | `pnpm rubric:impact` |
 | 真实模型评测 | `DEEPSEEK_API_KEY=… DEEPSEEK_MODEL=deepseek-v4-flash pnpm evaluate --repo <路径> --provider deepseek` |
+| 报告证据链对账（读任意报告独立重算） | `pnpm verify:report`（flow-check 第 21 断言已常驻） |
+| 专项评测（单技能重评合并进基础报告） | `pnpm evaluate --repo <路径> --skills <id> [--provider ustc]`（无基础报告时报错引导先跑全量；rubric 版本不一致拒绝合并） |
 | 本地起服务/前端 | `pnpm server`（8787）/ `pnpm web`（5173，代理到 8787） |
 
 ## 架构一页图
@@ -45,6 +47,9 @@ scripts/             eval-regression（合并门禁）/ rubric-impact / compare
 - **Windows 控制台是 GBK**：curl 直接打中文会坏，测试脚本用 ASCII 或落盘后用 node 读。
 - **SVG 文本无法被 Playwright 文本引擎定位**（无 innerText）：UI 自动化用 `page.evaluate` 派发事件。
 - 证据目录里的符号链接必须跳过（`digest.ts` 已做），否则会读出根目录之外的内容。
+- **schema 加字段必须 `.default()`**（09-07 N1 教训）：新必填字段会让旧报告解析失败，专项评测的基础报告定位会整链断裂；演进后中间版报告要能被当前 schema 读。
+- **后台服务报 EADDRINUSE 先查存活实例**（N5 教训）：`&` 起的 node 服务可脱离 shell 存活——netstat 查 PID 并 curl 特征字段验证代码版本，勿盲杀盲启。
+- **本体 keywords 警惕泛化 token**（N9 教训）：`index`/`map`/`set` 这类词会命中文件名与内建方法（mock 对 task-todo 的 ds.hash 误报根因）；加词前先 `grep -rn <词> samples/` 实测命中语义。
 
 ## 工作循环（AI 原生 SDLC）
 

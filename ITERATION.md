@@ -18,7 +18,147 @@
 - [ ] 若用户反馈新意见 → 按意见处理（唯一改代码入口）
 
 ### 下一轮：I26+
+
+### 决赛窗口开发清单（用户 09-06 12:50 确认「晚上闲时再开发」——夜间提交上传完成后开工，只动仓库不动已上传 zip）
+1. **专项评测（单节点 ↔ 单独评审任务）**——用户提出，判断为决赛演示杀手锏：评委点一个节点→2-3 分钟专项重评出结果。设计要点：
+   - evaluator 加 `--skills` 子集参数（取证只跑目标分支，红队/仲裁只作用目标裁决；成本 9 调用/11 分钟 → 3-4 调用/约 3 分钟）
+   - **合并语义**（核心难点）：专项结果覆盖合并进该仓库上一份完整报告（其余节点裁决沿用、指纹与 rubric 版本对齐），applyPrereqCaps 纯函数重算；轨迹曲线天然记录单技能进步
+   - UI：SidePanel「专项评测此技能」按钮 + EvalDrawer 节点多选
+   - 必须补：合并纯函数单测 + eval:regression 不变量核对 + mock 通道子集行为
+   - 产品闭环：推荐补技能 → 练 → 专项提交 → 单节点重评 → 图谱单点亮起（"登天之梯"的梯级感）
+2. 真实同学仓库试点（1-3 例 + 本人反馈）｜盲测信度实验｜LLM 生成达标仓库对抗压测｜信度白皮书（task-todo ×3 方差）
 同上核验；20:00 后附验收清单与上传步骤。答辩材料（PPT 09:45 版于 E:\A-GLM\登楼\02\defense\）待用户试讲反馈后修订。
+
+## 夜间对抗迭代协议（09-06 22:4x 起生效，用户授权「每晚11点到次日9点自动迭代」）
+
+- **窗口与轮次**：每晚 23:00-次日 8:45（automation-6d640a1b，每 45 分钟）；夜间轮编号 **N1、N2…**（与日间 I 轮区分）。**每轮收尾必须写下「下一轮计划」**——本轮提出、下轮执行，迭代链不断。
+- **三目标**：①**找茬式刁难**——数据正确性/原理漏洞/操作体验/汇报口径四方向主动挑刺，发现即修，gate+flow 全绿才算完成；②**功能 steelman**——候选功能→最强论证→无情精简→只落地当下最优且不降级（有测试保护、不破坏既有口径），落选入备选池；③**三链补全**——证据链（指纹/引用/复现命令对账）、操作链（README 命令实测）、安全链（输入校验/路径边界/密钥闸，库层同样要边界）。
+- **红线**：已提交 zip 与四件材料冻结不重打包；commit/push 留用户（agent 只 git add）；真实模型每轮 ≤2 次调用，默认 mock/离线；PPT 改动须过 COM 验证。
+- **N1 计划（23:00 执行）**：找茬方向=①专项评测合并语义边界——重复合并（N 次叠加）、scope 报告再作 base 的链条正确性、跨 provider 混合 base（mock base + ustc partial）的口径显示；②操作链实测——README 快速开始逐命令跑一遍；③安全链复查——/api/evaluate 的 skills 数组元素格式校验（当前只查存在性，未查字符串形状）。发现即修。
+
+## 夜间轮记录
+
+### N1（23:05-23:3x 完成）✅ 找茬四杀 + 一次自伤式真 bug：
+1. **合并语义边界**（schema）：①mergeReports 新增 rubric 版本闸——base 与 partial 的 pack.contentHash 不一致直接拒绝（范围外裁决基于旧标准不可比），报错引导重跑全量；②scope 新增 `baseProvider`（范围外裁决的通道溯源，default "unknown" 兼容中间版报告）；③链条合并验证（merged 再作 base，scope 指向最近一次 partial、早轮结果不丢）。+2 单测。
+2. **自伤式真 bug（schema 演进兼容性）**：给 scope 加必填 baseProvider 后，schema 中间版本写出的报告（有 scope 无 baseProvider）解析失败 → 专项自动定位选中它即爆「基础报告无法解析」。修：baseProvider 改 default("unknown") + findLatestBaseReport 改用 schema safeParse 只挑可解析报告。实弹复测链条合并通过（15-19 报告 baseProvider=mock 正确溯源）。
+3. **安全链**：/api/evaluate 的 skills 形状闸（字母开头/字符集/≤64 字符/1-64 个/去重），三组恶意形状实测 400。
+4. **汇报口径**：合并报告画布头原先只显示本次通道——现诚实标注「合并（N 项本次重评，其余沿自 X）」，title 含完整溯源；"unknown" 兜底显示「早期通道」。
+5. **操作链**：flow-check 20 项全过（新代码服务实测）；gate 29/29（+2 链条/版本闸单测）+ 回归不变量未破；mock 专项实弹 ds.stackqueue 链条合并 OK。
+- 落选备选池：轨迹导出 PNG、报告 diff 增强视图（steelman 后判定当前证据不足其复杂度，留决赛窗口再议）。
+- **N2 计划**：①找茬=红队对专项子集的输入适配（levelSummary 只含子集——红队缺全库上下文是否产生误导性结论？定设计口径或修 prompt）；轨迹/对比视图拿 scope 报告与全量报告 diff 的语义正确性；②三链=证据链对账脚本 scripts/verify-report.mjs（读任意报告→重算 stats/前置约束/指纹比对）；③操作体验=IAB 走查专项按钮→抽屉→完成后轨迹新增点的完整动线。
+
+### N2（23:45-00:1x 完成）✅ 四项全过：
+1. **红队子集适配（设计口径落定+prompt 修正）**：审查结论——红队 6 项必查全是仓库级检查，不依赖全库等级，scoped 模式无需给全库上下文（保持"红队只质证本次裁决"的对抗边界）；但红队会困惑"等级概览为何只有一项"。修：buildRedTeamPrompt 加可选 scopeNote，专项模式注入「子集重评说明：概览仅含本次重评 N 项；仓库级必查照常全查」。全量模式零变化。
+2. **轨迹/对比 scope 语义**：对比视图已有"上次/本次 provider"双标注（诚实，无需改）；轨迹面板语义正确性**实弹验证**——专项合并报告入时间线（task-todo ×10 次，曲线 22/41→19/41 逐点带通道标注），scope 报告 lit=合并后全库状态，作时间线点语义自洽。
+3. **证据链对账脚本落地**：scripts/verify-report.mjs（`pnpm verify:report`）——schema 解析/仲裁留痕写回/独立重算 effective+stats 逐项对账/scope 结构自洽，多本体按报告所属 pack 分别对账。**实弹 17/17 全过**（cs/mds/eie + 4 份 scope 合并报告）。这是"报告可复现"主张从口头变成可执行验证的一环。
+4. **IAB 完整动线绿**：节点→专项按钮→抽屉预设（banner/路径/通道）→切 mock 执行→「✓ 完成」→列表 9→10→canvas 切新合并报告（N1 合并标注在）→轨迹面板 ×10 次。另实弹复查 /api/reports/:file 路径安全——已有 basename+后缀白名单，穿越攻击 400（历史已设防）。
+- gate 29/29 + 回归未破；全部暂存。
+- **N3 计划**：①找茬=reports/ 目录膨胀对可用性的污染（task-todo 已 10 个选项，测试产物与真实使用混排——设计隔离/分组方案）；ComparePanel 跨 pack 同名 repo 的守卫核查；②三链=把 verify:report 纳入 flow-check（对账既有报告作为第 21 断言，轻量不拖慢）；③操作体验=窄屏（≤760px）下专项按钮与抽屉表单的可达性走查。
+
+### N3（00:30-01:0x 完成）✅ 三项全过 + 修一个窄屏真溢出：
+1. **reports 膨胀治理**：三个夜间测试产物（mock 合并报告）git mv 入 `reports/dev/`（/api/reports 顶层扫描天然不收录，UI 回到干净列表：task-todo 7 个有意义选项）；顶层保留 15 份含 ustc ds.hash 专项展示件。zip 存档无涉。
+2. **跨 pack 同名守卫**：坐实风险——meta 无 packId 时轨迹/对比按 repoName 匹配，同名仓库跨本体评测会混排垃圾 diff。修：/api/reports meta 增加 `packId` + ReportMeta 类型 + App 三处序列过滤（轨迹/对比上次/轨迹面板）同 pack 守卫。
+3. **对账纳入 flow-check**：第 21 断言「证据链对账 verify:report 全过」——报告可复现性成为动线回归的常驻关卡；实测 21/21 全过（dev/ 子目录不参与对账，符合预期）。
+4. **窄屏走查（375×720）**：专项按钮 44px 触控✓、滚动可达✓、抽屉表单可用✓；**发现真溢出**——report-select 的 min-content（最长选项文本）撑爆 flex 行，把「⚡评测项目」顶出视口（docW 397>375）。修：`min-width: 0`（文本由浏览器截断），复测 docW=375 零溢出、按钮完整可见。截图通道间歇 guest 故障（既有坑），以 DOM 几何数据判定。
+- gate 29/29 + flow 21/21 + 回归未破；全部暂存。
+- **N4 计划**：①找茬=汇报口径：README/DESIGN §10.3 补专项评测文档（mergeReports 语义+scope 溯源），DEFENSE 演示脚本增补「专项重评」一步（决赛演示新动线）；②三链=overflow 通用排查（对 segment/主题切换器等其余工具栏元素做窄屏扫描，沉淀为 mini 审计）；③steelman=备选池复审（轨迹导出 PNG / 报告 diff 增强 / 报告分享链接）。
+
+### N4（01:15-01:4x 完成）✅ 汇报口径补全 + overflow 审计收官 + steelman 三连裁：
+1. **汇报口径（找茬命中 1 处不一致）**：DEFENSE 演示脚本标注「与视频 v3 同序」——实际提交的是 v4，改 v4；演示表增补「扩展 +40s」行：专项评测现场动线（推荐→练→专项提交→单节点重评→图谱点亮，真实实测 2.6 分钟），供评委追问时展开；DESIGN §10.3 评测流水线行补专项评测（--skills + mergeReports + scope 溯源 + 2.6 分钟实测）；§10.5 可验证性补 `pnpm verify:report` 常驻对账。README 已含（N1），零改动。
+2. **overflow 通用审计**：375px 全元素扫描（滤 SVG 假阳性）——主视图/蜂窝零溢出；层叠视图 deck-card 超界属 3D 场景设计内（overflow=false 无滚动条，拖拽平移交互）；抽屉态表单贴合视口。结论：N3 修复后工具栏/抽屉/列表全清洁，无新溢出源。
+3. **steelman 备选池复审（三连裁，全落选留池）**：①轨迹导出 PNG——steelman 最强论点"教师可分享学员成长轨迹"；裁：分享卡已承担分享职责，轨迹导出是重复入口，价值密度不足。②报告 diff 增强（专项变化标注）——裁：mergeReports 语义下 diff 天然呈现（范围外不变范围内变），加标注是装饰性复杂度。③报告分享深链（?report= 参数）——steelman"评委直达指定报告"；裁：当前默认落地已是旗舰报告，深链需求等评委真实反馈再说。三候选均记入备选池附裁决理由。
+- 本轮零产品代码改动（仅 md 文档）；gate/flow 沿用 N3 绿态。
+- **N5 计划**：①找茬=「问 AI/推荐」对 scope 合并报告的输入语义（recommend 以 reportFile 读报告——scope 报告作输入时建议是否失真）+ ComparePanel 实际开一次 scope vs 全量对比走查；②三链=报告 JSON 自带复现命令字段审查（当前复现命令只在申诉模板拼装——报告本体是否该有 evidence.reproCommand，schema 加字段走 default 兼容）；③安全链=mock 通道对超大 digest 的资源上限审查（文件数/行数上限防 DoS）。
+
+### N5（02:00-02:5x 完成）✅ 三线全过：
+1. **推荐语义（审查通过，零改动）**：/api/recommend 从报告 assessments 取当前等级——合并报告=当前真实状态（范围内最新裁决+范围外沿用），阻塞链追溯语义自洽；recommendFile 已有 basename+后缀白名单。
+2. **复现命令进报告本体（证据链补全）**：ReportSchema 顶层新增 `repro`（default "" 向后兼容）——pipeline 按最终形态生成（GitHub 直评写仓库 URL 而非用后即焚的临时路径；专项带 --skills 后缀）；mergeReports 携带 partial.repro；服务端透传 repoUrl；申诉模板优先引用 report.repro（旧报告回退现场拼装）。mock 实弹：repro 正确含 --skills。
+3. **digest 资源上限（安全链）**：坐实 DoS 面——内容有 90KB/文件 12KB 预算但**枚举无上限**（指向超大目录树可拖死评测）。修：枚举封顶 MAX_FILES=5000 + MAX_DEPTH=12，且遍历改为**名字排序的确定性 DFS**——截断子集对同一棵树仍确定（同树→同摘要→同哈希承诺不破）。
+4. **IAB 对比走查**：scope 合并报告开「对比上次」——面板双 provider 标注 + 1↑1↓ 恰为 scope 链等级变化，diff 语义正确。
+- gate 29/29 + flow 21/21 + 回归未破。**运维注**：`&` 起的服务可脱离 shell 存活（EADDRINUSE 即信号——先查存活实例与其代码版本再杀，勿盲目重启）。
+- **N6 计划**：①找茬=数据正确性：三视图（tree/grid/deck）点亮计数与 stats 同源一致性走查（前端 buildVM 对账）；ComparePanel 对 scope 报告的仲裁留痕分区是否有视觉区分需求（评估，可能落备选池）；②steelman=「轨迹面板 scope 点标 ⚡ 徽标」（ReportMeta 加 scope 布尔——帮观众理解曲线突变是专项非全量；小改动，下轮评估是否过不降级线）；③三链=操作链：docs/DEPLOY.zh.md 部署说明逐命令实测。
+
+### N6（02:30-02:5x 完成）✅：
+1. **steelman 过线落地：轨迹 ⚡ 徽标**（N5 评估项转实施）——steelman 最强论点成立：曲线 22→19 的跳变无标注会误导观众（"怎么退步了"），徽标一词消除歧义且成本极小（meta scoped 布尔 + 类型 + 行内徽标 + circle title）。实装：/api/reports meta 加 `scoped`、ReportMeta 类型、TrackPanel 时间线行与圆点 title 标注。**IAB 实测：3 份 scoped 报告全部 ⚡ 正确标注**（dev/ 隐藏件不入列）。
+2. **三视图计数一致性**：stat-chip 在科技树/蜂窝/层叠三视图恒为 20/41——单一 buildVM 源自洽；DOM 类名计数噪音大（边线类名含 lit），以 stat 同源一致为结论，不再深挖类名对账。
+3. **汇报口径（DEPLOY）**：GitHub Pages 行与实际不符（文档写手动分支法，实为 pages.yml workflow 自动部署且线上即此管线）——改为真实管线描述。
+- gate 29/29 + 回归未破；全部暂存。
+- **N7 计划**：①找茬=数据正确性：申诉模板对 scope 报告的语义实测（生成申诉说明验证 repro 带 --skills、申诉范围=本次重评技能；范围外沿自 base 是否需在模板注明——评估后落决策）；②三链=操作链：DEPLOY 其余平台行与 README 快速开始最终复核（日间终验留痕）；③收尾整理：夜间轮汇总表（N1-N7 发现/修复清单）写入 ITERATION 供晨间汇报。
+
+### N7（03:15-03:4x 完成）✅：
+1. **申诉模板 scope 语义实测（抓到缺口并修）**：repro 带 `--skills` ✓（N5 字段生效），但模板未说明"为何只评一项"——复核者会困惑。修：SidePanel 申诉模板在 scope 报告时注入「报告性质：专项重评合并——X 为本次重评，其余沿自 Y 基础报告（日期）」。IAB 复测：说明行正确渲染、repro 完整。
+2. **操作链（DEPLOY/README 终复核）**：实弹测出 `npx qrcode-terminal` 在 Windows Git Bash **静默空输出**（exit 0 零内容）——文档命令换成已验证的 python qrcode 方案（答辩二维码即此生成）并加勿用警示；README 快速开始各命令在 N1-N6 期间已全部实测过（gate/flow/demo/demo:build/evaluate --skills/server），留此为证。
+3. **晨间汇总表**：见下。
+
+## 夜间轮汇总（N1-N7，晨间汇报用）
+
+| 轮 | 类型 | 发现 → 处置 |
+|---|---|---|
+| N1 | 找茬×5 | rubric 版本闸（拒绝跨标准合并）/ 链条合并验证 / scope 加 baseProvider 溯源 / **自伤式 schema 兼容 bug**（中间版报告解析失败→default+safeParse 定位）/ skills 形状闸（恶意 400）/ 合并口径画布标注 |
+| N2 | 三链+找茬 | 红队 scopeNote（对抗边界保住）/ 对比 provider 双标注（已诚实）/ **verify-report 对账脚本 17/17** / IAB 专项动线绿 |
+| N3 | 找茬×3 | 测试产物隔离 reports/dev/ / **跨 pack 同名守卫**（meta packId + 三处过滤）/ 对账入 flow-check 第 21 断言 / **窄屏真溢出**（min-width:0） |
+| N4 | 汇报口径+steelman | DEFENSE v3→v4 口径修正 / 演示表补专项扩展行 / DESIGN §10.3+§10.5 补专项与对账 / overflow 审计收官 / **steelman 三连裁**（轨迹 PNG、diff 标注、深链——全落池） |
+| N5 | 三链 | **repro 字段**（schema default 兼容→pipeline 生成→GitHub 用 URL→申诉引用）/ **digest 资源上限**（MAX_FILES=5000+DEPTH=12，确定性 DFS 保同树同哈希）/ 推荐语义审查通过 / IAB 对比走查 |
+| N6 | steelman+口径 | **轨迹 ⚡ 徽标**（3 份 scoped 实测标注）/ 三视图 stat 同源 20/41 / DEPLOY Pages 行改真实管线 |
+| N7 | 找茬+操作链 | **申诉模板 scope 说明**（复核者语境补全）/ qrcode-terminal 静默失败→换 python 方案 / README 命令全实测留证 |
+| N8 | 原理审查+收尾 | verdict-level 口径注释（不做机械强制）/ **过时记忆修正**（report.effective 已是真实对账数据）/ **CHANGELOG.md v1.0.0+v1.1.0** / REVIEW 安全补记 |
+| N9 | 找茬（机理级） | **mock ds.hash 误报根因**（index 命中文件名→移除，cs 0.1.1；map/set 保留=有效信号）/ AGENTS 命令册补 verify:report+专项 / 晨间包就绪 |
+| N10 | 找茬（裁定） | demo 快照漂移=**版本锁定设计自证，不重建** / flow-check 契约断言补 packId+scoped / 池复审无新候选 |
+| N11 | 三链+一致性 | 三文档专项评测口径交叉核对（2.6 分钟/--skills/语义四处一致，零修正）/ **端点安全矩阵**入 REVIEW（10 端点×闸逐行） |
+
+**净结果**：新增 1 个产品能力（专项评测）+ 6 处修复 + 2 个常驻质量关卡（verify:report、flow 21 项）+ 文档口径三处修正；测试 24→29；备选池 5 项留痕。gate 29/29、flow 21/21 持续绿。**晨间动作**：`git add -A && git commit`（建议信息：`feat: 专项评测 + 夜间对抗迭代 N1-N7（对账脚本/安全闸/口径修正）`）+ push；推送后可打 **v1.1.0** release。**注：09:00 夜间 automation 到窗停**，日间无值守 automation（需要可说一声再加）。
+- **N8 计划（04:00 执行）**：①找茬=原理深挖：assessor 的 verdict-level 一致性审查（coerceAssessment 对未提供 criteria 的 fallback 规则——level 与逐条 verdict 是否可能矛盾）；②收尾=CHANGELOG.md 草拟 v1.0.0→v1.1.0（专项评测+夜间迭代成果，供 release 页用）；③安全链扫尾=REVIEW.md 补记 N1-N7 的安全相关变更（digest 上限/baseReportFile 边界/skills 形状闸）。
+
+### N9（04:45-05:1x 完成）✅ mock 机理定位 + 新工具入册：
+1. **mock ds.hash 误报机理定位（数据正确性深挖）**：grep 实证 task-todo 源码零 hash/哈希内容——mock 判 L1 来自泛化 token：`index` 命中 9 处（全是 index.js 文件名/package.json/README，零语义）+ `map`/`set` 命中 Array.map/Set 类通用代码。处置：**移除 `index`**（文件名级假阳性，净改进）+ cs pack 0.1.0→0.1.1；**保留 map/set**（真哈希仓库的有效信号词，误报属关键词启发式固有局限——mock 系统性虚高已有明文口径）。回归不变量全过（task-todo 22/41 未变）。README mock 描述补局限注记（诚实口径）。cs 0.1.1 → 旧报告链按新 rubric 闸拒绝合并（预期行为，需全量重评）。
+2. **AGENTS.md 命令册更新**：补 `pnpm verify:report`（含"flow-check 第 21 断言已常驻"）与专项评测条目（含 rubric 闸说明）——未来 agent 会话可见新工具。
+3. **晨间包就绪**：33 文件暂存（16517 行新增）；HEAD 7ebed1c；建议晨间单串命令：
+   `git commit -m "feat: 专项评测 + 夜间对抗迭代 N1-N9（对账脚本/资源上限/安全闸/口径修正）" && git push`，推送后 `gh release create v1.1.0 --target master --title "v1.1.0 · 专项评测与可信度加固" --notes-file CHANGELOG.md`（或网页按 CHANGELOG 粘贴）。
+- gate 29/29（新关键词下回归不变量全过）。
+- **N10 计划（05:30）**：①三链=flow-check 第 22 断言候选：/api/reports meta 断言补 `packId`/`scoped` 字段存在（N3/N6 新字段的契约执法——契约对账哲学的延续）；②找茬=reports/ 与 demo 快照的版本漂移（cs 0.1.1 后 demo 包内 mock 报告的 pack.version 仍是 0.1.0——评估是否重跑 demo:build 及 Pages 更新时机）；③steelman=暂无新候选，复审池。
+
+### N10（05:30-05:5x 完成）✅：
+1. **契约断言升级**：flow-check「/api/reports 条目形状」补 `packId`/`scoped` 字段存在——N3/N6 新字段进入契约执法面（对账哲学：端点出参形状逐字段锁定）。flow-check 21/21 复跑全过。
+2. **demo 快照版本漂移——裁定不重建（找茬结论：漂移即设计）**：demo 报告自带 version 0.1.0 + contentHash ef17…（评判时锁定的标准），本体升 0.1.1 后旧报告携带旧哈希恰是「rubric 版本随报告锁定」承诺的诚实形态（简介 §二.1 原文）；重跑全量真实评测（10+ 次调用）只为对齐版本号属无意义动作。Pages 下次 push 自动重建时同样按此逻辑（pack.json 0.1.1 + 报告自带旧哈希）。历史证据的有效性不因本体演进失效。
+3. **steelman 池复审**：无新候选（三连裁后池稳定：轨迹 PNG/diff 标注/深链/CHANGELOG 已出池）。
+- gate/flow 绿态沿用（本轮仅 flow-check 断言加强）；全部暂存。
+- **N11 计划（06:15）**：①收尾整理=晨间汇报最终版（夜间轮 N1-N10 全表已就绪，补 N8-N10 三行进汇总表）；②找茬=aggressive 收尾扫描：AGENTS/README/DESIGN 三文档交叉引用一致性（新命令在 AGENTS/README/DESIGN 的表述是否互相一致——如专项评测的三处描述措辞）；③安全链=全部已闸端点清单入 ARCHITECTURE 或 REVIEW（端点安全矩阵：路径/形状/限速逐端点一行），沉淀为可审计清单。
+
+### N11（06:15-06:4x 完成）✅：
+1. **三文档交叉一致性（找茬通过）**：专项评测四处描述（README 命令/AGENTS 命令册/DEFENSE 演示行/DESIGN 模块表）交叉核对——2.6 分钟、--skills 语法、mergeReports+scope 语义、闭环保留口径全部一致，零修正（夜间轮各自写入时口径自觉对齐）。
+2. **端点安全矩阵入 REVIEW**：10 端点 ×（输入闸/备注）逐行成表——可审计清单沉淀（下新端点必增行）；结论：全部有界，唯一写路径 /api/evaluate 五层闸。
+3. 汇总表补 N8-N10 三行（晨间汇报最终版就绪）。
+- gate/flow 绿态沿用（本轮零代码，文档/记录）。
+- **N12 计划（07:00）**：①夜班终检：全部暂存 diff 快速走读（防夜间疲劳期引入低级错误——重点看 schema/pipeline/agents 三核心文件 diff）；②备选池与 N1-N11 经验句典化（沉淀进 AGENTS.md「已知坑」或单独段）；③N13-N14 计划预置：若无可证实问题则轻量轮转至 08:45 窗停，晨间汇报以汇总表为准。
+
+### N12（07:00-07:2x 完成）✅ 夜班终检 + 经验句典化：
+1. **暂存 diff 走读（三核心文件全过）**：schema（scope/repro/mergeReports+版本闸+兼容 default）、pipeline（未知 id 校验/路径边界/safeParse 定位/repro 生成/合并落盘）、agents（scopeNote 透传）——闸/兼容/溯源齐备，**无疲劳期低级错误**。mergeReports 的 durationMs 取 partial 耗时（本次重评口径）确认符合 scope 语境。
+2. **经验句典化**：AGENTS.md「已知坑」补三条夜间教训——schema 加字段必须 .default()（基础报告链断裂根因）、EADDRINUSE 先查存活实例（`&` 服务可脱离 shell）、本体 keywords 警惕泛化 token（先 grep samples 实测语义）。
+3. **N13-N14 预置**：若无新发现即轻量轮转（维护态：gate/flow/暂存检查+记录），08:45 窗停；晨间汇报以汇总表为准，无新增动作。
+- gate/flow 绿态沿用（本轮零代码——仅 AGENTS.md 文档）。
+- **N13 计划（07:45）**：①找茬=最后角度：报告 JSON 的 criteria 引用文件存在性抽查（assessor 校验「引用必须在证据文件集合内」——抽 chalk/kilo 报告各 3 条 citation 与 digest 文件清单对账）；②维护检查（gate/flow/暂存）。**N14 计划（08:30）**：①窗停前终检（zip 存档/服务/Pages/git 四项+汇总表终稿）；②留下「白班交接行」（今日待办=晨间 commit+push+v1.1.0 release）。
+
+### N13（07:45-08:0x 完成）✅：
+1. **引用存在性抽查（chalk 88 条 / kilo 41 条）**：全部相对路径形状正确（chalk=source/index.js、examples/rainbow.js 与真实仓库结构一致；kilo=kilo.c 单文件仓库），可疑形状零。机制核查：引用校验=prompt 层约束 + coerce 形状过滤，**无事后存在性核验**——GitHub 仓库焚毁后引用只能信不能验，这是证据链最后一环的结构性缺口。
+2. **入池（决赛窗口头号候选，附规格）**：「引用文件指纹快照」——评测时对被引用文件记录（路径+SHA-256，去重后体量小），报告自带后即使证据焚毁也能独立核验引用真伪。规格已明确（digest 采集/字段/verify-report 扩展），过不降级线但今晚不动（schema+digest+pipeline 三处联动，凌晨不做）。
+3. 维护检查：gate 29/29（N6 后代码零变更）、flow 21/21（N10）、暂存全同步。
+- **N14 计划（08:30）**：窗停前终检四项（zip 存档/服务/Pages/git）+ 汇总表终稿 + 白班交接行（今日待办：commit+push+v1.1.0 release+备选池头号候选「引用文件指纹快照」择期实现）。
+
+### N14（08:30-08:5x 完成）✅ **夜班收官（窗停）**：终检四项全过——zip 存档 228 全净/服务 200/**Pages 线上 200（最新部署绿）**/git 全同步（HEAD 7ebed1c + 夜间成果全部暂存）。
+
+---
+
+## 🌅 白班交接行（2026-09-07 08:50，夜班 N1-N14 完毕，09:00 窗停）
+
+**昨夜净产出**（全部已暂存，33+ 文件）：专项评测全链路（schema/pipeline/CLI/服务端/Web）+ 证据链对账脚本（常驻 flow 第 21 断言）+ 6 处修复（rubric 版本闸/边界双层防线/skills 形状闸/跨 pack 守卫/窄屏溢出/口径三处）+ cs 本体 0.1.1（mock 误报 token 清理）+ CHANGELOG/REVIEW/AGENTS/DEFENSE/DEPLOY 文档同步。**gate 29/29、flow 21/21、对账 17/17 全绿。**
+
+**今日待办（按序）**：
+1. `cd E:\A-GLM\登楼\02\skilltree && git commit -m "feat: 专项评测 + 夜间对抗迭代 N1-N14（对账脚本/资源上限/安全闸/口径修正）" && git push`
+2. `gh release create v1.1.0 --target master --title "v1.1.0 · 专项评测与可信度加固" --notes-file CHANGELOG.md`
+3. 决赛窗口待办（09-19/20 前）：真实同学仓库试点、盲测信度实验、备选池头号候选「引用文件指纹快照」（规格在 N13 记录）、答辩 PPT 试讲反馈修订
+4. 答辩材料：PPT=E:\A-GLM\登楼\02\defense\建木SkillTree-答辩.pptx（09:45 终态版）；讲稿=每页备注；DEFENSE.zh.md 演示脚本已含专项评测扩展行
+
+**夜间经验已沉淀**：AGENTS.md 已知坑 +3 条；REVIEW.md 端点安全矩阵 + 安全补记；ITERATION.md N1-N14 全记录 + 晨间汇总表。
 
 ---
 
@@ -56,3 +196,22 @@
 ## 下一轮起核验基线更新：zip=218 条目（其余不变：0 反斜杠/0 mimosa/0 env/mp4=1/docx=2；四材料 mtime 基线=视频 04:03 / 简介 docx 11:23 / 设计 docx 11:23 / zip 11:3x）
 ### I23（11:26）✅ 核验轮：新基线 218 全净、材料 mtime 符合、服务 200、git 全同步；确认用户已推送 Pages 提交（830c5e0 远端同步，Pages 10:59 上线）——I21+I22 仍在暂存区待用户推送。
 ### I24（11:35-12:3x）✅ **用户驱动：GitHub 直评「更具代表性的真实项目」**（用户指出 Hello-World 太简单）。定位：Hello-World 是打假侧战报（简单即故事），缺的是**正面侧真实第三方实证**；避开个人学生仓库（伦理），选组织级名项目。带 key 重启服务（USTC_API_KEY/USTC_MODEL=deepseek-v4-pro 只经环境变量），连续两次 GitHub 直评：**chalk/chalk 18/41·风险低·红队 6/6 全过·0 降级**（真测试真文档→全绿，11 分钟）；**antirez/kilo 14/41·风险中·flag 无测试→7 项 L2→L1 仲裁降级留痕**（真代码无测试→诚实扣分，9 分钟）。与 Hello-World 0/41·高 构成**三项目质量梯度**（全是真实第三方仓库）。已入演示包（demo:build，public/demo+src/demo-data 双位置）+ 简介 §二.7 战报升级为梯度表述 + DESIGN §10.5 补梯度；两 docx pandoc 重生成（6 处新内容命中）；gate exit 0；reports 11→13 无回归残留；**重打包 10.6MB/228 条目** zipcheck 全净（0/0/0、mp4=1/docx=2）。**期间发现用户 11:40 已推送 5beb24f（I21+I22 一并入库），Pages 11:40 重部署成功且线上已验证评测回放生效**；本轮新变更（6 新文件+材料梯度+演示包）在暂存区等下一次推送。
+### I25（12:2x-12:54 完成）✅ **终验放行轮**：①官方提交预通知逐条核对全符合（四材料/单压缩/队长提交/文件名格式/分享 P0581 双勾/可重复提交以最新为准）。②正式包**九项终验全过**（解包检查包内实际内容：简介 11 项命中/设计文档模型说明 27 处/视频 4:47.64 H.264 720p/学号手机号密钥在内容中零出现/zipcheck 228 全净）——**发现并修正真问题：用户改名漏「伍」字（本科生队→本科生队伍），官方明示其他文件名可能无效**；正式文件名=PB24261891+15396665755+智能体赛道+本科生队伍.zip（zipcheck.cjs 硬编码路径同步更新——曾发现传参被忽略，此前同名故历史结果有效）。③按官方 12 细分项给用户作品自评（创新 8.5/实用 8/难度 7.5/完成度 9；三大软肋=零真实用户/无 RAG 关键词/单机部署，均有答辩口径）。④12:54 核验：228 全净/材料稳定/服务 200/git 全同步；**用户已推送 7ebed1c（chalk/kilo）**，Pages 12:18 部署成功，线上演示已含 chalk 18/低 + kilo 14/中（curl 实证）。⑤剩余唯一动作=用户瀚海上传正式 zip。
+### I26（13:38 完成）✅ 核验轮：228 全净/服务 200/git 全同步（HEAD 7ebed1c）/材料 mtime 稳定。零改动。用户上传状态待其确认。
+### I27（14:23 完成）✅ 核验轮：228 全净/服务 200/git 全同步/材料稳定。零改动。距截止约 9.5 小时，唯一剩余=用户瀚海上传。
+### I28（15:08 完成）✅ 核验轮：228 全净/服务 200/git 全同步（HEAD 7ebed1c）/材料稳定。零改动。距截止约 8.8 小时。
+### I29（15:53 完成）✅ 核验轮：228 全净/服务 200/git 全同步/材料稳定。零改动。距截止约 8 小时。
+### I30（16:38 完成）✅ 核验轮：228 全净/服务 200/git 全同步/材料稳定。零改动。距截止约 7.3 小时。
+### I31（17:23 完成）✅ 核验轮：228 全净/服务 200/git 全同步/材料稳定。零改动。距截止约 6.6 小时。
+### I32（18:08 完成）✅ 核验轮：228 全净/服务 200/git 全同步/材料稳定。零改动。距截止约 5.8 小时。
+### I33（18:53 完成）✅ 核验轮：228 全净/服务 200/git 全同步/材料稳定。零改动。距截止约 5 小时。
+### I34（19:38 完成）✅ 核验轮：228 全净/服务 200/git 全同步/材料稳定。零改动。距截止约 4.3 小时。下轮（~20:23）过 20:00 收尾线。
+### I35（20:23 完成）✅ 核验轮（进入收尾模式）：228 全净/本地服务 200/**Pages 在线 200（CI 最新 pages run 绿）**/git 全同步（7ebed1c）。距截止约 3.6 小时。**唯一剩余=用户瀚海上传**；上传完成后按用户授权开工夜间专项评测开发。
+### I36（21:08 完成）✅ 收尾核验：228 全净/服务+Pages 双 200/git 同步。距截止约 2.8 小时。零改动。
+### 🏁 **提交完成（2026-09-06 21:1x，用户确认「传完了」）**：正式 zip 已上传瀚海并分享 P0581（双勾），**距截止约 2.7 小时完成，全程无逾期风险**。参赛主线终结：评估立项（09-15 前）→ MVP → 改名建木 → 视频四版 → 四件材料三轮打磨 → 公开仓库+Pages+CI → 三项目梯度战报 → 终验放行 → 上传。磁盘 zip（228 版）自此为已提交存档，**不再重打包**。按用户授权，转入夜间开发：专项评测（决赛窗口清单第 1 项，设计要点见上）。
+### I37（21:2x-22:2x 完成）✅ **夜间开发：专项评测（单节点 ↔ 单独评审任务）全链路落地**：
+- **schema**：ReportSchema 新增可选 `scope`（skills/baseReportId/baseCreatedAt，向后兼容旧报告）；新增纯函数 **mergeReports(base, partial, pack)**——范围内技能被新裁决覆盖、范围外沿用 base（含 base 仲裁已生效的等级）、红队/勘察/证据/模型取本次重跑、仲裁留痕按技能分区合并、前置约束与统计用全量 pack 重算。
+- **pipeline**：`skills?: string[]` + `baseReportFile`（省略自动定位输出目录中同仓库同本体最新报告，无基础报告则报错引导先跑全量）；scopedPack 只含目标分支/技能（取证只跑目标分支、红队/仲裁只作用子集）；合并后落盘为新报告（轨迹曲线天然记录单技能进步）。
+- **CLI**：`--skills id,id --base 报告.json`；**服务端** /api/evaluate 透传 skills/baseReport（basename 防穿越）；**Web**：SidePanel「⚡ 专项评测此技能」（服务模式+本地目录证据；GitHub 证据暂隐藏）→ EvalDrawer 专项 preset（仓库路径自动填入、provider 预选 ustc、banner 说明 3 分钟 vs 11 分钟）。
+- **验证**：gate 27/27（+3 mergeReports 单测）回归不变量未破；mock 实弹 ds.array（0.1s，自动定位 ustc base，20/41 保持）；**真实通道实弹 ds.hash = 2.6 分钟**（全量 7-11），合并后 20→19——**mock 虚高被专项真实重评自动纠正**（ds.hash L0·4 条引用），体系故事的活例；IAB 动线绿（按钮→抽屉 banner→路径/ustc 预填→可关）。
+- 产品闭环成立：推荐补技能 → 练 → 专项提交 → 单节点重评 → 图谱单点亮。README 已补用法。**待用户晨间推送**：`git commit -m "feat: 专项评测——单节点重评合并进基础报告（--skills + mergeReports + 侧栏入口）" && git push`。

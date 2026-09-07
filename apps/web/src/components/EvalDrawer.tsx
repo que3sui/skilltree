@@ -6,13 +6,26 @@ interface Props {
   onClose: () => void;
   onDone: (reportFile: string | undefined) => void;
   packId: string;
+  /** 专项评测预设（SidePanel「专项评测此技能」带入）：只重评指定技能并合并进该仓库最新报告 */
+  preset?: { repoPath: string; skills: string[]; label: string } | null;
 }
 
-export default function EvalDrawer({ open, onClose, onDone, packId }: Props) {
+export default function EvalDrawer({ open, onClose, onDone, packId, preset }: Props) {
   const [repoPath, setRepoPath] = useState("samples/task-todo");
   const [provider, setProvider] = useState("mock");  const [job, setJob] = useState<JobStatus | null>(null);
   const [error, setError] = useState<string | null>(null);
   const polling = useRef<number | null>(null);
+
+  // 专项预设进入时填入目标仓库；preset 变化（每次打开）都重置
+  const presetKey = preset ? `${preset.repoPath}#${preset.skills.join(",")}` : "";
+  const lastPresetKey = useRef("");
+  if (presetKey !== lastPresetKey.current) {
+    lastPresetKey.current = presetKey;
+    if (preset) {
+      setRepoPath(preset.repoPath);
+      setProvider("ustc");
+    }
+  }
 
   if (!open) return null;
 
@@ -23,7 +36,7 @@ export default function EvalDrawer({ open, onClose, onDone, packId }: Props) {
       const trimmed = repoPath.trim();
       // GitHub/Gitee 公开仓库 URL → 走直评通道（服务端浅克隆 + git 过程证据）
       const isUrl = /^https:\/\/(github\.com|gitee\.com)\/[\w.-]+\/[\w.-]+\/?$/.test(trimmed);
-      const { id } = await startEvaluation(trimmed, provider, packId, isUrl);
+      const { id } = await startEvaluation(trimmed, provider, packId, isUrl, preset?.skills);
       poll(id, 0);
     } catch (err) {
       setJob(null);
@@ -68,6 +81,13 @@ export default function EvalDrawer({ open, onClose, onDone, packId }: Props) {
             ×
           </button>
         </div>
+
+        {preset && (
+          <div className="replay-note">
+            <b>专项评测</b>：本次只重评 <b>{preset.label}</b>（其余技能沿用该仓库最新报告的裁决），
+            完成后自动合并生成新报告——比全量评测快得多（约 3 分钟 vs 11 分钟）。
+          </div>
+        )}
 
         <label className="field">
           <span>项目路径（本地目录）或 GitHub/Gitee 公开仓库 URL（自动浅克隆直评）</span>

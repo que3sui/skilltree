@@ -54,7 +54,7 @@ export default function TrackPanel({ entries, onClose }: Props) {
                   r={hover === p.i ? 4.6 : 3.2}
                   className={`track-dot${hover === p.i ? " track-dot-hot" : ""} risk-${p.risk === "high" ? "high" : "ok"}`}
                 >
-                  <title>{`${new Date(p.createdAt).toLocaleString("zh-CN")} · ${p.provider} · ${p.lit}/${p.total}`}</title>
+                  <title>{`${new Date(p.createdAt).toLocaleString("zh-CN")} · ${p.provider} · ${p.lit}/${p.total}${p.scoped ? " · 专项重评合并" : ""}`}</title>
                 </circle>
                 {/* 悬停热区放大到 ±8px，圆点小不易命中 */}
                 <circle cx={x(p.i)} cy={y(p.lit)} r="9" fill="transparent" />
@@ -74,6 +74,7 @@ export default function TrackPanel({ entries, onClose }: Props) {
             >
               <span className="cmp-name">
                 {new Date(p.createdAt).toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })} · {p.provider}
+                {p.scoped && <span title="专项重评合并报告——曲线突变来自单技能重评，非全量评测"> ⚡</span>}
               </span>
               <span className="cmp-levels">
                 {p.lit}/{p.total}{" "}

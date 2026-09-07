@@ -73,7 +73,7 @@ branch:
       name: 哈希表与集合
       tier: 2
       summary: 以均摊 O(1) 组织查找：哈希思想、冲突与代价。
-      keywords: [hash, map, dict, set, 哈希, 字典, 映射, 集合, index]
+      keywords: [hash, map, dict, set, 哈希, 字典, 映射, 集合]
       prereqs:
         - skill: ds.array
           minLevel: 1

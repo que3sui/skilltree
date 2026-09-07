@@ -137,6 +137,10 @@ function collectGit(absRoot: string): GitHistory | undefined {
 export function buildDigest(root: string, opts: DigestOptions = {}): Digest {
   const perFileCharLimit = opts.perFileCharLimit ?? 12_000;
   const totalCharBudget = opts.totalCharBudget ?? 90_000;
+  // 资源上限：枚举文件数与目录深度封顶，防超大目录树把评测拖成 DoS；
+  // 遍历按名字排序的确定性 DFS，因此截断后的子集对同一棵树仍然确定（同树 → 同摘要 → 同哈希）
+  const MAX_FILES = 5000;
+  const MAX_DEPTH = 12;
 
   const absRoot = path.resolve(root);
   if (!fs.existsSync(absRoot) || !fs.statSync(absRoot).isDirectory()) {
@@ -146,23 +150,25 @@ export function buildDigest(root: string, opts: DigestOptions = {}): Digest {
   const inRoot = (p: string): boolean => p === absRoot || p.startsWith(absRoot + path.sep);
 
   const candidates: Candidate[] = [];
-  const walk = (dir: string): void => {
-    if (!inRoot(dir)) return;
-    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+  const walk = (dir: string, depth: number): void => {
+    if (!inRoot(dir) || depth > MAX_DEPTH || candidates.length >= MAX_FILES) return;
+    const entries = [...fs.readdirSync(dir, { withFileTypes: true })].sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+    for (const entry of entries) {
       if (!isSafeEntryName(entry.name)) continue;
       if (entry.isSymbolicLink()) continue;
       const absChild = dir + path.sep + entry.name;
       if (!inRoot(absChild)) continue;
       if (entry.isDirectory()) {
-        if (!EXCLUDED_DIRS.has(entry.name)) walk(absChild);
+        if (!EXCLUDED_DIRS.has(entry.name)) walk(absChild, depth + 1);
         continue;
       }
       if (BINARY_EXTS.has(path.extname(entry.name).toLowerCase())) continue;
       if (EXCLUDE_FILE_RE.test(entry.name)) continue; // 机密文件不进证据、不出边界
       candidates.push({ rel: path.relative(absRoot, absChild).replaceAll("\\", "/"), abs: absChild });
+      if (candidates.length >= MAX_FILES) return; // 资源上限：枚举封顶
     }
   };
-  walk(absRoot);
+  walk(absRoot, 0);
   candidates.sort((a, b) => priorityOf(a.rel) - priorityOf(b.rel) || a.rel.localeCompare(b.rel));
 
   const files: DigestFile[] = [];

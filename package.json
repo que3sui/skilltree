@@ -11,6 +11,7 @@
     "build": "pnpm -r build",
     "test": "tsx --test packages/schema/test/schema.test.ts packages/evaluator/test/digest.test.ts packages/evaluator/test/pipeline.test.ts packages/evaluator/test/redact.test.ts",
     "eval:regression": "tsx scripts/eval-regression.mjs",
+    "verify:report": "tsx scripts/verify-report.mjs",
     "suggest-skill": "tsx scripts/suggest-skill.mjs",
     "assemble-pack": "tsx scripts/assemble-pack.mjs",
     "flow-check": "tsx scripts/flow-check.mjs",

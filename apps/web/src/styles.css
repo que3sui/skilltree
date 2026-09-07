@@ -1687,6 +1687,8 @@ body {
   .report-select {
     flex: 1;
     max-width: none;
+    /* 选项文本的 min-content 会撑爆 flex 行、把评测按钮顶出视口——允许收缩，文本由浏览器截断 */
+    min-width: 0;
   }
 
   .side-panel {

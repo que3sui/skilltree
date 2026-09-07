@@ -5,6 +5,9 @@ import {
   applyPrereqCaps,
   checkPack,
   computeStats,
+  mergeReports,
+  ReportSchema,
+  type Report,
   type SkillPack,
 } from "../src/index.js";
 
@@ -134,4 +137,114 @@ test("computeStats：按分支聚合点亮数与等级和", () => {
   assert.equal(stats.byBranch.b1!.lit, 2);
   assert.equal(stats.byBranch.b1!.levelSum, 3);
   assert.equal(stats.byBranch.b2!.lit, 0);
+});
+
+// ---------------------------------------------------------------------------
+// mergeReports：专项评测合并
+// ---------------------------------------------------------------------------
+
+function mkAssessment(skillId: string, level: number) {
+  return {
+    skillId,
+    level,
+    confidence: 0.9,
+    rationale: "",
+    criteria: [],
+  };
+}
+
+function mkReport(id: string, assessments: Report["assessments"], overrides: Partial<Report> = {}): Report {
+  const pack = mkPack();
+  const effective = applyPrereqCaps(pack, assessments);
+  const stats = computeStats(pack, effective);
+  return ReportSchema.parse({
+    reportVersion: 1,
+    id,
+    createdAt: `2026-09-06T00:00:0${id.length % 10}.000Z`,
+    evidence: { kind: "local-dir", path: "/repo", name: "repo", fileCount: 1, totalLines: 1, digestHash: "h" + id },
+    pack: { id: "test", version: "1.0.0", contentHash: "c" },
+    model: { provider: "mock", details: "" },
+    survey: { summary: "", languages: {}, entryPoints: [], buildCommands: [], testCommands: [], observations: [] },
+    assessments,
+    redteam: { checks: [], overallRisk: "low" },
+    arbitration: { adjustments: [], notes: "" },
+    effective,
+    stats,
+    ...overrides,
+  });
+}
+
+test("mergeReports：范围内技能被新裁决覆盖，范围外沿用 base", () => {
+  const pack = mkPack();
+  const base = mkReport("base", [mkAssessment("a", 1), mkAssessment("b", 2), mkAssessment("d", 1)]);
+  // 专项重评 b：这次只评了 L0（比如证据被推翻）
+  const partial = mkReport("part", [mkAssessment("b", 0)], {
+    redteam: { checks: [{ name: "tests_present", title: "测试", verdict: "flag", detail: "" }], overallRisk: "high" },
+  });
+  const merged = mergeReports(base, partial, pack);
+  const byId = new Map(merged.assessments.map((x) => [x.skillId, x]));
+  assert.equal(byId.size, 3);
+  assert.equal(byId.get("b")!.level, 0); // 覆盖
+  assert.equal(byId.get("a")!.level, 1); // 沿用
+  assert.equal(byId.get("d")!.level, 1); // 沿用
+  // 红队/统计来自本次重跑，前置约束全量重算
+  assert.equal(merged.redteam.overallRisk, "high");
+  assert.equal(merged.stats.litSkills, 2);
+  // scope 元数据指向 base
+  assert.ok(merged.scope);
+  assert.equal(merged.scope.baseReportId, "base");
+});
+
+test("mergeReports：scope 字段写明范围与基础报告，报告可过 schema 校验", () => {
+  const pack = mkPack();
+  const base = mkReport("base", [mkAssessment("a", 1), mkAssessment("b", 2)]);
+  const partial = mkReport("part", [mkAssessment("a", 1)]);
+  const merged = mergeReports(base, partial, pack);
+  assert.deepEqual(merged.scope?.skills, ["a"]);
+  assert.equal(merged.scope?.baseReportId, "base");
+  assert.deepEqual(ReportSchema.parse(merged).scope?.skills, ["a"]);
+});
+
+test("mergeReports：范围外 base 仲裁留痕保留，范围内以 partial 为准", () => {
+  const pack = mkPack();
+  const base = mkReport("base", [mkAssessment("a", 1), mkAssessment("b", 2)], {
+    arbitration: {
+      adjustments: [
+        { skillId: "a", from: 2, to: 1, reason: "base 调整" },
+        { skillId: "b", from: 2, to: 2, reason: "" },
+      ],
+      notes: "",
+    },
+  });
+  const partial = mkReport("part", [mkAssessment("b", 1)], {
+    arbitration: { adjustments: [{ skillId: "b", from: 2, to: 1, reason: "本次调整" }], notes: "n" },
+  });
+  const merged = mergeReports(base, partial, pack);
+  const ids = merged.arbitration.adjustments.map((x) => x.skillId);
+  assert.ok(ids.includes("a")); // 范围外保留
+  const bAdj = merged.arbitration.adjustments.find((x) => x.skillId === "b");
+  assert.equal(bAdj?.reason, "本次调整"); // 范围内以 partial 为准
+});
+
+test("mergeReports：合并报告可再作 base（链条合并），scope 指向最近一次 partial", () => {
+  const pack = mkPack();
+  const base = mkReport("b0", [mkAssessment("a", 1), mkAssessment("b", 2), mkAssessment("d", 1)]);
+  const m1 = mergeReports(base, mkReport("p1", [mkAssessment("a", 1)]), pack);
+  const m2 = mergeReports(m1, mkReport("p2", [mkAssessment("b", 2)]), pack);
+  assert.deepEqual(m2.scope?.skills, ["b"]);
+  assert.equal(m2.scope?.baseReportId, "p1"); // 指向最近一次基础，不丢链条
+  assert.equal(m2.scope?.baseProvider, "mock");
+  const byId = new Map(m2.assessments.map((x) => [x.skillId, x]));
+  assert.equal(byId.get("a")!.level, 1); // 第一轮专项结果在链条中保留
+  assert.equal(byId.get("b")!.level, 2);
+  assert.equal(byId.get("d")!.level, 1);
+});
+
+test("mergeReports：rubric 版本不一致 → 拒绝合并（范围外裁决基于旧标准，不可比）", () => {
+  const pack = mkPack();
+  const base = mkReport("base", [mkAssessment("a", 1)]);
+  const partial = mkReport("part", [mkAssessment("a", 1)], {
+    pack: { id: "test", version: "1.0.0", contentHash: "different-hash" },
+  });
+  assert.throws(() => mergeReports(base, partial, pack), /rubric 版本与当前不一致/);
 });

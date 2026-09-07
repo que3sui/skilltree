@@ -70,7 +70,7 @@ async function main() {
   const packBody = csPack.body;
   check("契约 /api/packs 形状", packs.body.packs.every((p) => typeof p.id === "string" && typeof p.name === "string"));
   check("契约 /api/pack 形状", typeof packBody.pack?.id === "string" && Array.isArray(packBody.pack?.branches) && Array.isArray(packBody.issues));
-  check("契约 /api/reports 条目形状", csReports.body.reports.every((r) => "file" in r && "lit" in r && "total" in r && "createdAt" in r));
+  check("契约 /api/reports 条目形状", csReports.body.reports.every((r) => "file" in r && "lit" in r && "total" in r && "createdAt" in r && "packId" in r && "scoped" in r));
   const oneReport = await get(`/api/reports/${encodeURIComponent(csReportFile)}`);
   check("契约 /api/reports/:file 返回 Report", oneReport.status === 200 && "assessments" in oneReport.body && "redteam" in oneReport.body);
   const badFile = await get("/api/reports/..%2Fsecret.json");
@@ -88,6 +88,22 @@ async function main() {
   check("assembly 无日志 pack=404", asmMiss.status === 404 && /组装日志/.test(await asmMiss.text()));
   const asmBad = await fetch(BASE + "/api/assembly/..%2Fevil");
   check("assembly 拒路径段 packId", asmBad.status === 400 || asmBad.status === 404);
+
+  // 8) 证据链对账：reports/ 全部报告独立重算逐项吻合（证据链可复现性的常驻断言）
+  const { execSync } = await import("node:child_process");
+  const { fileURLToPath } = await import("node:url");
+  const repoRoot = fileURLToPath(new URL("..", import.meta.url));
+  try {
+    const out = execSync("pnpm exec tsx scripts/verify-report.mjs", {
+      cwd: repoRoot,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+    check("证据链对账 verify:report 全过", /全部 \d+ 份报告证据链对账通过/.test(out));
+  } catch (e) {
+    check("证据链对账 verify:report 全过", false);
+    console.error(String(e.stderr || e.stdout || e.message || "").slice(-600));
+  }
 
   console.log(failures === 0 ? "\n全部通过" : `\n${failures} 项失败`);
   process.exit(failures === 0 ? 0 : 1);
